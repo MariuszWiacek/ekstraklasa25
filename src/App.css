@@ -7,6 +7,16 @@
   pointer-events: none;
 }
 
+.nav-link {
+  color: white !important;
+}
+
+.navbar-brand {
+  color: beige !important;
+}
+
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
