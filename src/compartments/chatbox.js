@@ -29,6 +29,11 @@ const Guestbook = () => {
   const db = getDatabase(); // Define the Firebase database instance
 
   useEffect(() => {
+    // Scroll to the bottom of the chat container when the component mounts
+    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+  }, []);
+
+  useEffect(() => {
     // Fetch guestbook entries from Firebase when the component mounts
     const entriesRef = ref(db, 'guestbookEntries');
     onValue(entriesRef, (snapshot) => {
