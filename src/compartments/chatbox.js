@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, push, onValue } from 'firebase/database';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -9,6 +9,7 @@ const Guestbook = () => {
   const [username, setUsername] = useState(localStorage.getItem('username') || ''); // Load username from local storage
   const [message, setMessage] = useState('');
   const [guestbookEntries, setGuestbookEntries] = useState([]);
+  const chatContainerRef = useRef(null);
 
   // Replace with your Firebase configuration
   const firebaseConfig = {
@@ -25,7 +26,7 @@ const Guestbook = () => {
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
 
-  const db = getDatabase();
+  const db = getDatabase(); // Define the Firebase database instance
 
   useEffect(() => {
     // Fetch guestbook entries from Firebase when the component mounts
@@ -36,10 +37,13 @@ const Guestbook = () => {
         if (data) {
           const entries = Object.values(data);
           setGuestbookEntries(entries);
+
+          // Scroll to the bottom of the chat container
+          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
       }
     });
-  }, []);
+  }, [chatContainerRef, db]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,16 +60,19 @@ const Guestbook = () => {
 
     // Clear the input fields
     setMessage('');
+
+    // Scroll to the bottom of the chat container
+    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   };
 
   return (
     <div className="chatbox">
-      <div className="messages">
+      <div className="messages" ref={chatContainerRef}>
         <br></br><h3 className="chat-title">Pierdolnik:</h3>
         <ul className="message-list">
           {guestbookEntries.map((entry, index) => (
             <li key={index} className="message">
-              <strong className="username" style={{color: "red"}}>{entry.name}:</strong> {entry.message}
+              <strong className="username" style={{ color: "red" }}>{entry.name}:</strong> {entry.message}
             </li>
           ))}
         </ul>
