@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, push, onValue } from 'firebase/database';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import './guestbook.css'; // Import the CSS
 
 const Guestbook = () => {
   const [name, setName] = useState('');
+  const [username, setUsername] = useState(localStorage.getItem('username') || ''); // Load username from local storage
   const [message, setMessage] = useState('');
   const [guestbookEntries, setGuestbookEntries] = useState([]);
 
-  // Your Firebase configuration here
+  // Replace with your Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyCGD41f7YT-UQyGZ7d1GzzB19B9wDNbg58",
     authDomain: "guestbook-73dfc.firebaseapp.com",
@@ -45,52 +47,50 @@ const Guestbook = () => {
     // Push the new entry to the Firebase Realtime Database
     const entriesRef = ref(db, 'guestbookEntries');
     push(entriesRef, {
-      name,
+      name: username, // Use the username in the entry
       message,
     });
 
+    // Save the username to local storage
+    localStorage.setItem('username', username);
+
     // Clear the input fields
-    setName('');
     setMessage('');
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ width: '30%' }}>
-        <h2>Chatbox</h2>
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{color:"white"}}>Name:</label>
-            <input
-              type="text"
-              style={{ width: '100%' }}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{color:"white"}}>Message:</label>
-            <textarea
-              style={{ width: '100%', height: '100%' }}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-      <div style={{ width: '65%', border: '1px solid #ccc', padding: '1rem', overflowY: 'scroll', maxHeight: '400px' }}>
-        <h3 style={{color:"white"}}>Entries:</h3>
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
+    <div className="chatbox">
+      <div className="messages">
+        <br></br><h3 className="chat-title">Pierdolnik:</h3>
+        <ul className="message-list">
           {guestbookEntries.map((entry, index) => (
-            <li key={index} style={{color:"red", fontSize: '14px', marginBottom: '0.5rem' }}>
-              <strong style={{color:"white"}}>{entry.name}:</strong > {entry.message}
+            <li key={index} className="message">
+              <strong className="username" style={{color: "red"}}>{entry.name}:</strong> {entry.message}
             </li>
           ))}
         </ul>
       </div>
+      <form className="form" onSubmit={handleSubmit}>
+        <input 
+          type="text"
+          className="username-input"
+          placeholder="Your username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          className="message-input"
+          placeholder="Type your message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          required
+        />
+        <button type="submit" className="send-button">
+          Send
+        </button>
+      </form>
     </div>
   );
 };

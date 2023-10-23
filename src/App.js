@@ -4,7 +4,7 @@ import Navbar from './compartments/navbar';
 import Table from './compartments/table';
 import Games from './compartments/games';
 import Footer from './compartments/footer';
-import Guestbook from './compartments/guestbook';
+import Guestbook from './compartments/chatbox';
 
 function App() {
   return (
