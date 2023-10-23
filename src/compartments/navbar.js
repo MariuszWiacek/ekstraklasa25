@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css'; // Import the CSS file
+import footballLogo from '../images/icon.jpg'; // Replace with your football logo path
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,10 +20,25 @@ const Navbar = () => {
     background: 'linear-gradient(to right, darkgreen, black)',
   };
 
+  const logoStyle = {
+    width: '30px', // Adjust the size of the logo as needed
+    marginRight: '10px', // Add spacing between the logo and text
+  };
+
+  const brandStyle = {
+    display: 'flex',
+    alignItems: 'center', // Align the logo and text vertically
+  };
+
+  const linksStyle = {
+    marginLeft: 'auto', // Push the links to the right
+  };
+
   return (
     <nav className={`navbar navbar-expand-lg navbar-light navbar-white`} style={navbarStyle}>
       <div className="container">
-        <Link to="/" className="navbar-brand">
+        <Link to="/" className="navbar-brand" style={brandStyle}>
+          <img src={footballLogo} alt="Football Logo" style={logoStyle} />
           Superliga
         </Link>
         <button
@@ -33,7 +49,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className={menuClass} id="navbarNav">
-          <ul className="navbar-nav ml-auto">
+          <ul className="navbar-nav" style={linksStyle}>
             <li className="nav-item">
               <Link to="/table" className="nav-link" onClick={closeMenu}>
                 League Table

@@ -38,3 +38,35 @@ h2 {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+ /* infobar 
+
+/* InfoBar.css */
+.info-bar-container {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.info-bar {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-message {
+  display: inline-block;
+  margin: 0 10px;
+  white-space: nowrap;
+  animation: scrollInfoMessage 10s linear infinite; /* Adjust the animation duration as needed */
+}
+
+@keyframes scrollInfoMessage {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
