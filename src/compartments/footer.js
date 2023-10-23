@@ -11,7 +11,7 @@ const Footer = () => {
     position: 'fixed',
     bottom: 0,
     width: '100%',
-    height: '20%', // Set the maximum height to 20%
+    height: '25%', // Set the maximum height to 20%
   };
 
   const whiteBackgroundStyle = {
@@ -27,7 +27,7 @@ const Footer = () => {
     position: 'fixed',
     bottom: 0,
     width: '100%',
-    height: '5%', // Height of the "MW" section
+    height: '5%', 
   };
 
   return (
@@ -68,7 +68,7 @@ const Footer = () => {
               </ul>
             </div>
             <div className="col-md-3">
-              <div style={whiteBackgroundStyle}>
+              <div>
                 <p>&copy; Superliga</p>
               </div>
             </div>

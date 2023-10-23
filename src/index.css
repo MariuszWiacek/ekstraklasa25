@@ -5,10 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url("../src/images/bcg.png"); /* Specify the correct path to your image */
+  background-image: url("../src/images/bcg.png") !important; /* Specify the correct path to your image */
   background-size: cover; /* Adjust the background size as needed */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   position: relative; /* Needed for the overlay */
+  background-attachment: fixed; /* Ensures the image covers the full height */
 
   /* Add a pseudo-element to create the overlay */
   &::before {

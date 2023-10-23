@@ -1,10 +1,7 @@
 import React from 'react';
-import { teamNames } from './teamdata'
-const Table = () => {
-  const tableStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.178)',
-  };
+import { teamNames } from './teamdata';
 
+const Table = () => {
   // Create an array of teams with random points
   const teams = teamNames.map((teamName) => ({
     name: teamName,
@@ -18,7 +15,7 @@ const Table = () => {
     <div>
       <h2>League Table</h2>
       <div className="table-responsive">
-        <table className="table table-sm" style={tableStyle}>
+        <table className="table table-sm">
           <thead>
             <tr>
               <th>Team</th>
