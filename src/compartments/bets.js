@@ -1,46 +1,8 @@
 import React, { useState, useEffect } from 'react';
-
-const initialGames = [
-  {
-    id: 1,
-    home: 'GKS Katowice',
-    away: 'Legia Warszawa',
-    score: '',
-    bet: '',
-  },
-  {
-    id: 2,
-    home: 'Wisła Kraków',
-    away: 'Lech Poznań',
-    score: '',
-    bet: '',
-  },
-  {
-    id: 3,
-    home: 'Jagiellonia Białystok',
-    away: 'Cracovia Kraków',
-    score: '',
-    bet: '',
-  },
-  {
-    id: 4,
-    home: 'Śląsk Wrocław',
-    away: 'Pogoń Szczecin',
-    score: '',
-    bet: '',
-  },
-  {
-    id: 5,
-    home: 'Legia Warszawa',
-    away: 'Raków Częstochowa',
-    score: '',
-    bet: '',
-  },
-  // Add more games here
-];
+import gameData from './gameData.json'; // Import the JSON data
 
 const Bets = () => {
-  const [games, setGames] = useState(initialGames);
+  const [games, setGames] = useState(gameData); // Use the imported gameData
   const [username, setUsername] = useState('');
   const [submittedData, setSubmittedData] = useState([]);
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
@@ -117,7 +79,7 @@ const Bets = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#212529', color: 'aliceblue', padding: '20px' }}>
+    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
       <h2 style={{ textAlign: 'center', borderBottom: '1px solid #444' }}>Football Games to Bet On</h2>
       <div style={{ textAlign: 'center', marginBottom: '10px', borderBottom: '1px solid #444' }}>
         <input style={{ margin: '10px' }}

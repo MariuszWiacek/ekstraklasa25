@@ -1,0 +1,39 @@
+[
+    {
+      "id": 1,
+      "home": "GKS Katowice",
+      "away": "Legia Warszawa",
+      "score": "",
+      "bet": ""
+    },
+    {
+      "id": 2,
+      "home": "Wisła Kraków",
+      "away": "Lech Poznań",
+      "score": "",
+      "bet": ""
+    },
+    {
+      "id": 3,
+      "home": "Jagiellonia Białystok",
+      "away": "Cracovia Kraków",
+      "score": "",
+      "bet": ""
+    },
+    {
+      "id": 4,
+      "home": "Śląsk Wrocław",
+      "away": "Pogoń Szczecin",
+      "score": "",
+      "bet": ""
+    },
+    {
+      "id": 5,
+      "home": "Legia Warszawa",
+      "away": "Raków Częstochowa",
+      "score": "",
+      "bet": ""
+    }
+    
+  ]
+  
