@@ -22,23 +22,22 @@ const Bets = () => {
     }
   }, []);
 
-  const handleGameChange = (gameId, selectedBet) => {
-    const updatedGames = games.map((game) =>
-      game.id === gameId ? { ...game, bet: selectedBet } : game
-    );
-    setGames(updatedGames);
-  };
-
   const handleScoreChange = (gameId, score) => {
-    // Ensure that the score follows the format "1:1"
-    // Allow only two numbers and automatically insert a colon
-    score = score.replace(/[^0-9]/g, ''); // Remove any non-numeric characters
-    if (score.length > 1) {
-      // If the input contains two numbers, insert a colon
-      score = score[0] + ':' + score[1];
+    // Allow automatic detection of the type (1, X, or 2)
+    let type = '';
+    if (/^\d+:\d+$/.test(score)) {
+      // Check if the score format is valid (e.g., "1:1")
+      if (score === '0:0' || score === '1:1' || score === '2:2' || score === '3:3') {
+        type = 'X'; // Set type to 'X' for draw
+      } else if (score.startsWith('0:')) {
+        type = '2'; // Set type to '2' for away win
+      } else if (score.startsWith('1:') || score.startsWith('2:') || score.startsWith('3:')) {
+        type = '1'; // Set type to '1' for home win
+      }
     }
+  
     const updatedGames = games.map((game) =>
-      game.id === gameId ? { ...game, score: score } : game
+      game.id === gameId ? { ...game, score: score, bet: type } : game
     );
     setGames(updatedGames);
   };
@@ -56,7 +55,7 @@ const Bets = () => {
     // Save the submitted data to local storage
     const newData = games
       .filter((game) => game.bet && game.score)
-      .map((game) => `${game.home} - ${game.away}, Bet: ${game.bet}, Score: ${game.score}`);
+      .map((game) => `${game.home} vs. ${game.away}, Bet: ${game.bet}, Score: ${game.score}`);
 
     const updatedData = [...newData, ...submittedData];
     localStorage.setItem('submittedData', JSON.stringify(updatedData));
@@ -64,6 +63,7 @@ const Bets = () => {
     // Set the submitted data and show it
     setSubmittedData(updatedData);
     setIsDataSubmitted(true);
+
 
     // Send the data to Firebase here
     // Example: Use Firebase Realtime Database or Firestore
@@ -76,7 +76,10 @@ const Bets = () => {
     setUsername('');
     setSubmittedData([]);
     setIsDataSubmitted(false);
+    setGames(gameData);
   };
+
+  
 
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
@@ -89,56 +92,50 @@ const Bets = () => {
           onChange={(e) => setUsername(e.target.value)}
         />
       </div>
-      {games.map((game, index) => (
-        <div key={game.id} style={{ textAlign: 'center', marginBottom: '10px', borderBottom: '1px solid #444', paddingBottom: '10px' }}>
-          <p>
-             {game.home} vs. {game.away}
-          </p>
-          <div style={{ display: 'flex', justifyContent:"center", alignItems: 'center', marginLeft: '5%' }}>
-           <label>
-              <span style={{   color: 'aliceblue' , marginLeft: '0.5%' }}>1</span>
-              <input
-                type="radio"
-                name={`bet-${game.id}`}
-                value="1"
-                checked={game.bet === '1'}
-                onChange={() => handleGameChange(game.id, '1')}
-              />
-            </label>
-            <label>
-              <span style={{ color: 'aliceblue',marginLeft: '1%' }}>X</span>
-              <input
-                type="radio"
-                name={`bet-${game.id}`}
-                value="X"
-                checked={game.bet === 'X'}
-                onChange={() => handleGameChange(game.id, 'X')}
-              />
-            </label>
-            <label>
-              <span style={{ color: 'aliceblue',  marginLeft: '1%' }}>2</span>
-              <input
-                type="radio"
-                name={`bet-${game.id}`}
-                value="2"
-                checked={game.bet === '2'}
-                onChange={() => handleGameChange(game.id, '2')}
-              />
-            </label>
-            <input
-        
-              type="text"
-              placeholder="1:1"
-              value={game.score}
-              style={{ width: '50px', fontSize: '16px', marginLeft: '5%' }}
-              onChange={(e) => handleScoreChange(game.id, e.target.value)}
-            /></div>
-          
-        </div>
-      ))}
-
-
-<div style={{ textAlign: 'center' }}>
+      <table style={{ width: '100%', border: '1px solid #444', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th style={{ borderBottom: '1px solid #444' }}>Home Team</th>
+            <th style={{ borderBottom: '1px solid #444' }}>Away Team</th>
+            <th style={{ borderBottom: '1px solid #444' }}>Result</th>
+            <th style={{ borderBottom: '1px solid #444' }}>Your Bet</th>
+            <th style={{ borderBottom: '1px solid #444' }}>Your Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {games.map((game) => (
+            <tr key={game.id} style={{ borderBottom: '1px solid #444' }}>
+              <td>{game.home}</td>
+              <td>{game.away}</td>
+              <td>{game.result}</td>
+              <td>
+                <select
+                  value={game.bet}
+                  onChange={(e) => handleScoreChange(game.id, game.score)}
+                  disabled // Disable type selection
+                >
+                  <option value="1">1</option>
+                  <option value="X">X</option>
+                  <option value="2">2</option>
+                </select>
+              </td>
+              <td>
+              <input style={{width:"50px"}}
+  type="text"
+  placeholder="1:1"
+  value={game.score}
+  onChange={(e) => {
+    const value = e.target.value.replace(/[^0-9:]/g, ''); // Remove non-numeric and non-colon characters
+    const score = value.replace(/(\d{1})(\d{1})/, '$1:$2'); // Insert a colon after the first digit
+    handleScoreChange(game.id, score);
+  }}
+/>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
           style={{
             backgroundColor: '#DC3545',
@@ -155,7 +152,6 @@ const Bets = () => {
         >
           Submit
         </button>
-
         <button
           style={{
             backgroundColor: '#0D6EFD',
@@ -175,13 +171,11 @@ const Bets = () => {
       </div>
       {/* Display submitted data */}
       {isDataSubmitted && (
-        <div style={{textAlign:"center"}}>
+        <div style={{ textAlign: 'center' }}>
           <h3 style={{ color: 'red' }}>{username}'s submitted bets: </h3>
-    
-      {submittedData.map((data, index) => (
-        <div key={index}>{data}</div>
-      ))}
-    
+          {submittedData.map((data, index) => (
+            <div key={index}>{data}</div>
+          ))}
         </div>
       )}
     </div>
