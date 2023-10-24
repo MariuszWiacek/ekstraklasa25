@@ -16,14 +16,18 @@ const Home = () => {
         Welcome to <span style={{ ...brandStyle, animation: 'pulse 2s infinite' }}>Superliga</span>
       </h1>
       <p style={{ color: 'white' }}>Place where you can have some fun guessing football scores</p>
+      <div style={{ display:"flex", justifyContent:"space-around", animation: 'bounce 2s infinite', cursor: 'pointer' }}>
+      
+      <Link to="/table" >
+        <span className="animated-text">Tabela</span>
+      </Link>
       <Link to="/bets">
-        <div className="arrow" style={{ position: 'relative', animation: 'bounce 2s infinite', cursor: 'pointer' }}>
-          <span style={{ fontSize: '24px' }}>➜</span>
-        </div>
+        <span style={{color: "red" }} className="animated-text">Obstawiaj!</span>
       </Link>
-      <Link to="/bets" style={{ color: 'white', textDecoration: 'underline', position: 'relative' }}>
-        <span className="animated-text">Guess Your Scores Here</span>
+      <Link to="/games">
+        <span className="animated-text">Wyniki</span>
       </Link>
+      </div>
     </div>
   );
 };
