@@ -46,7 +46,7 @@ const Navbar = () => {
   return (
     <nav className={`navbar navbar-expand-lg navbar-light navbar-white`} style={navbarStyle}>
       <div className="container">
-        <Link to="/" className="navbar-brand" style={brandStyle}>
+        <Link to="/home" className="navbar-brand" style={brandStyle}>
           <img src={footballLogo} alt="Football Logo" style={logoStyle} />
           Superliga
         </Link>

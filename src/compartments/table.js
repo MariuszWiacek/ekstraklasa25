@@ -26,7 +26,7 @@ const Table = () => {
 
   return (
     <div>
-      <h2>League Table</h2>
+      <h2 style={{textAlign:"center"}}>League Table</h2>
       <div className="table-responsive">
         <div style={tableStyle}>
           <table style={{ width: '100%' }}>

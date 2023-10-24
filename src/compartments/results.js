@@ -24,10 +24,10 @@ const Games = () => {
 
   return (
     <div>
-      <h2>Recent Games</h2>
+      <h2 style={{textAlign:"center"}}>Recent Games</h2>
       <div className="table-responsive">
         <div style={tableStyle}>
-          <table style={{ width: '100%' }}>
+          <table style={{ width: '100%', }}>
             <thead>
               <tr>
                 <th style={cellStyle}>Home Team</th>

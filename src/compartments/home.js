@@ -16,7 +16,7 @@ const Home = () => {
         Welcome to <span style={{ ...brandStyle, animation: 'pulse 2s infinite' }}>Superliga</span>
       </h1>
       <p style={{ color: 'white' }}>Place where you can have some fun guessing football scores</p>
-      <div style={{ display:"flex", justifyContent:"space-around", animation: 'bounce 2s infinite', cursor: 'pointer' }}>
+      <div style={{ display:"flex", justifyContent:"space-around", animation: 'bounce 2s infinite', cursor: 'pointer', padding:"5%" }}>
       
       <Link to="/table" >
         <span className="animated-text">Tabela</span>
