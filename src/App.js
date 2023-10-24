@@ -5,19 +5,25 @@ import Table from './compartments/table';
 import Games from './compartments/games';
 import Footer from './compartments/footer';
 import Guestbook from './compartments/chatbox';
-import InfoBar from './compartments/infobar'; // Import the InfoBar component
+import InfoBar from './compartments/infobar';
+import Home from './compartments/home';
+import Bets from './compartments/bets';
 
 function App() {
+  const isHomePage = window.location.pathname === '/';
+
   return (
     <Router>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
-        <InfoBar /> {/* Add the InfoBar component */}
+        <InfoBar />
         <div className="container" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          {isHomePage && <Home />}
           <Routes>
             <Route path="/table" element={<Table />} />
             <Route path="/games" element={<Games />} />
             <Route path="/guestbook" element={<Guestbook />} />
+            <Route path="/bets" element={<Bets />} />
           </Routes>
         </div>
         <Footer />

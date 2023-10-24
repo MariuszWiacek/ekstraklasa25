@@ -29,10 +29,23 @@ a{
 h2 {
   color: aliceblue !important;
 }
+h1 {
+  color: aliceblue !important;
+  font-family: "Rubik"
+}
+
+p {
+  color: aliceblue;
+  font-family: "Rubik";
+}
 .navbar-toggler {
   color: #30292900 !important;
   background-color: rgba(255, 255, 255, 0.763) !important;
   font-size: 16px !important;
+}
+span {
+  font-size: 16px;
+  font-family: "Rubik";
 }
 
 code {
@@ -69,4 +82,16 @@ code {
   100% {
     transform: translateX(-100%);
   }
+}
+
+@media (max-width: 768px) {
+  span {
+    font-size: 12px;
+  }
+  p {
+    font-size: 12px;
+  }
+
+  a {font-size: 12px;}
+  h2 {font-size: 20px !important;}
 }

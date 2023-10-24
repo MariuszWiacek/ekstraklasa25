@@ -77,7 +77,7 @@ const Guestbook = () => {
         <ul className="message-list">
           {guestbookEntries.map((entry, index) => (
             <li key={index} className="message">
-              <strong className="username" style={{ color: "red" }}>{entry.name}:</strong> {entry.message}
+              <strong className="username" style={{ color: "red"}}>{entry.name}:</strong> {entry.message}
             </li>
           ))}
         </ul>
