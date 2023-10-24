@@ -5,6 +5,7 @@ import { faFutbol } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => {
   const footerStyle = {
+    fontSize: "15px",
     backgroundColor: 'darkgreen',
     backgroundImage: 'linear-gradient(to right, darkgreen, black)',
     color: 'white',
@@ -14,7 +15,7 @@ const Footer = () => {
     backgroundColor: 'black',
     textAlign: 'center',
     color: 'white',
-    fontSize: '12px', // Adjust the font size as needed
+    fontSize: '12px', 
   };
 
   return (
@@ -23,13 +24,13 @@ const Footer = () => {
         <footer style={footerStyle}>
           <div className="container">
             <div className="row">
-              <div className="col-md-3">
+              <div className="col-md-2">
                 <a href="#">
-                  <FontAwesomeIcon icon={faFutbol} size="2x" /> Football Club
+                  <FontAwesomeIcon icon={faFutbol} size="1.5x" /> Football Club
                 </a>
               </div>
-              <div className="col-md-3">
-                <div className="social-icons">
+              <div className="col-md-6">
+                <div className="social-icons" style={{display:"flex", justifyContent:"space-around"}}>
                   <a href="#">
                     <FontAwesomeIcon icon={faGithub} size="2x" />
                   </a>
@@ -41,21 +42,10 @@ const Footer = () => {
                   </a>
                 </div>
               </div>
-              <div className="col-md-3">
-                <p>Contact Us:</p>
-                <ul>
-                  <li>
-                    <a href="#">Email</a>
-                  </li>
-                  <li>
-                    <a href="#">Phone</a>
-                  </li>
-                  <li>
-                    <a href="#">Address</a>
-                  </li>
-                </ul>
+              <div className="col-md-2">
+                <p>Contact Us</p>
               </div>
-              <div className="col-md-3">
+              <div className="col-md-2">
                 <div>
                   <p>&copy; Superliga</p>
                 </div>

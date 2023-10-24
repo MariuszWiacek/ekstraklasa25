@@ -17,7 +17,7 @@ function App() {
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
         <InfoBar />
-        <div className="container" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div className="container" style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop:"3%" }}>
           {isHomePage && <Home />}
           <Routes>
             <Route path="/table" element={<Table />} />

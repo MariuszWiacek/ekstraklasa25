@@ -17,17 +17,26 @@ const Navbar = () => {
   const menuClass = isMenuOpen ? "collapse navbar-collapse show" : "collapse navbar-collapse";
 
   const navbarStyle = {
+    position: 'fixed', // Fixed position
+    top: 0, // Stick to the top
+    width: '100%', // Full width
     background: 'linear-gradient(to right, black, black, black)',
+    zIndex: 1000, // Ensure it's above other content
   };
 
   const logoStyle = {
     width: '30px', // Adjust the size of the logo as needed
     marginRight: '10px', // Add spacing between the logo and text
+    background: 'transparent', // Make the logo background transparent
   };
 
   const brandStyle = {
     display: 'flex',
     alignItems: 'center', // Align the logo and text vertically
+    fontFamily: 'Impact',
+    fontSize: '36px',
+    fontStyle: 'italic',
+    letterSpacing: '2px',
   };
 
   const linksStyle = {
@@ -50,7 +59,6 @@ const Navbar = () => {
         </button>
         <div className={menuClass} id="navbarNav">
           <ul className="navbar-nav" style={linksStyle}>
-      
             <li className="nav-item">
               <Link to="/bets" className="nav-link" onClick={closeMenu}>
                 Bets
