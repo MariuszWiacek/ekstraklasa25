@@ -7,15 +7,14 @@ const Footer = () => {
   const footerStyle = {
     fontSize: "15px",
     backgroundColor: 'darkgreen',
-    backgroundImage: 'linear-gradient(to right, darkgreen, black)',
+    backgroundImage: 'linear-gradient(to right, red, black, red)',
     color: 'white',
   };
 
   const mwStyle = {
-    backgroundColor: 'black',
     textAlign: 'center',
-    color: 'white',
-    fontSize: '12px', 
+    fontSize: '12px',
+    backgroundImage: 'linear-gradient(to right, red, black, red)',
   };
 
   return (
@@ -24,13 +23,8 @@ const Footer = () => {
         <footer style={footerStyle}>
           <div className="container">
             <div className="row">
-              <div className="col-md-2">
-                <a href="#">
-                  <FontAwesomeIcon icon={faFutbol} size="1.5x" /> Football Club
-                </a>
-              </div>
               <div className="col-md-6">
-                <div className="social-icons" style={{display:"flex", justifyContent:"space-around"}}>
+                <div className="social-icons" style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
                   <a href="#">
                     <FontAwesomeIcon icon={faGithub} size="2x" />
                   </a>
@@ -42,13 +36,12 @@ const Footer = () => {
                   </a>
                 </div>
               </div>
-              <div className="col-md-2">
+              <div className="col-md-6" style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+                <a href="#">
+                  <FontAwesomeIcon icon={faFutbol} size="1.5x" /> Football Club
+                </a>
+                <p>&copy; Superliga</p>
                 <p>Contact Us</p>
-              </div>
-              <div className="col-md-2">
-                <div>
-                  <p>&copy; Superliga</p>
-                </div>
               </div>
             </div>
           </div>

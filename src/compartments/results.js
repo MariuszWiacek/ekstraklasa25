@@ -17,24 +17,23 @@ const Games = () => {
   };
 
   const cellStyle = {
-    color: 'AliceBlue', // Font color
-    fontSize: '1.2rem', // Font size
-    padding: '10px', // Add some padding for better spacing
+    fontSize: '16px', 
+color: "grey",
+    '@media (max-width: 767px)': {
+      fontSize: '1px', 
+    },
+
+    color: 'AliceBlue',
+    padding: '10px', 
   };
 
   return (
     <div>
-      <h2 style={{textAlign:"center"}}>Recent Games</h2>
+      <h2 style={{ textAlign: "center" }}>Wyniki</h2>
       <div className="table-responsive">
         <div style={tableStyle}>
           <table style={{ width: '100%', }}>
-            <thead>
-              <tr>
-                <th style={cellStyle}>Home Team</th>
-                <th style={cellStyle}>Away Team</th>
-                <th style={cellStyle}>Result</th>
-              </tr>
-            </thead>
+            
             <tbody>
               {games.map((game, index) => (
                 <tr key={index}>

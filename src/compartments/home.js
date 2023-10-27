@@ -5,29 +5,27 @@ const brandStyle = {
   fontFamily: 'Impact',
   fontSize: '36px',
   fontStyle: 'italic',
-  letterSpacing: '2px',
+  letterSpacing: '5x',
   color: 'red',
+  textShadow: '0.5 0.5 5px white', // Add a white border
+};
+
+const homeStyle = {
+  textAlign: 'center',
+  marginTop: '5vh',
+  background: `url("path/to/pitch.png") no-repeat center center fixed`,
+  backgroundSize: 'cover',
 };
 
 const Home = () => {
   return (
-    <div style={{ textAlign: 'center', marginTop: '5vh' }}>
-      <h1 style={{ fontSize: '36px', color: 'aliceblue' }}>
-        Welcome to <span style={{ ...brandStyle, animation: 'pulse 2s infinite' }}>Superliga</span>
+    <div style={homeStyle}>
+      <h1 style={{ color: 'white' }}>
+        <span style={brandStyle}>Superliga</span>
       </h1>
-      <p style={{ color: 'white' }}>Place where you can have some fun guessing football scores</p>
-      <div style={{ display:"flex", justifyContent:"space-around", animation: 'bounce 2s infinite', cursor: 'pointer', padding:"5%" }}>
-      
-      <Link to="/table" >
-        <span className="animated-text">Tabela</span>
-      </Link>
-      <Link to="/bets">
-        <span style={{color: "red" }} className="animated-text">Obstawiaj!</span>
-      </Link>
-      <Link to="/games">
-        <span className="animated-text">Wyniki</span>
-      </Link>
-      </div>
+      <p style={{ color: 'white', animation: 'fade-in 1.5s ease-out' }}>
+        Miejsce, gdzie możesz się dobrze bawić, obstawiając wyniki meczów piłkarskich
+      </p>
     </div>
   );
 };

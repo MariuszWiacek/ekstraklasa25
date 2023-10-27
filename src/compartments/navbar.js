@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../App.css'; // Import the CSS file
-import footballLogo from '../images/icon.jpg'; // Replace with your football logo path
+import '../App.css';
+import footballLogo from '../images/icon.jpg';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,64 +14,67 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  const menuClass = isMenuOpen ? "collapse navbar-collapse show" : "collapse navbar-collapse";
+  const menuClass = isMenuOpen ? 'collapse navbar-collapse show' : 'collapse navbar-collapse';
 
   const navbarStyle = {
-    position: 'fixed', // Fixed position
-    top: 0, // Stick to the top
-    width: '100%', // Full width
-    background: 'linear-gradient(to right, black, black, black)',
-    zIndex: 1000, // Ensure it's above other content
+    position: 'fixed',
+    top: 0,
+    width: '100%',
+    background: 'linear-gradient(to right, black, red, black)',
+    zIndex: 1000,
   };
 
   const logoStyle = {
-    width: '30px', // Adjust the size of the logo as needed
-    marginRight: '10px', // Add spacing between the logo and text
-    background: 'transparent', // Make the logo background transparent
+    width: '30px',
+    marginRight: '10px',
+    background: 'transparent',
   };
 
   const brandStyle = {
     display: 'flex',
-    alignItems: 'center', // Align the logo and text vertically
+    alignItems: 'center',
     fontFamily: 'Impact',
     fontSize: '36px',
     fontStyle: 'italic',
     letterSpacing: '2px',
+    color: 'red', // Set the text color to red
   };
 
   const linksStyle = {
-    marginLeft: 'auto', // Push the links to the right
+    marginLeft: 'auto',
   };
 
   return (
     <nav className={`navbar navbar-expand-lg navbar-light navbar-white`} style={navbarStyle}>
       <div className="container">
         <Link to="/home" className="navbar-brand" style={brandStyle}>
-          <img src={footballLogo} alt="Football Logo" style={logoStyle} />
+          <img src={footballLogo} alt="Logo piłkarski" style={logoStyle} />
           Superliga
         </Link>
         <button
-          className="navbar-toggler"
+          className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
           type="button"
           onClick={toggleMenu}
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
         </button>
         <div className={menuClass} id="navbarNav">
           <ul className="navbar-nav" style={linksStyle}>
             <li className="nav-item">
               <Link to="/bets" className="nav-link" onClick={closeMenu}>
-                Bets
+                Zakłady
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/table" className="nav-link" onClick={closeMenu}>
-                League Table
+                Tabela
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/games" className="nav-link" onClick={closeMenu}>
-                Games
+                Wyniki
               </Link>
             </li>
             <li className="nav-item">

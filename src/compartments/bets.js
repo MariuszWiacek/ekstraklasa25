@@ -83,7 +83,7 @@ const Bets = () => {
 
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', borderBottom: '1px solid #444' }}>Football Games to Bet On</h2>
+      <h2 style={{ textAlign: 'center', borderBottom: '1px solid #444' }}>Najblizsze mecze :</h2>
       <div style={{ textAlign: 'center', marginBottom: '10px', borderBottom: '1px solid #444' }}>
         <input style={{ margin: '10px' }}
           type="text"
@@ -172,7 +172,7 @@ const Bets = () => {
       {/* Display submitted data */}
       {isDataSubmitted && (
         <div style={{ textAlign: 'center' }}>
-          <h3 style={{ color: 'red' }}>{username}'s submitted bets: </h3>
+          <h3 style={{ color: 'red' }}>{username}  - twoje ostatnie zaklady: </h3>
           {submittedData.map((data, index) => (
             <div key={index}>{data}</div>
           ))}

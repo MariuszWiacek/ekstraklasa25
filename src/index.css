@@ -3,7 +3,7 @@ body {
   font-family: 'Syne', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url("../src/images/bcg.png") !important; /* Specify the correct path to your image */
+  background-image: url("../src/images/pitch.png") !important; /* Specify the correct path to your image */
   background-size: cover; /* Adjust the background size as needed */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   position: relative; /* Needed for the overlay */
@@ -52,7 +52,7 @@ p {
 }
 .navbar-toggler {
   color: #30292900 !important;
-  background-color: rgba(255, 255, 255, 0.763) !important;
+  background-color: rgba(255, 0, 0, 0.763) !important;
   font-size: 16px !important;
 }
 span {
@@ -70,6 +70,34 @@ code {
   max-width: 100%;
   overflow: hidden;
 }
+/* CSS in your App.css file or a separate CSS file */
+.navbar-toggler {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar-toggler .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 4px auto;
+  transition: 0.4s;
+}
+
+.navbar-toggler.open .bar:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 5px);
+}
+
+.navbar-toggler.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggler.open .bar:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -5px);
+}
+
 
 .info-bar {
   background-color: black;
@@ -125,22 +153,71 @@ code {
   }
 }
 
-/* Apply the animation to the "Superliga" text */
-span[style*='animation: pulse'] {
-  animation: pulse 2s infinite;
+@keyframes custom-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-background {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animated-text {
+  animation: slide-background 3s linear infinite, fade-in 1.5s;
+}
+
 
 
 
 
 @media (max-width: 768px) {
   span {
-    font-size: 12px;
+    font-size: 16px;
   }
   p {
-    font-size: 12px;
+    font-size: 14px;
   }
 
-  a {font-size: 12px;}
-  h2 {font-size: 20px !important;}
+  a {font-size: 14px;}
+  h2 {font-size: 24px !important;}
+  h1 {font-size: 20px !important;}
+
+  .cellStyle {
+    font-size: 16px !important; /* Adjust the font size for mobile devices */
+  }
+
+
+
 }

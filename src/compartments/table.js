@@ -14,19 +14,20 @@ const Table = () => {
   const tableStyle = {
     backgroundColor: '#212529ab', // Background color
     width: '100%',
-    maxWidth: '800px', // You can adjust the maximum width as needed
-    margin: '0 auto', // Center the table horizontally
+    maxWidth: '800px', 
+    margin: '0 auto', 
+    fontSize: '16px', 
   };
 
   const cellStyle = {
-    color: 'AliceBlue', // Font color
-    fontSize: '1.2rem', // Font size
-    padding: '10px', // Add some padding for better spacing
+    color: 'AliceBlue', 
+    padding: '10px',
+
   };
 
   return (
     <div>
-      <h2 style={{textAlign:"center"}}>League Table</h2>
+      <h2 style={{textAlign:"center", color: "red"}}>Tabela</h2>
       <div className="table-responsive">
         <div style={tableStyle}>
           <table style={{ width: '100%' }}>
