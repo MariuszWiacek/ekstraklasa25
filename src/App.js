@@ -15,10 +15,11 @@ function App() {
   return (
     <Router>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-       <Navbar />
-       <InfoBar />
-        
+        <Navbar />
+        <InfoBar />
+
         <div className="container" style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '5%' }}>
+          
           <Home />
           <Routes>
             <Route path="/table" element={<Table />} />

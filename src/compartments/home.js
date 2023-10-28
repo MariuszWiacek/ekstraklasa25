@@ -14,6 +14,7 @@ const Home = () => {
       <p style={{ color: 'grey', animation: 'fade-in 1.5s ease-out', fontStyle:'italic' }}>
         Superliga - Miejsce, gdzie możesz się dobrze bawić, obstawiając wyniki meczów piłkarskich
       </p>
+      <p style={{color: "white"}}>Nastepna kolejka : 22/11/2023</p>
     </div>
   );
 };
