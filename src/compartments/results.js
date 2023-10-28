@@ -28,8 +28,8 @@ color: "grey",
   };
 
   return (
-    <div>
-      <h2 style={{ textAlign: "center" }}>Wyniki</h2>
+    <div style={{paddingBottom:'5%'}}>
+      <h2 style={{ textAlign: "center",  textDecoration:'underline', paddingBottom:'2%'}}>Wyniki</h2>
       <div className="table-responsive">
         <div style={tableStyle}>
           <table style={{ width: '100%', }}>

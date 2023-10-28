@@ -5,17 +5,20 @@
     flex-direction: column;
     height: 100%;
     padding: 10px;
-    background-color: #00000000;
+    background-color: #ffffff00;
     overflow: hidden;
+  
   }
   
   /* Chat messages container */
   .messages {
+    
     font-family: 'Rubik', sans-serif;
+    font-size: 14px;
     flex: 1;
     border: 1px solid #ccc;
     padding: 10px;
-    background-color: #ffffff;
+    background-color: #2727277b;
     border-radius: 8px;
     overflow-y: scroll;
     scrollbar-width: thin;
@@ -29,7 +32,7 @@
   }
   
   .messages::-webkit-scrollbar-thumb {
-    background-color: #cd0000;
+    background-color: #fb000071;
   }
   
   /* Chat input form */
@@ -49,8 +52,8 @@
   
   .send-button {
     padding: 10px;
-    background-color: #ff0000;
-    color: #fff;
+    background-color: #ff00007b;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;

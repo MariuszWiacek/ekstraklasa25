@@ -6,15 +6,15 @@ import { faFutbol } from '@fortawesome/free-solid-svg-icons';
 const Footer = () => {
   const footerStyle = {
     fontSize: "15px",
-    backgroundColor: 'darkgreen',
-    backgroundImage: 'linear-gradient(to right, red, black, red)',
+    backgroundColor: 'black',
+    backgroundImage: 'linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(255, 0, 0, 0), rgba(0, 0, 0, 0))',
     color: 'white',
   };
 
   const mwStyle = {
     textAlign: 'center',
     fontSize: '12px',
-    backgroundImage: 'linear-gradient(to right, red, black, red)',
+    backgroundImage: 'linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(255, 0, 0, 0), rgba(0, 0, 0, 0))',
   };
 
   return (

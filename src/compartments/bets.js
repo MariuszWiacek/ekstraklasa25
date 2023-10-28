@@ -147,23 +147,25 @@ const Bets = () => {
             display: 'inline-block',
             margin: '10px',
             fontSize: '14px',
+            transition: 'background-color 0.3s', // Add a smooth transition effect
           }}
           onClick={handleSubmit}
         >
           Submit
         </button>
         <button
-          style={{
-            backgroundColor: '#0D6EFD',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            display: 'inline-block',
-            margin: '10px',
-            fontSize: '14px',
-          }}
+         style = {{
+          backgroundColor: 'rgba(13, 110, 253, 0.5)',
+          color: 'white',
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '10px',
+          cursor: 'pointer',
+          display: 'inline-block',
+          margin: '10px',
+          fontSize: '14px',
+          transition: 'background-color 0.3s', // Add a smooth transition effect
+        }}
           onClick={handleReset}
         >
           Reset

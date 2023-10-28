@@ -17,6 +17,7 @@ const Table = () => {
     maxWidth: '800px', 
     margin: '0 auto', 
     fontSize: '16px', 
+    
   };
 
   const cellStyle = {
@@ -26,8 +27,8 @@ const Table = () => {
   };
 
   return (
-    <div>
-      <h2 style={{textAlign:"center", color: "red"}}>Tabela</h2>
+    <div style={{paddingBottom:'5%'}}>
+      <h2 style={{textAlign:"center",  textDecoration:'underline' , paddingBottom:'2%'}}>Tabela</h2>
       <div className="table-responsive">
         <div style={tableStyle}>
           <table style={{ width: '100%' }}>
