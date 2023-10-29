@@ -42,6 +42,7 @@ const Navbar = () => {
 
   const linksStyle = {
     marginLeft: 'auto',
+    fontWeight: '700',
   };
 
   return (
