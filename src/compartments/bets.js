@@ -27,20 +27,23 @@ const Bets = () => {
     let type = '';
     if (/^\d+:\d+$/.test(score)) {
       // Check if the score format is valid (e.g., "1:1")
-      if (score === '0:0' || score === '1:1' || score === '2:2' || score === '3:3') {
+      const [homeScore, awayScore] = score.split(':').map(Number);
+  
+      if (homeScore === awayScore) {
         type = 'X'; // Set type to 'X' for draw
-      } else if (score.startsWith('0:')) {
-        type = '2'; // Set type to '2' for away win
-      } else if (score.startsWith('1:') || score.startsWith('2:') || score.startsWith('3:')) {
+      } else if (homeScore > awayScore) {
         type = '1'; // Set type to '1' for home win
+      } else {
+        type = '2'; // Set type to '2' for away win
       }
     }
-
+  
     const updatedGames = games.map((game) =>
       game.id === gameId ? { ...game, score: score, bet: type } : game
     );
     setGames(updatedGames);
   };
+  
 
   const handleSubmit = () => {
     // Check if data has already been submitted
