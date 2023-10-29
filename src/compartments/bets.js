@@ -90,12 +90,12 @@ const Bets = () => {
             style={{
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
               color: 'aliceblue',
-              fontSize: "12px",
+              fontSize: "10px",
               padding: '10px',
               margin: '10px',
               borderRadius: '10px',
               textAlign: 'center',
-              width: '90%', // Adjust the card width as needed
+              width: '100%', // Adjust the card width as needed
             }}
           >
             <h3 style={{ color: 'red' }}>{user}: </h3>
@@ -117,8 +117,8 @@ const Bets = () => {
 
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', borderBottom: '1px solid #444' }}>Najbliższe mecze:</h2>
-      <div style={{ textAlign: 'center', marginBottom: '10px', borderBottom: '1px solid #444' }}>
+      <h2 style={{ textAlign: 'center', }}>Aktualna kolejka:</h2><p style={{ textAlign: 'center', }}>22/11/2023</p>
+      <div style={{ textAlign: 'center', marginBottom: '10px',marginTop:"5%" }}>
         <input
           style={{ margin: '10px' }}
           type="text"
@@ -127,19 +127,19 @@ const Bets = () => {
           onChange={(e) => setUsername(e.target.value)}
         />
       </div>
-      <table style={{ width: '100%', border: '1px solid #444', borderCollapse: 'collapse' }}>
+      <table style={{ width: '100%', border: '0px solid #444', borderCollapse: 'collapse' , marginTop:"5%", }}>
         <thead>
           <tr>
-            <th style={{ borderBottom: '1px solid #444' }}>Home Team</th>
-            <th style={{ borderBottom: '1px solid #444' }}>Away Team</th>
-            <th style={{ borderBottom: '1px solid #444' }}>Result</th>
-            <th style={{ borderBottom: '1px solid #444' }}>Your Bet</th>
-            <th style={{ borderBottom: '1px solid #444' }}>Your Score</th>
+            <th style={{  borderBottom: '0.5px solid #444' }}>Home Team</th>
+            <th style={{ borderBottom: '0.5px solid #444' }}>Away Team</th>
+            <th style={{ borderBottom: '0.5px solid #444' }}>Result</th>
+            <th style={{ borderBottom: '0.5px solid #444' }}>Your Bet</th>
+            <th style={{ borderBottom: '0.5px solid #444' }}>Your Score</th>
           </tr>
         </thead>
         <tbody>
           {games.map((game) => (
-            <tr key={game.id} style={{ borderBottom: '1px solid #444' }}>
+            <tr key={game.id} style={{borderBottom: '0.5px solid #444' }}>
               <td>{game.home}</td>
               <td>{game.away}</td>
               <td>{game.result}</td>

@@ -12,7 +12,7 @@ const Games = () => {
   const tableStyle = {
     backgroundColor: '#212529ab', // Background color
     width: '100%',
-    maxWidth: '800px', // You can adjust the maximum width as needed
+    maxWidth: '90%', // You can adjust the maximum width as needed
     margin: '0 auto', // Center the table horizontally
   };
 
