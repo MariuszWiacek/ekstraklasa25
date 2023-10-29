@@ -4,7 +4,7 @@ import gameData from './gameData.json'; // Import the JSON data
 const Bets = () => {
   const [games, setGames] = useState(gameData); // Use the imported gameData
   const [username, setUsername] = useState('');
-  const [submittedData, setSubmittedData] = useState([]);
+  const [submittedData, setSubmittedData] = useState({});
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const Bets = () => {
         type = '1'; // Set type to '1' for home win
       }
     }
-  
+
     const updatedGames = games.map((game) =>
       game.id === gameId ? { ...game, score: score, bet: type } : game
     );
@@ -45,7 +45,7 @@ const Bets = () => {
   const handleSubmit = () => {
     // Check if data has already been submitted
     if (isDataSubmitted) {
-      alert('You have already submitted your bets!');
+      alert(`${username}, You have already submitted your bets!`);
       return;
     }
 
@@ -55,37 +55,69 @@ const Bets = () => {
     // Save the submitted data to local storage
     const newData = games
       .filter((game) => game.bet && game.score)
-      .map((game) => `${game.home} vs. ${game.away}, Bet: ${game.bet}, Score: ${game.score}`);
+      .map((game) => ({
+        home: game.home,
+        away: game.away,
+        bet: game.bet,
+        score: game.score,
+      }));
 
-    const updatedData = [...newData, ...submittedData];
+    const updatedData = { ...submittedData, [username]: newData };
     localStorage.setItem('submittedData', JSON.stringify(updatedData));
 
     // Set the submitted data and show it
     setSubmittedData(updatedData);
     setIsDataSubmitted(true);
-
-
-    // Send the data to Firebase here
-    // Example: Use Firebase Realtime Database or Firestore
   };
 
   const handleReset = () => {
     // Clear local storage and reset the state
     localStorage.removeItem('username');
-    localStorage.removeItem('submittedData');
     setUsername('');
-    setSubmittedData([]);
+    setSubmittedData({});
     setIsDataSubmitted(false);
     setGames(gameData);
   };
 
-  
+  const renderUserCards = () => {
+    if (isDataSubmitted) {
+      return Object.keys(submittedData).map((user, index) => (
+        <div key={index}>
+          <div className="card"
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              color: 'aliceblue',
+              fontSize: "12px",
+              padding: '10px',
+              margin: '10px',
+              borderRadius: '10px',
+              textAlign: 'center',
+              width: '90%', // Adjust the card width as needed
+            }}
+          >
+            <h3 style={{ color: 'red' }}>{user}: </h3>
+            {submittedData[user].map((bet, index) => (
+              <div key={index}>
+                {`${bet.home} vs. ${bet.away}, Bet: `}
+                <span style={{ color: 'red' }}>{bet.bet}</span>
+                {`, Score: `}
+                <span style={{ color: 'red' }}>{bet.score}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ));
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', borderBottom: '1px solid #444' }}>Najblizsze mecze :</h2>
+      <h2 style={{ textAlign: 'center', borderBottom: '1px solid #444' }}>Najbliższe mecze:</h2>
       <div style={{ textAlign: 'center', marginBottom: '10px', borderBottom: '1px solid #444' }}>
-        <input style={{ margin: '10px' }}
+        <input
+          style={{ margin: '10px' }}
           type="text"
           placeholder="Enter your username"
           value={username}
@@ -120,16 +152,17 @@ const Bets = () => {
                 </select>
               </td>
               <td>
-              <input style={{width:"50px"}}
-  type="text"
-  placeholder="1:1"
-  value={game.score}
-  onChange={(e) => {
-    const value = e.target.value.replace(/[^0-9:]/g, ''); // Remove non-numeric and non-colon characters
-    const score = value.replace(/(\d{1})(\d{1})/, '$1:$2'); // Insert a colon after the first digit
-    handleScoreChange(game.id, score);
-  }}
-/>
+                <input
+                  style={{ width: '50px' }}
+                  type="text"
+                  placeholder="1:1"
+                  value={game.score}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9:]/g, ''); // Remove non-numeric and non-colon characters
+                    const score = value.replace(/(\d{1})(\d{1})/, '$1:$2'); // Insert a colon after the first digit
+                    handleScoreChange(game.id, score);
+                  }}
+                />
               </td>
             </tr>
           ))}
@@ -154,32 +187,24 @@ const Bets = () => {
           Submit
         </button>
         <button
-         style = {{
-          backgroundColor: 'rgba(13, 110, 253, 0.5)',
-          color: 'white',
-          padding: '10px 20px',
-          border: 'none',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          display: 'inline-block',
-          margin: '10px',
-          fontSize: '14px',
-          transition: 'background-color 0.3s', // Add a smooth transition effect
-        }}
+          style={{
+            backgroundColor: 'rgba(13, 110, 253, 0.5)',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            display: 'inline-block',
+            margin: '10px',
+            fontSize: '14px',
+            transition: 'background-color 0.3s', // Add a smooth transition effect
+          }}
           onClick={handleReset}
         >
           Reset
         </button>
       </div>
-      {/* Display submitted data */}
-      {isDataSubmitted && (
-        <div style={{ textAlign: 'center' }}>
-          <h3 style={{ color: 'red' }}>{username}  - twoje ostatnie zaklady: </h3>
-          {submittedData.map((data, index) => (
-            <div key={index}>{data}</div>
-          ))}
-        </div>
-      )}
+      {renderUserCards()}
     </div>
   );
 };

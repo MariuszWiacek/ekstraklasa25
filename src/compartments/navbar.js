@@ -17,13 +17,12 @@ const Navbar = () => {
   const menuClass = isMenuOpen ? 'collapse navbar-collapse show' : 'collapse navbar-collapse';
 
   const navbarStyle = {
-   
+    position: 'fixed',
     top: 0,
     width: '100%',
-    background: 'linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(255, 0, 0, 0), rgba(0, 0, 0, 0))',
-    
+    background: 'rgba(0, 0, 0, 1)', // Replace with your desired background color
+    zIndex: 1000, // Set a high z-index to ensure it's on top
   };
-   
 
   const logoStyle = {
     width: '30px',

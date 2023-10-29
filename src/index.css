@@ -50,8 +50,12 @@ p {
   color: aliceblue;
   font-family: "Rubik";
 }
+td {
+  color: aliceblue !important;
+  font-family: "Rubik";
+}
 .navbar-toggler {
-  color: #30292900 !important;
+  color: #30292985 !important;
   background-color: aliceblue !important;
   font-size: 16px !important;
 }
@@ -99,20 +103,6 @@ code {
 }
 
 
-.info-bar {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: aliceblue !important;
-  padding: 10px;
-  text-align: center;
-  overflow: hidden;
-}
-
-.info-message {
-  display: inline-block;
-  margin: 0 10px;
-  white-space: nowrap;
-  animation: scrollInfoMessage 10s linear infinite; /* Adjust the animation duration as needed */
-}
 
 @keyframes scrollInfoMessage {
   0% {
@@ -202,6 +192,7 @@ code {
 
 
 @media (max-width: 768px) {
+  
   span {
     font-size: 16px;
   }

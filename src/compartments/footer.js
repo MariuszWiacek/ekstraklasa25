@@ -14,7 +14,7 @@ const Footer = () => {
   const mwStyle = {
     textAlign: 'center',
     fontSize: '12px',
-    backgroundImage: 'linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(255, 0, 0, 0), rgba(0, 0, 0, 0))',
+    backgroundImage: 'rgba(0, 0, 0, 0.6)'
   };
 
   return (

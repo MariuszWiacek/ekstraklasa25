@@ -22,8 +22,6 @@ color: "grey",
     '@media (max-width: 767px)': {
       fontSize: '1px', 
     },
-
-    color: 'AliceBlue',
     padding: '10px', 
   };
 

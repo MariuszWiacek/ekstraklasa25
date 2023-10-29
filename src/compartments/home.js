@@ -5,7 +5,7 @@ const homeStyle = {
   marginTop: '5vh',
   background: `url("path/to/pitch.png") no-repeat center center fixed`,
   backgroundSize: 'cover',
- 
+
 };
 
 const Home = () => {
