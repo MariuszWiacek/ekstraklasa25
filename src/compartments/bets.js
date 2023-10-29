@@ -70,7 +70,14 @@ const Bets = () => {
     const hasMissingBets = games.some((game) => !game.score);
 
     if (hasMissingBets) {
-      alert(`${username}, Please make a bet for all games before submitting.`);
+      setMissingBets(true);
+      alert('Please make a bet for all games before submitting.');
+      return;
+    }
+
+    // Check if the user has already submitted bets for the current round
+    if (submittedData[username]) {
+      alert('You have already submitted your bets for this round.');
       return;
     }
 
@@ -85,12 +92,7 @@ const Bets = () => {
       }));
 
     const updatedSubmittedData = { ...submittedData };
-
-    if (updatedSubmittedData[username]) {
-      updatedSubmittedData[username].push(...userBets);
-    } else {
-      updatedSubmittedData[username] = userBets;
-    }
+    updatedSubmittedData[username] = userBets;
 
     setSubmittedData(updatedSubmittedData);
 
@@ -98,8 +100,6 @@ const Bets = () => {
     dbRef.set(updatedSubmittedData);
     setIsDataSubmitted(true);
   };
-
-
 
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
@@ -146,7 +146,6 @@ const Bets = () => {
                 <select
                   value={game.bet}
                   onChange={(e) => handleScoreChange(game.id, game.score)}
-                  disabled
                 >
                   <option value="1">1</option>
                   <option value="X">X</option>
@@ -178,8 +177,8 @@ const Bets = () => {
             display: 'inlineblock',
             margin: '10px',
             fontSize: '14px',
-            width: '60%', 
-            transition: 'background-color 0.3s',
+            width: '60%',
+            transition: 'backgroundcolor 0.3s',
           }}
           onClick={handleSubmit}
         >
