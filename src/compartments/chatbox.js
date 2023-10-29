@@ -1,8 +1,22 @@
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, push, onValue } from 'firebase/database';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import './guestbook.css'; // Import the CSS
+
+import './guestbook.css';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCGD41f7YT-UQyGZ7d1GzzB19B9wDNbg58",
+  authDomain: "guestbook-73dfc.firebaseapp.com",
+  databaseURL: "https://guestbook-73dfc-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "guestbook-73dfc",
+  storageBucket: "guestbook-73dfc.appspot.com",
+  messagingSenderId: "674344514507",
+  appId: "1:674344514507:web:fc587317fa516369a3bc4e",
+  measurementId: "G-1TZ4B0BK9D"
+};
 
 const Guestbook = () => {
   const [name, setName] = useState('');
@@ -11,22 +25,10 @@ const Guestbook = () => {
   const [guestbookEntries, setGuestbookEntries] = useState([]);
   const chatContainerRef = useRef(null);
 
-  // Replace with your Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCGD41f7YT-UQyGZ7d1GzzB19B9wDNbg58",
-    authDomain: "guestbook-73dfc.firebaseapp.com",
-    databaseURL: "https://guestbook-73dfc-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "guestbook-73dfc",
-    storageBucket: "guestbook-73dfc.appspot.com",
-    messagingSenderId: "674344514507",
-    appId: "1:674344514507:web:fc587317fa516369a3bc4e",
-    measurementId: "G-1TZ4B0BK9D"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-
-  const db = getDatabase(); // Define the Firebase database instance
+  // Initialize a secondary Firebase app
+  const secondaryApp = initializeApp(firebaseConfig, 'secondary');
+  const analytics = getAnalytics(secondaryApp);
+  const db = getDatabase(secondaryApp);
 
   const scrollToBottom = () => {
     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -112,4 +114,6 @@ const Guestbook = () => {
   );
 };
 
+
 export default Guestbook;
+
