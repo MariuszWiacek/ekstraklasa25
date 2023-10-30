@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import gameData from './gameData.json';
 
 const Games = () => {
-  const [gameScores, setGameScores] = useState(gameData.map(() => ({ result: '' })));
-
   const tableStyle = {
     backgroundColor: '#212529ab',
     width: '100%',
@@ -14,50 +12,43 @@ const Games = () => {
   const cellStyle = {
     fontSize: '16px',
     color: 'grey',
-    '@media (max-width: 767px)': {
-      fontSize: '1px',
-    },
     padding: '10px',
   };
 
-  const handleResultChange = (index, newResult) => {
-    const newGameScores = [...gameScores];
-    newGameScores[index].result = newResult;
-    setGameScores(newGameScores);
+  const redStyle = {
+    color: 'red',
   };
 
-  const handleEnterPress = (event, index) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+  const determineType = (result) => {
+    if (!result) {
+      return "";
+    }
 
-    // You can choose to do something with the result here (e.g., display it).
-    console.log(`Result for game ${index}: ${gameScores[index].result}`);
+    const [homeScore, awayScore] = result.split(':').map(Number);
+    if (homeScore > awayScore) {
+      return "1";
+    } else if (homeScore < awayScore) {
+      return "2";
+    } else {
+      return "X";
+    }
   };
 
   return (
     <div style={{ paddingBottom: '5%' }}>
       <h2 style={{ textAlign: 'center', textDecoration: 'underline', paddingBottom: '2%' }}>
         Wyniki
-      </h2>
+      </h2><p  style={{ color: "grey", textAlign: 'center',paddingBottom: '2%' }}>ostatnia kolejka :</p>
       <div className="table-responsive">
         <div style={tableStyle}>
           <table style={{ width: '100%' }}>
             <tbody>
               {gameData.map((game, index) => (
                 <tr key={index}>
-                  <td style={cellStyle}>{game.home}:</td>
+                  <td style={cellStyle}>{game.home}</td>
                   <td style={cellStyle}>{game.away}</td>
-                  <td style={cellStyle}>
-                    <input
-                      type="text"
-                      value={gameScores[index].result}
-                      onChange={(e) => handleResultChange(index, e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          handleEnterPress(e, index); // Pass the event and index
-                        }
-                      }}
-                    />
-                  </td>
+                  <td style={cellStyle}>Wynik: <span style={redStyle}>{game.result || ""}</span></td>
+                  <td style={cellStyle}>Typ: <span style={redStyle}>{determineType(game.result)}</span></td>
                 </tr>
               ))}
             </tbody>
