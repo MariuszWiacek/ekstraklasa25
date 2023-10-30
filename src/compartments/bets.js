@@ -143,29 +143,30 @@ const Bets = () => {
           </tr>
         </thead>
         <tbody>
-          {games.map((game) => (
-            <tr key={game.id} style={{ borderBottom: '0.5px solid #444' }}>
-              <td>{game.home}</td>
-              <td>{game.away}</td>
-              <td>{game.result}</td>
-              <td>
-              <select value={game.bet} disabled>
-  <option value="1">1</option>
-  <option value="X">X</option>
-  <option value="2">2</option>
-</select>
-              </td>
-              <td>
-                <input
-                  style={{ width: '50px' }}
-                  type="text"
-                  placeholder="1:1"
-                  value={game.score}
-                  onChange={(e) => handleScoreChange(game.id, e.target.value)}
-                />
-              </td>
-            </tr>
-          ))}
+        {games.map((game) => (
+  <tr key={game.id} style={{ borderBottom: '0.5px solid #444' }}>
+    <td>{game.home}</td>
+    <td>{game.away}</td>
+    <td>{game.result}</td>
+    <td>
+      <select value={game.bet} disabled>
+        <option value="1">1</option>
+        <option value="X">X</option>
+        <option value="2">2</option>
+      </select>
+    </td>
+    <td>
+      <input
+        style={{ width: '50px' }}
+        type="text"
+        placeholder="1:1"
+        value={game.score}
+        onChange={(e) => handleScoreChange(game.id, e.target.value)}
+        maxLength="3" // Limit the input length to 3 characters
+      />
+    </td>
+  </tr>
+))}
         </tbody>
       </table>
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
