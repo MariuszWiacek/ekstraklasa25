@@ -5,14 +5,16 @@ import 'firebase/compat/database';
 import gameData from './gameData.json';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
-  authDomain: "bets-3887b.firebaseapp.com",
-  databaseURL: "https://bets-3887b-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "bets-3887b",
-  storageBucket: "bets-3887b.appspot.com",
-  messagingSenderId: "446338011209",
-  appId: "1:446338011209:web:bc4a33a19b763564992f98",
-  measurementId: "G-W9EB371N7C"
+
+    apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
+    authDomain: "bets-3887b.firebaseapp.com",
+    databaseURL: "https://bets-3887b-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "bets-3887b",
+    storageBucket: "bets-3887b.appspot.com",
+    messagingSenderId: "446338011209",
+    appId: "1:446338011209:web:bc4a33a19b763564992f98",
+    measurementId: "G-W9EB371N7C"
+  
 };
 
 firebase.initializeApp(firebaseConfig);
