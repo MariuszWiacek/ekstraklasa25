@@ -5,17 +5,15 @@ import 'firebase/compat/database';
 import gameData from './gameData.json';
 
 const firebaseConfig = {
-
-    apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
-    authDomain: "bets-3887b.firebaseapp.com",
-    databaseURL: "https://bets-3887b-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "bets-3887b",
-    storageBucket: "bets-3887b.appspot.com",
-    messagingSenderId: "446338011209",
-    appId: "1:446338011209:web:bc4a33a19b763564992f98",
-    measurementId: "G-W9EB371N7C"
-  
-};
+  apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
+  authDomain: "bets-3887b.firebaseapp.com",
+  databaseURL: "https://bets-3887b-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "bets-3887b",
+  storageBucket: "bets-3887b.appspot.com",
+  messagingSenderId: "446338011209",
+  appId: "1:446338011209:web:bc4a33a19b763564992f98",
+  measurementId: "G-W9EB371N7C"
+}
 
 firebase.initializeApp(firebaseConfig);
 
@@ -68,6 +66,12 @@ const Bets = () => {
   };
 
   const handleSubmit = () => {
+    // Check if the username is not inputted
+    if (!username) {
+      alert('Wprowadź nazwę użytkownika.'); // Display an alert in Polish
+      return;
+    }
+
     // Check for missing bets
     const hasMissingBets = games.some((game) => !game.score);
 
@@ -145,14 +149,11 @@ const Bets = () => {
               <td>{game.away}</td>
               <td>{game.result}</td>
               <td>
-                <select
-                  value={game.bet}
-                  onChange={(e) => handleScoreChange(game.id, game.score)}
-                >
-                  <option value="1">1</option>
-                  <option value="X">X</option>
-                  <option value="2">2</option>
-                </select>
+              <select value={game.bet} disabled>
+  <option value="1">1</option>
+  <option value="X">X</option>
+  <option value="2">2</option>
+</select>
               </td>
               <td>
                 <input
@@ -186,7 +187,6 @@ const Bets = () => {
         >
           Submit
         </button>
-        
       </div>
       {isDataSubmitted &&
         Object.keys(submittedData).map((user) => (

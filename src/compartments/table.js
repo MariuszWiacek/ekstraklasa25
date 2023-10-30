@@ -28,13 +28,13 @@ const Table = () => {
   useEffect(() => {
     if (gameData && Object.keys(submittedData).length > 0) {
       const points = {};
-  
+
       Object.keys(submittedData).forEach((username) => {
         let userPoints = 0;
-  
+
         submittedData[username].forEach((bet) => {
           const gameResult = gameData.find((game) => game.id === bet.id);
-  
+
           if (gameResult) {
             if (gameResult.result === bet.score && gameResult.type === bet.bet) {
               userPoints += 4; // 4 points for both matched result and type
@@ -45,19 +45,19 @@ const Table = () => {
             }
           }
         });
-  
+
         points[username] = userPoints;
       });
-  
+
       // Sort user points in descending order
       const sortedUserPoints = Object.keys(points).sort((a, b) => points[b] - points[a]);
-  
+
       // Create a sorted user points object
       const sortedPoints = {};
       sortedUserPoints.forEach((username) => {
         sortedPoints[username] = points[username];
       });
-  
+
       setUserPoints(sortedPoints);
     }
   }, [submittedData, gameData]);
