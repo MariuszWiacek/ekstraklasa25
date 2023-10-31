@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { BarLoader } from 'react-spinners'; // Import BarLoader from react-spinners
+import {BarLoader } from 'react-spinners';// Import BarLoader from react-spinners
 import Navbar from './compartments/navbar';
 import Table from './compartments/table';
 import Games from './compartments/results';
@@ -11,7 +11,7 @@ import Bets from './compartments/bets';
 
 function Loading() {
   return (
-    <div
+    <div c
       style={{
         position: 'fixed',
         top: 0,
@@ -26,7 +26,7 @@ function Loading() {
         zIndex: 9999,
       }}
     >
-      <BarLoader color="red" /> {/* Use BarLoader from react-spinners */}
+      <BarLoader height= "8px" width="60%" size="70px" color="#FF005C" textAlign="center"/>
     </div>
   );
 }
@@ -37,7 +37,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 4000);
   }, []);
 
   return (
