@@ -33,7 +33,7 @@ const Navbar = () => {
     position: 'fixed',
     top: 0,
     width: '100%',
-    background: scrollPosition > 0 ? 'red' : 'transparent',
+    background: scrollPosition > 0 ? 'red' : 'black',
     zIndex: 1000,
     transition: 'background-color 0.3s ease',
   };
@@ -41,7 +41,7 @@ const Navbar = () => {
   const logoStyle = {
     width: '30px',
     marginRight: '10px',
-    background: 'transparent',
+    background: 'black',
   };
 
   const brandStyle = {
