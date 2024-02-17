@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../App.css';
-import footballLogo from '../images/icon.jpg';
+import { motion, AnimatePresence } from 'framer-motion';
+import footballLogo2 from '../images/icon2.png'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -20,8 +33,9 @@ const Navbar = () => {
     position: 'fixed',
     top: 0,
     width: '100%',
-    background: 'rgba(0, 0, 0, 1)', // Replace with your desired background color
-    zIndex: 1000, // Set a high z-index to ensure it's on top
+    background: scrollPosition > 0 ? 'red' : 'transparent',
+    zIndex: 1000,
+    transition: 'background-color 0.3s ease',
   };
 
   const logoStyle = {
@@ -37,7 +51,8 @@ const Navbar = () => {
     fontSize: '36px',
     fontStyle: 'italic',
     letterSpacing: '2px',
-    color: 'red', // Set the text color to red
+    color: scrollPosition > 0 ? 'red' : 'black',
+    transition: 'color 0.3s ease',
   };
 
   const linksStyle = {
@@ -48,10 +63,20 @@ const Navbar = () => {
   return (
     <nav className={`navbar navbar-expand-lg navbar-light navbar-white`} style={navbarStyle}>
       <div className="container">
-        <Link to="/home" className="navbar-brand" style={brandStyle}>
-          <img src={footballLogo} alt="Logo piłkarski" style={logoStyle} />
-          Superliga
-        </Link>
+        <AnimatePresence>
+          <motion.div
+            key="superliga"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            exit={{ scale: 0, rotate: 180 }}
+            transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
+          >
+            <Link to="/home" className="navbar-brand" style={brandStyle}>
+              <motion.img src={footballLogo2} alt="Logo piłkarski" style={logoStyle} initial={{ scale: 0 }} animate={{ scale: 1 }} />
+              Superliga
+            </Link>
+          </motion.div>
+        </AnimatePresence>
         <button
           className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
           type="button"

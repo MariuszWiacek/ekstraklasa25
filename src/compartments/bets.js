@@ -3,6 +3,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
 import gameData from './gameData.json';
+import Table from './table'; // Import the Table component
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
@@ -113,7 +114,7 @@ const Bets = () => {
       <p style={{ textAlign: 'center' }}>11/11/2023</p>
       <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <input
-          style={{ margin: '10px' }}
+          style={{ margin: '1px' }}
           type="text"
           placeholder="Enter your username"
           value={username}
@@ -188,6 +189,7 @@ const Bets = () => {
         >
           Submit
         </button>
+        
       </div>
       {isDataSubmitted &&
         Object.keys(submittedData).map((user) => (
@@ -199,12 +201,19 @@ const Bets = () => {
                 <span style={{ color: 'red' }}>{bet.bet}</span>
                 {`, Score: `}
                 <span style={{ color: 'red' }}>{bet.score}</span>
+                
               </div>
+              
+              
             ))}
           </div>
+           
         ))}
     </div>
   );
+  
 };
+
+
 
 export default Bets;

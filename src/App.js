@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import {BarLoader } from 'react-spinners';// Import BarLoader from react-spinners
+import { motion, AnimatePresence } from 'framer-motion'; // Import motion and AnimatePresence from framer-motion
+import { BarLoader } from 'react-spinners'; // Import BarLoader from react-spinners
 import Navbar from './compartments/navbar';
 import Table from './compartments/table';
 import Games from './compartments/results';
@@ -8,10 +9,15 @@ import Footer from './compartments/footer';
 import Guestbook from './compartments/chatbox';
 import Home from './compartments/home';
 import Bets from './compartments/bets';
+import footballLogo from './images/icon.png'; // Import your logo
 
 function Loading() {
   return (
-    <div c
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 2 }} // Adjust the duration for the entire loading screen
       style={{
         position: 'fixed',
         top: 0,
@@ -26,10 +32,28 @@ function Loading() {
         zIndex: 9999,
       }}
     >
-      <BarLoader height= "8px" width="60%" size="70px" color="#FF005C" textAlign="center"/>
-    </div>
+      <div style={{ position: 'absolute', textAlign: 'center' }}>
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1, delay: 1 }} // Adjust the duration and delay for the logo
+        >
+          <img src={footballLogo} alt="Logo piłkarski" style={{ width: '400px', height: '300px', marginBottom: '20px' }} />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1 }} // Adjust the duration and delay for the text
+        >
+          <h1 style={{ color: '#F5F5DC', margin: 0 }}>SUPERLIGA 2024</h1>
+        </motion.div>
+        <BarLoader height="3px" width="100%" size="70px" color="red" textAlign="center" />
+      </div>
+    </motion.div>
   );
 }
+
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,23 +66,25 @@ function App() {
 
   return (
     <Router>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh',  }}>
-          <Navbar />
-          <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%' }}>
-            <Home />
-            <Routes>
-              <Route path="/table" element={<Table />} />
-              <Route path="/games" element={<Games />} />
-              <Route path="/guestbook" element={<Guestbook />} />
-              <Route path="/bets" element={<Bets />} />
-            </Routes>
+      <AnimatePresence>
+        {isLoading ? (
+          <Loading key="loading" />
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <Navbar />
+            <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%' }}>
+              <Home />
+              <Routes>
+                <Route path="/table" element={<Table />} />
+                <Route path="/games" element={<Games />} />
+                <Route path="/guestbook" element={<Guestbook />} />
+                <Route path="/bets" element={<Bets />} />
+              </Routes>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </Router>
   );
 }

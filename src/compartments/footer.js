@@ -7,7 +7,6 @@ const Footer = () => {
   const footerStyle = {
     fontSize: "15px",
     backgroundColor: 'black',
-    backgroundImage: 'linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(255, 0, 0, 0), rgba(0, 0, 0, 0))',
     color: 'white',
   };
 
