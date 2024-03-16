@@ -1,0 +1,51 @@
+{  "weekName": "Week 2",
+
+  "games": [
+    {
+      "id": 1,
+      "home": "GKS week2",
+      "away": "GKS Tychy",
+      "score": "",
+      "bet": "",
+      "result": "1:0",
+      "type": "1" 
+    },
+    {
+      "id": 2,
+      "home": "Ruch Chorzów",
+      "away": "Radomiak Radom",
+      "score": "",
+      "bet": "",
+      "result": "1:1",
+      "type": "X" 
+    },
+    {
+      "id": 3,
+      "home": "Leverkusen",
+      "away": "Union Berlin",
+      "score": "",
+      "bet": "",
+      "result": "0:2",
+      "type": "2" 
+    },
+    {
+      "id": 4,
+      "home": "FC Barcelona",
+      "away": "Alaves",
+      "score": "",
+      "bet": "",
+      "result": "3:1",
+      "type": "1" 
+    },
+    {
+      "id": 5,
+      "home": "Legia Warszawa",
+      "away": "Lech Poznan",
+      "score": "",
+      "bet": "",
+      "result": "2:2",
+      "type": "X"
+    }
+  ],
+  "changeDate": "2024-03-23"
+}

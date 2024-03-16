@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
-import gameData from './gameData.json';
-import Table from './table'; // Import the Table component
+import week1Data from './gameData/week1.json';
+import week2Data from './gameData/week2.json';
+// Import other week data as needed
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
@@ -14,16 +15,23 @@ const firebaseConfig = {
   messagingSenderId: "446338011209",
   appId: "1:446338011209:web:bc4a33a19b763564992f98",
   measurementId: "G-W9EB371N7C"
-}
+};
 
 firebase.initializeApp(firebaseConfig);
 
+const weekData = [
+  { id: 1, data: week1Data },
+  { id: 2, data: week2Data },
+  
+];
+
 const Bets = () => {
-  const [games, setGames] = useState(gameData);
-  const [username, setUsername] = useState('');
+  const [games, setGames] = useState([]);
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [submittedData, setSubmittedData] = useState({});
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [missingBets, setMissingBets] = useState(false);
+  const [currentWeekData, setCurrentWeekData] = useState(null);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -32,19 +40,35 @@ const Bets = () => {
       }
     });
 
-    const dbRef = firebase.database().ref('submittedData');
-    dbRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setSubmittedData(data);
-        setIsDataSubmitted(true);
-      }
-    });
+    const currentDate = new Date();
+    const currentWeek = weekData.find(week => new Date(week.data.changeDate) > currentDate);
+
+    if (currentWeek) {
+      console.log("Current week data:", currentWeek.data); // Debugging
+      setCurrentWeekData(currentWeek.data);
+      setGames(currentWeek.data.games); // Set games here
+      console.log("Games:", currentWeek.data.games); // Debugging
+     
+
+      const dbRef = firebase.database().ref(`submittedData/week${currentWeek.id}`);
+      dbRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setSubmittedData(data);
+          setIsDataSubmitted(true);
+        }
+      });
+    }
   }, []);
+
+  useEffect(() => {
+    if (currentWeekData) {
+      setGames(currentWeekData.games);
+    }
+  }, [currentWeekData]);
 
   const autoDetectBetType = (score) => {
     const [homeScore, awayScore] = score.split(':').map(Number);
-
     if (homeScore === awayScore) {
       return 'X';
     } else if (homeScore > awayScore) {
@@ -57,7 +81,6 @@ const Bets = () => {
   const handleScoreChange = (gameId, newScore) => {
     const cleanedScore = newScore.replace(/[^0-9:]/g, '');
     const formattedScore = cleanedScore.replace(/^(?:(\d))([^:]*$)/, '$1:$2');
-
     const updatedGames = games.map((game) =>
       game.id === gameId
         ? { ...game, score: formattedScore, bet: autoDetectBetType(formattedScore) }
@@ -67,27 +90,20 @@ const Bets = () => {
   };
 
   const handleSubmit = () => {
-    // Check if the username is not inputted
     if (!username) {
-      alert('Wprowadź nazwę użytkownika.'); // Display an alert in Polish
+      alert('Please enter your username.');
       return;
     }
-
-    // Check for missing bets
     const hasMissingBets = games.some((game) => !game.score);
-
     if (hasMissingBets) {
       setMissingBets(true);
       alert('Please make a bet for all games before submitting.');
       return;
     }
-
-    // Check if the user has already submitted bets for the current round
     if (submittedData[username]) {
       alert('You have already submitted your bets for this round.');
       return;
     }
-
     const userBets = games
       .filter((game) => game.score)
       .map((game) => ({
@@ -97,28 +113,30 @@ const Bets = () => {
         score: game.score,
         bet: autoDetectBetType(game.score),
       }));
-
     const updatedSubmittedData = { ...submittedData };
     updatedSubmittedData[username] = userBets;
-
     setSubmittedData(updatedSubmittedData);
-
-    const dbRef = firebase.database().ref('submittedData');
-    dbRef.set(updatedSubmittedData);
+    const dbRef = firebase.database().ref(`submittedData/week${currentWeekData.id}/${username}`);
+    dbRef.set(userBets);
     setIsDataSubmitted(true);
+  };
+
+  const handleUsernameChange = (e) => {
+    const value = e.target.value;
+    setUsername(value);
+    localStorage.setItem('username', value);
   };
 
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
-      <h2 style={{ textAlign: 'center' }}>Aktualna kolejka:</h2>
-      <p style={{ textAlign: 'center' }}>11/11/2023</p>
+      <p style={{ textAlign: 'left', color: 'white' }}>Current week: {currentWeekData ? currentWeekData.id : 'Loading...'}</p>
       <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <input
           style={{ margin: '1px' }}
           type="text"
           placeholder="Enter your username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={handleUsernameChange}
         />
       </div>
       {missingBets && (
@@ -144,30 +162,30 @@ const Bets = () => {
           </tr>
         </thead>
         <tbody>
-        {games.map((game) => (
-  <tr key={game.id} style={{ borderBottom: '0.5px solid #444' }}>
-    <td>{game.home}</td>
-    <td>{game.away}</td>
-    <td>{game.result}</td>
-    <td>
-      <select value={game.bet} disabled>
-        <option value="1">1</option>
-        <option value="X">X</option>
-        <option value="2">2</option>
-      </select>
-    </td>
-    <td>
-      <input
-        style={{ width: '50px' }}
-        type="text"
-        placeholder="1:1"
-        value={game.score}
-        onChange={(e) => handleScoreChange(game.id, e.target.value)}
-        maxLength="3" // Limit the input length to 3 characters
-      />
-    </td>
-  </tr>
-))}
+          {games.map((game) => (
+            <tr key={game.id} style={{ borderBottom: '0.5px solid #444' }}>
+              <td style={{ color: 'white' }}>{game.home}</td>
+              <td style={{ color: 'white' }}>{game.away}</td>
+              <td style={{ color: 'red' }}>{game.result}</td>
+              <td>
+                <select value={game.bet} disabled>
+                  <option value="1">1</option>
+                  <option value="X">X</option>
+                  <option value="2">2</option>
+                </select>
+              </td>
+              <td>
+                <input
+                  style={{ width: '50px', color: 'red', textDecoration: 'bo' }}
+                  type="text"
+                  placeholder="1:1"
+                  value={game.score}
+                  onChange={(e) => handleScoreChange(game.id, e.target.value)}
+                  maxLength="3"
+                />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -189,31 +207,49 @@ const Bets = () => {
         >
           Submit
         </button>
-        
       </div>
-      {isDataSubmitted &&
-        Object.keys(submittedData).map((user) => (
-          <div key={user} className="card" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)', color: 'aliceblue', fontSize: '10px', padding: '10px', margin: '10px', borderRadius: '10px', textAlign: 'center', width: '100%' }}>
-            <h3 style={{ color: 'red' }}>{user}: </h3>
-            {submittedData[user].map((bet, index) => (
-              <div key={index}>
-                {`${bet.home} vs. ${bet.away}, Bet: `}
-                <span style={{ color: 'red' }}>{bet.bet}</span>
-                {`, Score: `}
-                <span style={{ color: 'red' }}>{bet.score}</span>
-                
+      {isDataSubmitted && (
+        <div
+          className="cards-container"
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '20px',
+          }}
+        >
+          <div
+            className="card"
+            style={{
+              backgroundColor: 'white',
+              color: 'black',
+              fontSize: '12px',
+              padding: '10px',
+              margin: '10px',
+              borderRadius: '10px',
+              textAlign: 'center',
+              width: 'calc(100% - 20px)',
+            }}
+          >
+            <h3 style={{ color: 'red' }}>Submitted Bets for Week {currentWeekData ? currentWeekData.id : 'Loading...'}</h3>
+            {Object.keys(submittedData).map((user) => (
+              <div key={user} style={{ marginBottom: '10px' }}>
+                <h4 style={{ color: 'blue' }}>{user}</h4>
+                {submittedData[user].map((bet, index) => (
+                  <div key={index}>
+                    {`${bet.home} vs. ${bet.away}, Bet: `}
+                    <span style={{ color: 'red' }}>{bet.bet}</span>
+                    {`, Score: `}
+                    <span style={{ color: 'red' }}>{bet.score}</span>
+                  </div>
+                ))}
               </div>
-              
-              
             ))}
           </div>
-           
-        ))}
+        </div>
+      )}
     </div>
   );
-  
 };
-
-
 
 export default Bets;

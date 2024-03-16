@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
-import gameData from './gameData.json';
+import gameData from './gameData/week1.json';
 
 const Table = () => {
-  const [gameResults, setGameResults] = useState(gameData);
+  const [gameResults, setGameResults] = useState([]);
   const [submittedData, setSubmittedData] = useState({});
   const [userPoints, setUserPoints] = useState({});
 
@@ -33,7 +33,7 @@ const Table = () => {
         let userPoints = 0;
 
         submittedData[username].forEach((bet) => {
-          const gameResult = gameData.find((game) => game.id === bet.id);
+          const gameResult = gameData.games.find((game) => game.id === bet.id);
 
           if (gameResult) {
             if (gameResult.result === bet.score && gameResult.type === bet.bet) {

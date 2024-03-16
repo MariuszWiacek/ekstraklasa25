@@ -34,7 +34,11 @@ a{
 }
 
 h2 {
-  color: aliceblue !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+h3 {
+  color: rgb(0, 0, 0) !important;
 }
 
 ul{
@@ -42,7 +46,7 @@ ul{
 }
 
 h1 {
-  color: aliceblue !important ;
+  color: rgb(255, 255, 255) !important ;
   font-family: "Rubik"
 }
 
@@ -51,7 +55,7 @@ p {
   font-family: "Rubik";
 }
 td {
-  color: aliceblue !important;
+  color: rgb(0, 0, 0) ;
   font-family: "Rubik";
 }
 
@@ -197,7 +201,9 @@ code {
 
 
 @media (max-width: 768px) {
-  
+  .card {
+    width: 100% !important; 
+  }
   span {
     font-size: 16px;
   }

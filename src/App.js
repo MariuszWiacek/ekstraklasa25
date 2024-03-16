@@ -71,9 +71,9 @@ function App() {
           <Loading key="loading" />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Navbar />
+            <Navbar /> <Bets />
             <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%' }}>
-              <Home />
+              
               <Routes>
                 <Route path="/table" element={<Table />} />
                 <Route path="/games" element={<Games />} />

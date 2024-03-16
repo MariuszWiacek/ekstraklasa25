@@ -1,5 +1,5 @@
 import React from 'react';
-import gameData from './gameData.json';
+import gameData from './gameData/week1.json';
 
 const Games = () => {
   const tableStyle = {
@@ -43,7 +43,7 @@ const Games = () => {
         <div style={tableStyle}>
           <table style={{ width: '100%' }}>
             <tbody>
-              {gameData.map((game, index) => (
+              {gameData.games.map((game, index) => ( // Accessing the games array within gameData
                 <tr key={index}>
                   <td style={cellStyle}>{game.home}</td>
                   <td style={cellStyle}>{game.away}</td>
