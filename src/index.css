@@ -38,7 +38,7 @@ h2 {
 }
 
 h3 {
-  color: rgb(0, 0, 0) !important;
+  color: rgb(0, 4, 254) !important;
 }
 
 ul{
@@ -55,13 +55,13 @@ p {
   font-family: "Rubik";
 }
 td {
-  color: rgb(0, 0, 0) ;
+  color: rgb(254, 254, 254) ;
   font-family: "Rubik";
 }
 
 th {
   font-size: 10px !important;
-  color: grey;
+  color: rgb(255, 255, 255);
 }
 .navbar-toggler {
   color: #30292985 !important;

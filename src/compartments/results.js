@@ -1,60 +1,95 @@
-import React from 'react';
-import gameData from './gameData/week1.json';
+import React, { useState, useEffect } from 'react';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
+import gameData from './gameData/data.json';
 
 const Games = () => {
-  const tableStyle = {
-    backgroundColor: '#212529ab',
-    width: '100%',
-    maxWidth: '90%',
-    margin: '0 auto',
+  const [results, setResults] = useState([]);
+  const [submittedBets, setSubmittedBets] = useState(null);
+
+  useEffect(() => {
+    const fetchSubmittedBets = async () => {
+      const submittedDataRef = firebase.database().ref('submittedData');
+      submittedDataRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        setSubmittedBets(data);
+      });
+    };
+
+    fetchSubmittedBets();
+
+    // Setting results from JSON data
+    setResults(gameData);
+
+    return () => firebase.database().ref('submittedData').off('value');
+  }, []);
+
+  const handleChange = (gameIndex, key) => (event) => {
+    const newResults = [...results];
+    newResults[gameIndex][key] = event.target.value;
+    setResults(newResults);
   };
 
-  const cellStyle = {
-    fontSize: '16px',
-    color: 'grey',
-    padding: '10px',
+  const handleSubmit = () => {
+    firebase.database().ref('gameResults').set(results);
+    alert('Results submitted successfully!');
   };
 
-  const redStyle = {
-    color: 'red',
-  };
-
-  const determineType = (result) => {
-    if (!result) {
-      return "";
+  const renderSubmittedBets = () => {
+    if (!submittedBets) {
+      return <p>Loading...</p>;
     }
-
-    const [homeScore, awayScore] = result.split(':').map(Number);
-    if (homeScore > awayScore) {
-      return "1";
-    } else if (homeScore < awayScore) {
-      return "2";
+  
+    const currentWeek = 'week1'; // Change this to the current week
+  
+    if (submittedBets[currentWeek] && Array.isArray(submittedBets[currentWeek])) {
+      return submittedBets[currentWeek].map((bettor) => (
+        <div key={bettor}>
+          <h3>{bettor}</h3>
+          <ul>
+            {submittedBets[currentWeek][bettor].map((bet, index) => (
+              <li key={index}>{`${bet.home} vs ${bet.away}: ${bet.score || 'No result'}`}</li>
+            ))}
+          </ul>
+        </div>
+      ));
     } else {
-      return "X";
+      return <p>No bets</p>;
     }
   };
+  
 
   return (
     <div style={{ paddingBottom: '5%' }}>
       <h2 style={{ textAlign: 'center', textDecoration: 'underline', paddingBottom: '2%' }}>
         Wyniki
-      </h2><p  style={{ color: "grey", textAlign: 'center',paddingBottom: '2%' }}>ostatnia kolejka :</p>
+      </h2>
       <div className="table-responsive">
-        <div style={tableStyle}>
-          <table style={{ width: '100%' }}>
-            <tbody>
-              {gameData.games.map((game, index) => ( // Accessing the games array within gameData
-                <tr key={index}>
-                  <td style={cellStyle}>{game.home}</td>
-                  <td style={cellStyle}>{game.away}</td>
-                  <td style={cellStyle}>Wynik: <span style={redStyle}>{game.result || ""}</span></td>
-                  <td style={cellStyle}>Typ: <span style={redStyle}>{determineType(game.result)}</span></td>
+        {results.map((game, gameIndex) => (
+          <div key={gameIndex}>
+            <table style={{ width: '100%' }}>
+              <tbody>
+                <tr>
+                  <td>{game.home}</td>
+                  <td>{game.away}</td>
+                  <td>
+                    <input
+                      type="text"
+                      maxLength="3"
+                      placeholder="x:x"
+                      value={game.result}
+                      onChange={handleChange(gameIndex, 'result')}
+                      style={{ width: '50px', color: 'red', textDecoration: 'bo' }}
+                    />
+                  </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </tbody>
+            </table>
+          </div>
+        ))}
       </div>
+      <button onClick={handleSubmit}>Submit Results</button>
+      {renderSubmittedBets()}
     </div>
   );
 };

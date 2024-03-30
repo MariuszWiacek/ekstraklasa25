@@ -61,7 +61,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 4000);
+    }, 0);
   }, []);
 
   return (
@@ -71,7 +71,7 @@ function App() {
           <Loading key="loading" />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Navbar /> <Bets />
+            <Navbar /> 
             <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%' }}>
               
               <Routes>

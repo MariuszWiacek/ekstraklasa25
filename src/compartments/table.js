@@ -1,94 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/database';
-import gameData from './gameData/week1.json';
 
-const Table = () => {
-  const [gameResults, setGameResults] = useState([]);
-  const [submittedData, setSubmittedData] = useState({});
+const Table = ({ gameResults, submittedData }) => {
   const [userPoints, setUserPoints] = useState({});
 
   useEffect(() => {
-    const gameRef = firebase.database().ref('games');
-    gameRef.on('value', (snapshot) => {
-      const games = snapshot.val();
-      setGameResults(games);
-    });
-
-    const userBetsRef = firebase.database().ref('submittedData');
-    userBetsRef.on('value', (snapshot) => {
-      const bets = snapshot.val();
-      if (bets) {
-        setSubmittedData(bets);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (gameData && Object.keys(submittedData).length > 0) {
+    const calculateUserPoints = () => {
       const points = {};
 
-      Object.keys(submittedData).forEach((username) => {
-        let userPoints = 0;
+      if (gameResults && submittedData) {
+        Object.keys(submittedData).forEach((username) => {
+          submittedData[username].forEach((bet, index) => {
+            const gameResult = gameResults[index];
+            if (gameResult && gameResult.result && bet.score) {
+              const [homeScore, awayScore] = gameResult.result.split(':').map(Number);
+              const [betHomeScore, betAwayScore] = bet.score.split(':').map(Number);
+              let userPoints = 0;
 
-        submittedData[username].forEach((bet) => {
-          const gameResult = gameData.games.find((game) => game.id === bet.id);
+              if (!isNaN(homeScore) && !isNaN(awayScore) && !isNaN(betHomeScore) && !isNaN(betAwayScore)) {
+                if (homeScore === betHomeScore && awayScore === betAwayScore) {
+                  userPoints += 3; // 3 points for correct score
+                } else if (determineType(homeScore, awayScore) === determineType(betHomeScore, betAwayScore)) {
+                  userPoints += 1; // 1 point for correct outcome
+                }
+              }
 
-          if (gameResult) {
-            if (gameResult.result === bet.score && gameResult.type === bet.bet) {
-              userPoints += 4; // 4 points for both matched result and type
-            } else if (gameResult.result === bet.score) {
-              userPoints += 3; // 3 points for matched result
-            } else if (gameResult.type === bet.bet) {
-              userPoints += 1; // 1 point for matched type
+              points[username] = (points[username] || 0) + userPoints;
             }
-          }
+          });
         });
+      }
 
-        points[username] = userPoints;
-      });
+      setUserPoints(points);
+    };
 
-      // Sort user points in descending order
-      const sortedUserPoints = Object.keys(points).sort((a, b) => points[b] - points[a]);
+    calculateUserPoints();
+  }, [gameResults, submittedData]);
 
-      // Create a sorted user points object
-      const sortedPoints = {};
-      sortedUserPoints.forEach((username) => {
-        sortedPoints[username] = points[username];
-      });
-
-      setUserPoints(sortedPoints);
+  const determineType = (homeScore, awayScore) => {
+    if (homeScore > awayScore) {
+      return '1';
+    } else if (homeScore < awayScore) {
+      return '2';
+    } else {
+      return 'X';
     }
-  }, [submittedData, gameData]);
+  };
 
   return (
-    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
-      <h2 style={{ textAlign: 'center' }}>Tabela:</h2>
-      <table
-        style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          marginTop: '5%',
-        }}
-      >
+    <div>
+      <h2>Points Table</h2>
+      <table>
         <thead>
           <tr>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Place</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Username</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Points</th>
+            <th>Username</th>
+            <th>Points</th>
           </tr>
         </thead>
         <tbody>
-          {Object.keys(userPoints).map((username, index) => (
-            <tr
-              key={username}
-              style={{
-                borderBottom: '0.5px solid #444',
-                background: index === 0 ? 'rgba(255, 255, 0, 0.7)' : 'transparent',
-              }}
-            >
-              <td>{index + 1}</td>
+          {Object.keys(userPoints).map((username) => (
+            <tr key={username}>
               <td>{username}</td>
               <td>{userPoints[username]}</td>
             </tr>
