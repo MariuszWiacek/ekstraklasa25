@@ -7,7 +7,7 @@ import Table from './compartments/table';
 import Games from './compartments/results';
 import Footer from './compartments/footer';
 import Guestbook from './compartments/chatbox';
-import Home from './compartments/home';
+import Games2 from './compartments/results2';
 import Bets from './compartments/bets';
 import footballLogo from './images/icon.png'; // Import your logo
 
@@ -77,6 +77,7 @@ function App() {
               <Routes>
                 <Route path="/table" element={<Table />} />
                 <Route path="/games" element={<Games />} />
+                <Route path="/games2" element={<Games2 />} />
                 <Route path="/guestbook" element={<Guestbook />} />
                 <Route path="/bets" element={<Bets />} />
               </Routes>

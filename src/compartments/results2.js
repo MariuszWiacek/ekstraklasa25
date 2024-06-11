@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getDatabase, ref, set, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import gameData from './gameData/data.json';
 
-const Results = () => {
+const Results2 = () => {
   const [games, setGames] = useState([]);
   const [resultsInput, setResultsInput] = useState([]);
   const [submittedResults, setSubmittedResults] = useState(false);
@@ -42,44 +42,34 @@ const Results = () => {
     return points;
   };
 
-  const handleResultChange = (index, result) => {
-    setResultsInput(prevResults => {
-      const updatedResults = [...prevResults];
-      updatedResults[index] = result;
-      return updatedResults;
-    });
-  };
-
-  const handleSubmitResults = () => {
-    set(ref(getDatabase(), 'results'), resultsInput)
-      .then(() => {
-        setSubmittedResults(true);
-        alert('Results submitted successfully!');
-      })
-      .catch((error) => {
-        console.error('Error submitting results:', error);
-        alert('An error occurred while submitting the results. Please try again.');
-      });
-  };
   return (
     <div>
-      <h2>Enter Results:</h2>
-      {games.map((game, index) => (
-        <div key={index}>
-          <span>{game.home} vs {game.away}: </span>
-          <input
-            type="text"
-            placeholder="1:1"
-            value={resultsInput[index] || ''}
-            onChange={(e) => handleResultChange(index, e.target.value)}
-          />
+      <h2>Results and Points Table:</h2>
+      {submittedResults && (
+        <div>
+          <h3>Results:</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Game</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              {games.map((game, index) => (
+                <tr key={index}>
+                  <td>{game.home} vs {game.away}</td>
+                  <td>{resultsInput[index]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      ))}
-      <button onClick={handleSubmitResults}>Submit Results</button>
+      )}
 
       {submittedResults && (
         <div>
-          <h2>Points Table:</h2>
+          <h3>Points Table:</h3>
           <table>
             <thead>
               <tr>
@@ -102,4 +92,4 @@ const Results = () => {
   );
 };
 
-export default Results;
+export default Results2;
