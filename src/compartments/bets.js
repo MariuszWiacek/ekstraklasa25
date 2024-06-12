@@ -34,6 +34,14 @@ const Bets = () => {
   const [missingBets, setMissingBets] = useState(false);
   const [results, setResults] = useState({}); // State to hold the results
   const [timeRemaining, setTimeRemaining] = useState(''); // Define timeRemaining state
+  const [disabledUserSelect, setDisabledUserSelect] = useState(false); // Add state for disabling user select
+
+  useEffect(() => {
+    // Check if username has been selected previously and disable user select if yes
+    if (selectedUser) {
+      setDisabledUserSelect(true);
+    }
+  }, [selectedUser]);
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
@@ -180,6 +188,7 @@ const Bets = () => {
     const userSubmittedBets = submittedData[selectedUser];
   
     if (userSubmittedBets) {
+      setDisabledUserSelect(true);
       const alreadySubmittedGames = Object.keys(userSubmittedBets).map(Number);
       const alreadySubmittedIds = new Set(alreadySubmittedGames);
   
@@ -255,15 +264,15 @@ const Bets = () => {
       
       <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
       <select
-  style={{ margin: '1px' }}
-  value={selectedUser}
-  onChange={handleUserChange} // Call handleUserChange when user selects a new user
->
-  <option value="">Twój login</option>
-  {Object.keys(usersData).map((user, index) => (
-    <option key={index} value={user}>{user}</option>
-  ))}
-</select>
+        value={selectedUser}
+        onChange={handleUserChange}
+        disabled={disabledUserSelect} // Add disabled attribute
+      >
+        <option value="">Select User</option>
+        {Object.keys(usersData).map((user, index) => (
+          <option key={index} value={user}>{user}</option>
+        ))}
+      </select>
       </div>
       {missingBets && (
         <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
@@ -355,9 +364,9 @@ const Bets = () => {
           <h3 style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{user}: </h3>
           {Object.values(submittedData[user]).map((bet, index) => (
             <div key={index} style={{ marginBottom: '5px', textAlign: 'center' }}>
-              {`${bet.home} vs. ${bet.away}, Bet: `}
+              {`${bet.home} vs. ${bet.away}, Typ: `}
               <span style={{ color: 'red', fontWeight: 'bold' }}>{bet.bet}</span>
-              {`, Score: `}
+              {`, Wynik: `}
               <span style={{ color: 'red', fontWeight: 'bold' }}>{bet.score}</span>
             </div>
           ))}

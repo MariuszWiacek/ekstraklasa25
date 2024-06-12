@@ -75,7 +75,7 @@ const Navbar = () => {
             transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
           >
             <Link to="/home" className="navbar-brand" style={brandStyle}>
-              <motion.img src={footballLogo2} alt="Logo piłkarski" style={logoStyle} initial={{ scale: 0 }} animate={{ scale: 1 }} />
+              <motion.img src={logo} alt="Logo piłkarski" style={logoStyle} initial={{ scale: 0 }} animate={{ scale: 1 }} />
               EUROBET 2024
             </Link>
           </motion.div>
