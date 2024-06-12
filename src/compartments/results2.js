@@ -69,25 +69,27 @@ const Results2 = () => {
 
       {submittedResults && (
         <div>
-            <hr></hr>
-          <h3>Aktualna tabela:</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(submittedData).map((user) => (
+        <hr />
+        <h3>Aktualna tabela:</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(submittedData)
+              .sort((a, b) => calculatePoints(Object.values(submittedData[b]), resultsInput) - calculatePoints(Object.values(submittedData[a]), resultsInput))
+              .map((user) => (
                 <tr key={user}>
                   <td>{user}</td>
                   <td>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
                 </tr>
               ))}
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
+      </div>
       )}
     </div>
   );
