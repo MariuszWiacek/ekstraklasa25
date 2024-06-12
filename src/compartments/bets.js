@@ -227,11 +227,11 @@ const Bets = () => {
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: userBetsObject });
           setIsDataSubmitted(true);
-          alert('Results submitted successfully!');
+          alert('Wyniki zostały pomyślnie przesłane!')
         })
         .catch((error) => {
           console.error('Error submitting data:', error);
-          alert('An error occurred while submitting your bets. Please try again.');
+          alert('Wystąpił błąd podczas przesyłania Twoich zakładów. Spróbuj ponownie.');
         });
     }
     setGames(prevGames =>
@@ -249,7 +249,7 @@ const Bets = () => {
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <p>Time remaining until the first game: {timeRemaining}</p>
+          <p>Pozostały czas do pierwszego meczu: {timeRemaining}</p>
         </div>
       )}
       
