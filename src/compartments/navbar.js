@@ -77,6 +77,7 @@ const Navbar = () => {
             </Link>
           </motion.div>
         </AnimatePresence>
+        
         <button
           className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
           type="button"

@@ -18,7 +18,7 @@ const Rules = () => {
         <li>
           <strong style={{color:'red'}}>Zakłady:</strong>
           <ul>
-            <li>Każdy uczestnik ma prawo obstawić wynik oraz typ dla każdego meczu w danej kolejce.</li>
+            <li>Każdy uczestnik powinien obstawić wynik oraz typ dla każdego meczu w danej kolejce.</li>
             <li>Zakłady można składać przed rozpoczęciem meczu. Po rozpoczęciu meczu zakłady na ten mecz są zablokowane.</li>
           </ul>
         </li>
@@ -43,8 +43,6 @@ const Rules = () => {
             <li>W przypadku, gdy dwóch lub więcej uczestników uzyska tę samą liczbę punktów, rozstrzygające będą dodatkowe kryteria, takie jak:
               <ul>
                 <li>Liczba poprawnych wyników,</li>
-                <li>Wyniki szczegółowych typów (np. ilość goli, strzelec),</li>
-                <li>Wyniki w poprzednich kolejkach.</li>
               </ul>
             </li>
           </ul>

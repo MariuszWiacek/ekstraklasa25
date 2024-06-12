@@ -73,7 +73,7 @@ function App() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Navbar /> 
-            <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%' }}>
+            <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%', paddingTop:"5%" }}>
               
               <Routes>
                 <Route path='/rules' element={<Rules />} />
