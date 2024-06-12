@@ -61,6 +61,8 @@ const Navbar = () => {
     fontWeight: '700',
   };
 
+
+
   return (
     <nav className={`navbar navbar-expand-lg navbar-light navbar-white`} style={navbarStyle}>
       <div className="container">
@@ -78,7 +80,7 @@ const Navbar = () => {
             </Link>
           </motion.div>
         </AnimatePresence>
-        <img src={logo} alt="Logo" style={{ width: '5%', height: 'auto' }} />
+      
         <button
           className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
           type="button"
