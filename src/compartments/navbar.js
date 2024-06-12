@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import footballLogo2 from '../images/icon2.png'
+import logo from '../images/logo.jpg'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -77,7 +78,7 @@ const Navbar = () => {
             </Link>
           </motion.div>
         </AnimatePresence>
-        
+        <img src={logo} alt="Logo" style={{ width: '5%', height: 'auto' }} />
         <button
           className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
           type="button"

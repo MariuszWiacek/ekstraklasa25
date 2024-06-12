@@ -78,7 +78,7 @@ const Guestbook = () => {
     <div className="chatbox">
       <div className="messages" style={{ marginBottom: '1%' }} ref={chatContainerRef}>
         <br></br>
-        <h3 className="chat-title" style={{ textAlign: 'center', color: 'aliceblue', textDecoration: 'underline', marginBottom: '5%' }}>Chatbox:</h3>
+        <h2 className="chat-title" style={{ textAlign: 'center', color: 'aliceblue', textDecoration: 'underline', marginBottom: '5%' }}>Chatbox:</h2>
         <ul className="message-list">
           {guestbookEntries.map((entry, index) => (
             <div key={index} className="message">

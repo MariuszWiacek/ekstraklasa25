@@ -3,7 +3,7 @@ import React from 'react';
 const Rules = () => {
   return (
     <div>
-      <h2>Regulamin Obstawiania:<hr></hr>
+      <h2>Regulamin:<hr></hr>
 
 
       </h2>
@@ -18,7 +18,7 @@ const Rules = () => {
         <li>
           <strong style={{color:'red'}}>Zakłady:</strong>
           <ul>
-            <li>Każdy uczestnik powinien obstawić wynik oraz typ dla każdego meczu w danej kolejce.</li>
+            <li>Każdy uczestnik powinien <b>wybrać swojego uzytkownika</b> i obstawić wynik oraz typ dla każdego meczu w danej kolejce.</li>
             <li>Zakłady można składać przed rozpoczęciem meczu. Po rozpoczęciu meczu zakłady na ten mecz są zablokowane.</li>
           </ul>
         </li>

@@ -43,24 +43,31 @@ const Results2 = () => {
   };
 
   return (
-    <div>
-      
+    <div style={styles.container}>
       {submittedResults && (
-        <div>
-          <h3>Wyniki:</h3><hr></hr>
-          <table>
+        <div style={styles.resultsSection}>
+          <h2>Wyniki:</h2>
+          <hr style={styles.hr} />
+          <table style={styles.table}>
             <thead>
               <tr>
-                <th>mecz</th>
-                <th>wynik</th>
+                <th>Data</th>
+                <th>Mecz</th>
+                <th>Wynik</th>
               </tr>
             </thead>
             <tbody>
               {games.map((game, index) => (
-                <tr key={index}>
-                  <td>{game.home} vs {game.away}</td>
-                  <td>{resultsInput[index]}</td>
-                </tr>
+                <React.Fragment key={index}>
+                  <tr style={styles.gameRow}>
+                    <td>{game.date}</td>
+                    <td>{game.home} vs {game.away}</td>
+                    <td>{resultsInput[index]}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="3"><hr style={styles.rowHr} /></td>
+                  </tr>
+                </React.Fragment>
               ))}
             </tbody>
           </table>
@@ -68,31 +75,72 @@ const Results2 = () => {
       )}
 
       {submittedResults && (
-        <div>
-        <hr />
-        <h3>Aktualna tabela:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(submittedData)
-              .sort((a, b) => calculatePoints(Object.values(submittedData[b]), resultsInput) - calculatePoints(Object.values(submittedData[a]), resultsInput))
-              .map((user) => (
-                <tr key={user}>
-                  <td>{user}</td>
-                  <td>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
+        <div style={styles.pointsSection}>
+          <hr style={styles.hr} />
+          <h3>Aktualna tabela:</h3>
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th>Użytkownik</th>
+                <th>Punkty</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(submittedData)
+                .sort((a, b) => calculatePoints(Object.values(submittedData[b]), resultsInput) - calculatePoints(Object.values(submittedData[a]), resultsInput))
+                .map((user) => (
+                  <tr key={user}>
+                    <td>{user}</td>
+                    <td>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
+};
+
+const styles = {
+  container: {
+    textAlign: 'left',
+    margin: '20px',
+  },
+  resultsSection: {
+    textAlign: 'center',
+    color: 'red',
+    marginBottom: '20px',
+  },
+  pointsSection: {
+    marginTop: '20px',
+  },
+  hr: {
+    margin: '20px 0',
+  },
+  rowHr: {
+    border: '0',
+    borderTop: '1px solid #ddd',
+    margin: '10px 0',
+  },
+  table: {
+    margin: '0 auto',
+    borderCollapse: 'collapse',
+    width: '90%',
+  },
+  th: {
+    border: '1px solid #ddd',
+    padding: '8px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+  },
+  td: {
+    border: '1px solid #ddd',
+    padding: '8px',
+  },
+  gameRow: {
+    marginBottom: '10px',
+  },
 };
 
 export default Results2;

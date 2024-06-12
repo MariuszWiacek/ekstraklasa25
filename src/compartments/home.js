@@ -1,4 +1,6 @@
 import React from 'react';
+import logo from '../images/logo.jpg'
+
 
 const homeStyle = {
   textAlign: 'center',
@@ -11,8 +13,7 @@ const homeStyle = {
 const Home = () => {
   return (
     <div style={homeStyle}>
-    <div>ksskksks</div>
-      <p style={{color: "white"}}>Nastepna kolejka : 22/11/2023</p>
+    <img src={logo} alt="Logo" style={{ width: '50%', height: '1%' }} />
     </div>
   );
 };

@@ -56,11 +56,11 @@ const Results = () => {
     set(ref(getDatabase(), 'results'), resultsInput)
       .then(() => {
         setSubmittedResults(true);
-        alert('Results submitted successfully!');
+        alert('Wyniki zostały pomyślnie przesłane!');
       })
       .catch((error) => {
         console.error('Error submitting results:', error);
-        alert('An error occurred while submitting the results. Please try again.');
+        alert('Wystąpił błąd podczas przesyłania wyników. Spróbuj ponownie.');
       });
   };
 
@@ -68,54 +68,58 @@ const Results = () => {
     if (password === 'maniek123') {
       setAuthenticated(true);
     } else {
-      alert('Incorrect password. Please try again.');
+      alert('Nieprawidłowe hasło. Spróbuj ponownie.');
     }
   };
 
   if (!authenticated) {
     return (
-      <div>
-        <h2>Please Enter Password to Access Results:</h2>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button onClick={handlePasswordSubmit}>Submit</button>
+      <div style={styles.authContainer}>
+        <h2>Hasło Admina:</h2>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={styles.input}
+        />
+        <button onClick={handlePasswordSubmit} style={styles.button}>Zatwierdź</button>
       </div>
     );
   }
 
   return (
-    <div>
-      <h2>Enter Results:</h2>
+    <div style={styles.resultsContainer}>
+      <h2>Wprowadź wyniki:</h2>
       {games.map((game, index) => (
-        <div key={index}>
-          <span style={{color:'white'}}>{game.home} vs {game.away}: </span>
+        <div key={index} style={styles.gameEntry}>
+          <span style={{color: 'white'}}>{game.home} vs {game.away}:</span>
           <input
-          style={{
-            width: '50px', color:'red'}}
             type="text"
             maxLength="3"
             placeholder="x:x"
             value={resultsInput[index] || ''}
             onChange={(e) => handleResultChange(index, e.target.value)}
+            style={styles.resultInput}
           />
         </div>
       ))}
-      <button onClick={handleSubmitResults}>Submit Results</button>
+      <button onClick={handleSubmitResults} style={styles.button}>Zatwierdź wyniki</button>
 
       {submittedResults && (
-        <div>
-          <h2>Points Table:</h2>
-          <table>
+        <div style={styles.pointsTable}>
+          <h2>Tabela punktów:</h2>
+          <table style={styles.table}>
             <thead>
               <tr>
-                <th>User</th>
-                <th>Points</th>
+                <th style={styles.th}>Użytkownik</th>
+                <th style={styles.th}>Punkty</th>
               </tr>
             </thead>
             <tbody>
               {Object.keys(submittedData).map((user) => (
                 <tr key={user}>
-                  <td>{user}</td>
-                  <td>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
+                  <td style={styles.td}>{user}</td>
+                  <td style={styles.td}>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
                 </tr>
               ))}
             </tbody>
@@ -124,6 +128,54 @@ const Results = () => {
       )}
     </div>
   );
+};
+
+const styles = {
+  authContainer: {
+    textAlign: 'center',
+    margin: '20px',
+  },
+  resultsContainer: {
+    textAlign: 'center',
+    margin: '20px',
+  },
+  input: {
+    margin: '10px 0',
+    padding: '5px',
+    fontSize: '16px',
+  },
+  button: {
+    padding: '10px 20px',
+    fontSize: '16px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  gameEntry: {
+    margin: '10px 0',
+  },
+  resultInput: {
+    width: '50px',
+    color: 'red',
+  },
+  pointsTable: {
+    marginTop: '20px',
+  },
+  table: {
+    margin: '0 auto',
+    borderCollapse: 'collapse',
+  },
+  th: {
+    border: '1px solid #ddd',
+    padding: '8px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+  },
+  td: {
+    border: '1px solid #ddd',
+    padding: '8px',
+  },
 };
 
 export default Results;

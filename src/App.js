@@ -11,6 +11,7 @@ import Games2 from './compartments/results2';
 import Bets from './compartments/bets';
 import footballLogo from './images/icon.png'; // Import your logo
 import Rules from './compartments/rules';
+import logo from './images/logo.jpg'
 
 function Loading() {
   return (
@@ -62,7 +63,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 0);
+    }, 3000);
   }, []);
 
   return (
@@ -74,7 +75,7 @@ function App() {
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Navbar /> 
             <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%', paddingTop:"5%" }}>
-              
+            
               <Routes>
                 <Route path='/rules' element={<Rules />} />
                 <Route path="/table" element={<Table />} />
