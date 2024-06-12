@@ -7,6 +7,8 @@ const Results = () => {
   const [resultsInput, setResultsInput] = useState([]);
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
+  const [password, setPassword] = useState('');
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     setGames(gameData);
@@ -61,15 +63,37 @@ const Results = () => {
         alert('An error occurred while submitting the results. Please try again.');
       });
   };
+
+  const handlePasswordSubmit = () => {
+    if (password === 'maniek123') {
+      setAuthenticated(true);
+    } else {
+      alert('Incorrect password. Please try again.');
+    }
+  };
+
+  if (!authenticated) {
+    return (
+      <div>
+        <h2>Please Enter Password to Access Results:</h2>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button onClick={handlePasswordSubmit}>Submit</button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h2>Enter Results:</h2>
       {games.map((game, index) => (
         <div key={index}>
-          <span>{game.home} vs {game.away}: </span>
+          <span style={{color:'white'}}>{game.home} vs {game.away}: </span>
           <input
+          style={{
+            width: '50px', color:'red'}}
             type="text"
-            placeholder="1:1"
+            maxLength="3"
+            placeholder="x:x"
             value={resultsInput[index] || ''}
             onChange={(e) => handleResultChange(index, e.target.value)}
           />

@@ -25,6 +25,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const database = getDatabase(firebaseApp);
 
+
 const Bets = () => {
   const [games, setGames] = useState(gameData);
   const [selectedUser, setSelectedUser] = useState('');
@@ -32,8 +33,82 @@ const Bets = () => {
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [missingBets, setMissingBets] = useState(false);
   const [results, setResults] = useState({}); // State to hold the results
+  const [timeRemaining, setTimeRemaining] = useState(''); // Define timeRemaining state
+
+  useEffect(() => {
+    const lastChosenUser = localStorage.getItem('selectedUser');
+    if (lastChosenUser) {
+      setSelectedUser(lastChosenUser);
+    }
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setSelectedUser(user.displayName);
+      }
+    });
+
+    const dbRef = ref(database, 'submittedData');
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setSubmittedData(data);
+        setIsDataSubmitted(true);
+      }
+    });
+
+    const resultsRef = ref(database, 'results');
+    onValue(resultsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setResults(data);
+      }
+    });
+  }, []);
+  // Define setTimeRemaining function
+  const updateTimeRemaining = () => {
+    // Calculate time remaining until next game
+    const now = new Date();
+    const nextGame = games.find(game => new Date(`${game.date} ${game.kickoff}`) > now);
+    if (nextGame) {
+      const kickoffTime = new Date(`${nextGame.date} ${nextGame.kickoff}`);
+      const diff = kickoffTime - now;
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeRemaining(`${hours}h :${minutes}min :${seconds}s`);
+    }
+  };
+
+  useEffect(() => {
+    updateTimeRemaining(); // Update time remaining when component mounts
+  }, [games]); // Trigger update when games change
+
+  useEffect(() => {
+    const interval = setInterval(updateTimeRemaining, 1000); // Update time remaining every second
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
+
+  // Define isReadOnly function with index parameter
+  const isReadOnly = (selectedUser, index) => {
+    return submittedData[selectedUser] && submittedData[selectedUser][index];
+  };
+
+  // Define gameStarted function with index parameter
+  const gameStarted = (gameDate, gameKickoff) => {
+    const gameDateTime = new Date(`${gameDate} ${gameKickoff}`);
+    const currentDateTime = new Date();
+    return currentDateTime >= gameDateTime;
+  };
 
  
+  
+  const handleUserChange = (e) => {
+    const user = e.target.value;
+    setSelectedUser(user);
+    localStorage.setItem('selectedUser', user);
+    setGames(gameData.map(game => ({ ...game, score: '' }))); // Clear game scores
+  };
+  
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -51,15 +126,26 @@ const Bets = () => {
       }
     });
 
-    const resultsRef = ref(database, 'results'); // Reference to results in Firebase
+    const resultsRef = ref(database, 'results');
     onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         setResults(data);
       }
     });
-  }, []);
 
+    // Calculate time remaining until the first game
+    const now = new Date();
+    const nextGame = games.find(game => new Date(`${game.date} ${game.kickoff}`) > now);
+    if (nextGame) {
+      const kickoffTime = new Date(`${nextGame.date} ${nextGame.kickoff}`);
+      const diff = kickoffTime - now;
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeRemaining(`${hours}h :${minutes}min :${seconds}s`);
+    }
+  }, [games, database]);
 
   const autoDetectBetType = (score) => {
     const [homeScore, awayScore] = score.split(':').map(Number);
@@ -148,32 +234,42 @@ const Bets = () => {
           alert('An error occurred while submitting your bets. Please try again.');
         });
     }
-  };
+    setGames(prevGames =>
+      prevGames.map(game =>
+        submittedData[selectedUser] && submittedData[selectedUser][game.id]
+          ? { ...game, readOnly: true }
+          : game
+      )
+    );
   
+   
+  };
 
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
-      <h2 style={{ textAlign: 'center' }}>KOLEJKA:</h2>
-      <p style={{ textAlign: 'center' }}>22/03/24</p>
-      <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
-        <select
-          style={{ margin: '1px' }}
-          value={selectedUser}
-          onChange={(e) => setSelectedUser(e.target.value)}
-        >
-          <option value="">Twój login</option>
-          {Object.keys(usersData).map((user, index) => (
-            <option key={index} value={user}>{user}</option>
-          ))}
-        </select>
-      </div>
+      {timeRemaining && (
+        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+          <p>Time remaining until the first game: {timeRemaining}</p>
+        </div>
+      )}
       
+      <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
+      <select
+  style={{ margin: '1px' }}
+  value={selectedUser}
+  onChange={handleUserChange} // Call handleUserChange when user selects a new user
+>
+  <option value="">Twój login</option>
+  {Object.keys(usersData).map((user, index) => (
+    <option key={index} value={user}>{user}</option>
+  ))}
+</select>
+      </div>
       {missingBets && (
         <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
           Proszę dokonać zakładu dla wszystkich meczów przed zatwierdzeniem.
         </div>
       )}
-      
       <table
         style={{
           width: '100%',
@@ -190,34 +286,44 @@ const Bets = () => {
             <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>Twój Zakład</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Twój Wynik</th>
+            <th style={{ borderBottom: '0.5px solid #444' }}>Wpisz Wynik</th>
           </tr>
         </thead>
         <tbody>
           {games.map((game, index) => (
             <tr key={index} style={{ borderBottom: '0.5px solid #444', opacity: game.disabled ? '0.5' : '1', pointerEvents: game.disabled ? 'none' : 'auto' }}>
-              <td>{game.date}</td> {/* Wyświetlenie daty */}
-              <td>{game.kickoff}</td> {/* Wyświetlenie godziny */}
+              <td>{game.date}</td>
+              <td>{game.kickoff}</td>
               <td>{game.home}</td>
               <td>{game.away}</td>
-              <td>{results[index]}</td> {/* Wyświetlenie wyniku */}
+              <td>{results[index]}</td>
               <td>
                 <select value={game.bet} disabled>
                   <option value="1">1</option>
+                 
                   <option value="X">X</option>
                   <option value="2">2</option>
                 </select>
               </td>
               <td>
-                <input
-                  style={{ width: '50px' }}
-                  type="text"
-                  placeholder="1:1"
-                  value={game.score}
-                  onChange={(e) => handleScoreChange(index, e.target.value)}
-                  maxLength="3"
-                  disabled={submittedData[selectedUser] && submittedData[selectedUser][index]}
-                />
+              <input
+  style={{
+    width: '50px',
+    backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'red' : 'white') : 'white',
+    cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
+    color: 'red' 
+  }}
+  type="text"
+  placeholder="x:x"
+  value={game.score}
+  onChange={(e) => handleScoreChange(index, e.target.value)}
+  maxLength="3"
+  readOnly={isReadOnly(selectedUser, index)}
+  disabled={gameStarted}
+/>
+
+
+
               </td>
             </tr>
           ))}

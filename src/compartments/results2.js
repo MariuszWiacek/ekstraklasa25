@@ -44,15 +44,15 @@ const Results2 = () => {
 
   return (
     <div>
-      <h2>Results and Points Table:</h2>
+      
       {submittedResults && (
         <div>
-          <h3>Results:</h3>
+          <h3>Wyniki:</h3><hr></hr>
           <table>
             <thead>
               <tr>
-                <th>Game</th>
-                <th>Result</th>
+                <th>mecz</th>
+                <th>wynik</th>
               </tr>
             </thead>
             <tbody>
@@ -69,7 +69,8 @@ const Results2 = () => {
 
       {submittedResults && (
         <div>
-          <h3>Points Table:</h3>
+            <hr></hr>
+          <h3>Aktualna tabela:</h3>
           <table>
             <thead>
               <tr>

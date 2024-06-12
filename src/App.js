@@ -10,6 +10,7 @@ import Guestbook from './compartments/chatbox';
 import Games2 from './compartments/results2';
 import Bets from './compartments/bets';
 import footballLogo from './images/icon.png'; // Import your logo
+import Rules from './compartments/rules';
 
 function Loading() {
   return (
@@ -75,6 +76,7 @@ function App() {
             <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%' }}>
               
               <Routes>
+                <Route path='/rules' element={<Rules />} />
                 <Route path="/table" element={<Table />} />
                 <Route path="/games" element={<Games />} />
                 <Route path="/games2" element={<Games2 />} />

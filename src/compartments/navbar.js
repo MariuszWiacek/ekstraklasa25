@@ -73,7 +73,7 @@ const Navbar = () => {
           >
             <Link to="/home" className="navbar-brand" style={brandStyle}>
               <motion.img src={footballLogo2} alt="Logo piłkarski" style={logoStyle} initial={{ scale: 0 }} animate={{ scale: 1 }} />
-              Superliga
+              EUROBET 2024
             </Link>
           </motion.div>
         </AnimatePresence>
@@ -101,6 +101,11 @@ const Navbar = () => {
             <li className="nav-item">
               <Link to="/games2" className="nav-link" onClick={closeMenu}>
                 Wyniki
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/rules" className="nav-link" onClick={closeMenu}>
+                Regulamin
               </Link>
             </li>
             <li className="nav-item">
