@@ -7,6 +7,7 @@ import gameData from './gameData/data.json';
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
+import ExpandableCard from './expandableCard'; // Adjust the path as needed
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
@@ -25,7 +26,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const database = getDatabase(firebaseApp);
 
-
 const Bets = () => {
   const [games, setGames] = useState(gameData);
   const [selectedUser, setSelectedUser] = useState('');
@@ -34,14 +34,6 @@ const Bets = () => {
   const [missingBets, setMissingBets] = useState(false);
   const [results, setResults] = useState({}); // State to hold the results
   const [timeRemaining, setTimeRemaining] = useState(''); // Define timeRemaining state
-  const [disabledUserSelect, setDisabledUserSelect] = useState(false); // Add state for disabling user select
-
-  useEffect(() => {
-    // Check if username has been selected previously and disable user select if yes
-    if (selectedUser) {
-      setDisabledUserSelect(true);
-    }
-  }, [selectedUser]);
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
@@ -72,7 +64,6 @@ const Bets = () => {
       }
     });
   }, []);
-  // Define setTimeRemaining function
   const updateTimeRemaining = () => {
     // Calculate time remaining until next game
     const now = new Date();
@@ -188,7 +179,6 @@ const Bets = () => {
     const userSubmittedBets = submittedData[selectedUser];
   
     if (userSubmittedBets) {
-      setDisabledUserSelect(true);
       const alreadySubmittedGames = Object.keys(userSubmittedBets).map(Number);
       const alreadySubmittedIds = new Set(alreadySubmittedGames);
   
@@ -263,16 +253,17 @@ const Bets = () => {
       )}
       
       <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
-      <select
-        value={selectedUser}
-        onChange={handleUserChange}
-        disabled={disabledUserSelect} // Add disabled attribute
-      >
-        <option value="">Select User</option>
-        {Object.keys(usersData).map((user, index) => (
-          <option key={index} value={user}>{user}</option>
-        ))}
-      </select>
+        <select
+          style={{ margin: '1px' }}
+          value={selectedUser}
+          onChange={handleUserChange}
+          
+        >
+          <option value="">Twój login</option>
+          {Object.keys(usersData).map((user, index) => (
+            <option key={index} value={user}>{user}</option>
+          ))}
+        </select>
       </div>
       {missingBets && (
         <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
@@ -358,20 +349,9 @@ const Bets = () => {
           Zatwierdź
         </button>
       </div>
-      {isDataSubmitted &&
-      Object.keys(submittedData).map((user) => (
-        <div key={user} className="paper-card" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', padding: '20px', margin: '10px', borderRadius: '10px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', fontFamily: 'PenFont', fontSize: '16px', color: 'black' }}>
-          <h3 style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{user}: </h3>
-          {Object.values(submittedData[user]).map((bet, index) => (
-            <div key={index} style={{ marginBottom: '5px', textAlign: 'center' }}>
-              {`${bet.home} vs. ${bet.away}, Typ: `}
-              <span style={{ color: 'red', fontWeight: 'bold' }}>{bet.bet}</span>
-              {`, Wynik: `}
-              <span style={{ color: 'red', fontWeight: 'bold' }}>{bet.score}</span>
-            </div>
-          ))}
-        </div>
-      ))}
+      {isDataSubmitted && Object.keys(submittedData).map((user) => (
+  <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
+))}
     </div>
   );
 };
