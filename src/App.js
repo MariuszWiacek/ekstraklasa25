@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion'; // Import motion and AnimatePresence from framer-motion
-import { BarLoader } from 'react-spinners'; // Import BarLoader from react-spinners
+import { motion, AnimatePresence } from 'framer-motion';
+import { BarLoader } from 'react-spinners';
+
+import Home from './compartments/home';
 import Navbar from './compartments/navbar';
 import Table from './compartments/table';
 import Games from './compartments/results';
@@ -9,9 +11,10 @@ import Footer from './compartments/footer';
 import Guestbook from './compartments/chatbox';
 import Games2 from './compartments/results2';
 import Bets from './compartments/bets';
-import footballLogo from './images/icon.png'; // Import your logo
 import Rules from './compartments/rules';
-import logo from './images/logo.jpg'
+
+import footballLogo from './images/icon.png'; // Replace with your logo URL
+import logo from './images/logo.jpg'; // Adjust logo import as necessary
 
 function Loading() {
   return (
@@ -19,14 +22,14 @@ function Loading() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 2 }} // Adjust the duration for the entire loading screen
+      transition={{ duration: 2 }}
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
-        background: 'url("../src/images/pitch.png") no-repeat center center fixed', // Replace with your background image URL
+        background: 'url("../src/images/pitch.png") no-repeat center center fixed', // Adjust background image URL
         backgroundSize: 'cover',
         display: 'flex',
         alignItems: 'center',
@@ -38,24 +41,22 @@ function Loading() {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 1, delay: 1 }} // Adjust the duration and delay for the logo
+          transition={{ duration: 1, delay: 1 }}
         >
-          <img src={footballLogo} alt="Logo piłkarski" style={{ width: '400px', height: '300px', marginBottom: '20px' }} />
+          <img src={footballLogo} alt="Football Logo" style={{ width: '400px', height: '300px', marginBottom: '20px' }} />
         </motion.div>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }} // Adjust the duration and delay for the text
+          transition={{ duration: 1, delay: 1 }}
         >
           <h1 style={{ color: '#F5F5DC', margin: 0 }}>SUPERLIGA 2024</h1>
         </motion.div>
-        <BarLoader height="3px" width="100%" size="70px" color="red" textAlign="center" />
+        <BarLoader height="3px" width="100%" size="70px" color="red" />
       </div>
     </motion.div>
   );
 }
-
-
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -63,7 +64,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 3000); // Simulating a 3-second loading period
   }, []);
 
   return (
@@ -73,11 +74,11 @@ function App() {
           <Loading key="loading" />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Navbar /> 
-            <div className={`container ${isLoading ? 'hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%', paddingTop:"5%" }}>
-            
+            <Navbar />
+            <div className="container" style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%', paddingTop: '5%' }}>
               <Routes>
-                <Route path='/rules' element={<Rules />} />
+                <Route path="/" element={<Home />} /> {/* Display Home component when '/' is accessed */}
+                <Route path="/rules" element={<Rules />} />
                 <Route path="/table" element={<Table />} />
                 <Route path="/games" element={<Games />} />
                 <Route path="/games2" element={<Games2 />} />

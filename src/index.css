@@ -40,6 +40,10 @@ h2 {
 h3 {
   color: rgb(0, 4, 254) !important;
 }
+h4 {
+  color: rgba(0, 0, 0, 0.774) !important;
+  size: 30px !important;
+}
 
 ul{
   color: aliceblue !important;

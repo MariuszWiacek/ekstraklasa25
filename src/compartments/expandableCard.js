@@ -47,9 +47,9 @@ const ExpandableCard = ({ user, bets, results }) => {
     color: 'black',
     fontWeight: 'bold',
     marginBottom: '10px',
+   
     textAlign: 'center',
-    textDecoration: 'underline',
-    fontSize: '14px'
+    fontSize: '24px'
   };
 
   return (

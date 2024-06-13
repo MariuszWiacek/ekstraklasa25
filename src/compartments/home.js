@@ -4,7 +4,6 @@ import logo from '../images/logo.jpg'
 
 const homeStyle = {
   textAlign: 'center',
-  marginTop: '5vh',
   background: `url("path/to/pitch.png") no-repeat center center fixed`,
   backgroundSize: 'cover',
 
@@ -13,7 +12,7 @@ const homeStyle = {
 const Home = () => {
   return (
     <div style={homeStyle}>
-    <img src={logo} alt="Logo" style={{ width: '50%', height: '1%' }} />
+    <img src={logo} alt="Logo" style={{ width: '100%', height: '1%' }} />
     </div>
   );
 };
