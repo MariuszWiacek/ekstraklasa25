@@ -19,7 +19,8 @@ const Rules = () => {
           <strong style={{color:'red'}}>Zakłady:</strong>
           <ul>
             <li>Każdy uczestnik powinien <b>wybrać swojego uzytkownika</b> i obstawić wynik oraz typ dla każdego meczu w danej kolejce.</li>
-            <li>Zakłady można składać przed rozpoczęciem meczu. Po rozpoczęciu meczu zakłady na ten mecz są zablokowane.</li>
+            <li>Zakłady można składać do rozpoczęcia meczu. Po rozpoczęciu meczu zakłady na ten mecz są zablokowane.</li>
+            <li>Zakłady na kolejną kolejkę będą odblokowane po zakończeniu aktualnej kolejki przez daną grupę.</li>
           </ul>
         </li>
         <li>
