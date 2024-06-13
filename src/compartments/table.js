@@ -54,30 +54,73 @@ const Table = () => {
       return { user, points };
     });
 
-    setTableData(updatedTableData.sort((a, b) => b.points - a.points));
+    // Sorting table data by points in descending order
+    updatedTableData.sort((a, b) => b.points - a.points);
+
+    // Assigning places (1st, 2nd, 3rd, etc.)
+    updatedTableData.forEach((entry, index) => {
+      entry.place = getPlace(index + 1); // index + 1 to start from 1
+    });
+
+    setTableData(updatedTableData);
   }, [submittedData, results]);
+
+  // Function to get ordinal suffix for places (1st, 2nd, 3rd, etc.)
+  const getPlace = (place) => {
+    const j = place % 10,
+          k = place % 100;
+    if (j === 1 && k !== 11) {
+        return place ;
+    }
+    if (j === 2 && k !== 12) {
+        return place ;
+    }
+    if (j === 3 && k !== 13) {
+        return place ;
+    }
+    return place ;
+  }
 
   return (
     <div>
-      <h2>Tabela punktów:</h2>
-      <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-        <thead>
+      <h2 style={{ textAlign: 'center' }}>Tabela punktów:</h2>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+          <thead>
           <tr style={{ backgroundColor: '#212529', color: 'white' }}>
-            <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Użytkownik</th>
-            <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Punkty</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.map((entry, index) => (
-            <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#f2f2f2' : 'black' }}>
-              <td style={{ color: 'red', padding: '10px', border: '1px solid #dddddd' }}>{entry.user}</td>
-              <td style={{ color: 'red', padding: '10px', border: '1px solid #dddddd' }}>{entry.points}</td>
+              <th style={tableHeaderStyle}>Miejsce</th>
+              <th style={tableHeaderStyle}>Użytkownik</th>
+              <th style={tableHeaderStyle}>Punkty</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {tableData.map((entry, index) => (
+              <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
+                <td style={tableCellStyle}>{entry.place}</td>
+                <td style={tableCellStyle}>{entry.user}</td>
+                <td style={tableCellStyle}>{entry.points}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
+};
+
+// Styles for table header and cell
+const tableHeaderStyle = {
+  padding: '10px',
+  border: '1px solid #dddddd',
+  backgroundColor: '#212529',
+  color: 'white',
+  textAlign: 'center',
+};
+
+const tableCellStyle = {
+  padding: '10px',
+  border: '1px solid #dddddd',
+  textAlign: 'center',
 };
 
 export default Table;
