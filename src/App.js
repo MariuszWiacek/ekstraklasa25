@@ -77,7 +77,7 @@ function App() {
             <Navbar />
             <div className="container" style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%', paddingTop: '5%' }}>
               <Routes>
-                <Route path="/home" element={<Home />} /> 
+                <Route path="/" element={<Home />} /> 
                 <Route path="/rules" element={<Rules />} />
                 <Route path="/table" element={<Table />} />
                 <Route path="/games" element={<Games />} />
