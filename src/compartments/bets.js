@@ -64,6 +64,7 @@ const Bets = () => {
       }
     });
   }, []);
+
   const updateTimeRemaining = () => {
     // Calculate time remaining until next game
     const now = new Date();
@@ -99,15 +100,12 @@ const Bets = () => {
     return currentDateTime >= gameDateTime;
   };
 
- 
-  
   const handleUserChange = (e) => {
     const user = e.target.value;
     setSelectedUser(user);
     localStorage.setItem('selectedUser', user);
     setGames(gameData.map(game => ({ ...game, score: '' }))); // Clear game scores
   };
-  
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -175,13 +173,13 @@ const Bets = () => {
       alert('Please select a user.');
       return;
     }
-  
+
     const userSubmittedBets = submittedData[selectedUser];
-  
+
     if (userSubmittedBets) {
       const alreadySubmittedGames = Object.keys(userSubmittedBets).map(Number);
       const alreadySubmittedIds = new Set(alreadySubmittedGames);
-  
+
       const newBetsToSubmit = games.reduce((newBets, game, index) => {
         if (game.score && !alreadySubmittedIds.has(index)) {
           newBets[index] = {
@@ -193,12 +191,12 @@ const Bets = () => {
         }
         return newBets;
       }, {});
-  
+
       if (Object.keys(newBetsToSubmit).length === 0) {
         alert('You have already submitted your bets for all available games.');
         return;
       }
-  
+
       set(ref(database, `submittedData/${selectedUser}`), { ...userSubmittedBets, ...newBetsToSubmit })
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: { ...userSubmittedBets, ...newBetsToSubmit } });
@@ -221,7 +219,7 @@ const Bets = () => {
           };
         }
       });
-  
+
       set(ref(database, `submittedData/${selectedUser}`), userBetsObject)
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: userBetsObject });
@@ -240,8 +238,7 @@ const Bets = () => {
           : game
       )
     );
-  
-   
+
   };
 
   return (
@@ -251,13 +248,13 @@ const Bets = () => {
           <p>Pozostały czas do pierwszego meczu: {timeRemaining}</p>
         </div>
       )}
-      
+
       <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <select
           style={{ margin: '1px' }}
           value={selectedUser}
           onChange={handleUserChange}
-          
+
         >
           <option value="">Twój login</option>
           {Object.keys(usersData).map((user, index) => (
@@ -300,7 +297,6 @@ const Bets = () => {
               <td>
                 <select value={game.bet} disabled>
                   <option value="1">1</option>
-                 
                   <option value="X">X</option>
                   <option value="2">2</option>
                 </select>
@@ -309,20 +305,19 @@ const Bets = () => {
               <input
   style={{
     width: '50px',
-    backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'red' : 'white') : 'white',
+    backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
     cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
-    color: 'red' 
+    color: 'red',
   }}
   type="text"
-  placeholder="x:x"
+  placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
   value={game.score}
   onChange={(e) => handleScoreChange(index, e.target.value)}
   maxLength="3"
   readOnly={isReadOnly(selectedUser, index)}
+  title={isReadOnly(selectedUser, index) ? "✔️" : ""}
   disabled={gameStarted}
 />
-
-
 
               </td>
             </tr>
@@ -350,8 +345,8 @@ const Bets = () => {
         </button>
       </div>
       {isDataSubmitted && Object.keys(submittedData).map((user) => (
-  <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
-))}
+        <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
+      ))}
     </div>
   );
 };

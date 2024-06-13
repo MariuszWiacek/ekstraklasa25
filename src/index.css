@@ -58,6 +58,11 @@ p {
   color: aliceblue;
   font-family: "Rubik";
 }
+p2 {
+  color: rgb(255, 0, 64);
+  font-family: "Rubik";
+  font-weight: bolder;
+}
 td {
   color: rgb(254, 254, 254) ;
   font-family: "Rubik";
