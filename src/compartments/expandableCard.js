@@ -13,7 +13,8 @@ const ExpandableCard = ({ user, bets, results }) => {
     color: 'black',
     cursor: 'pointer',
     width: '100%',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    margin: '10px'
   };
 
   const betContainerStyle = {
@@ -25,7 +26,8 @@ const ExpandableCard = ({ user, bets, results }) => {
     marginBottom: '10px',
     fontSize: '10px', // smaller font for mobile
     textAlign: 'center',
-    lineHeight: '1.5'
+    lineHeight: '1.5',
+    
   };
 
   const resultsStyle = {
@@ -64,9 +66,9 @@ const ExpandableCard = ({ user, bets, results }) => {
           {Object.keys(bets).map((index) => (
             <div key={index} style={gameStyle}>
               <div style={{ fontSize: '10px' }}>
-                <span style={{ color: 'blue' }}>{bets[index].home}</span>
+                <span style={{ color: 'black' }}>{bets[index].home}</span>
                 {' vs. '}
-                <span style={{ color: 'red' }}>{bets[index].away}</span>
+                <span style={{ color: 'black' }}>{bets[index].away}</span>
                 {' | '}
                 <span style={{ color: 'blue' }}>Typ: [ {bets[index].bet} ]</span>
                 {' | '}

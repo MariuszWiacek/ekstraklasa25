@@ -69,8 +69,8 @@ th {
   font-size: 16px !important;
 }
 span {
-  font-size: 14px !important;
-  font-family: "Rubik";
+  font-size: 16px !important;
+  font-family: "Rubik"; 
 }
 
 code {
@@ -205,7 +205,7 @@ code {
     width: 100% !important; 
   }
   span {
-    font-size: 16px;
+    font-size: 11px !important;
   }
   p {
     font-size: 12px;
