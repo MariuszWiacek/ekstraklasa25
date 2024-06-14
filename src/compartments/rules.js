@@ -9,13 +9,6 @@ const Rules = () => {
       </h2>
       <ol>
         <li>
-          <strong style={{color:'red'}}>Punktacja:</strong>
-          <ul>
-            <li>Poprawny wynik (np. 2:1): 3 punkty</li>
-            <li>Prawidłowy typ (1, X, 2): 1 punkt</li>
-          </ul>
-        </li>
-        <li>
           <strong style={{color:'red'}}>Zakłady:</strong>
           <ul>
             <li>Każdy uczestnik powinien <b>wybrać swojego uzytkownika</b> i obstawić wynik oraz typ dla każdego meczu w danej kolejce.</li>

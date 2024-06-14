@@ -93,12 +93,21 @@ const Bets = () => {
     return submittedData[selectedUser] && submittedData[selectedUser][index];
   };
 
-  // Define gameStarted function with index parameter
+  
   const gameStarted = (gameDate, gameKickoff) => {
     const gameDateTime = new Date(`${gameDate} ${gameKickoff}`);
     const currentDateTime = new Date();
-    return currentDateTime >= gameDateTime;
+    const adjustedCurrentDateTime = new Date(currentDateTime.getTime() + 60 * 60 * 1000); // Adding 1 hour (60 minutes * 60 seconds * 1000 milliseconds)
+    return adjustedCurrentDateTime >= gameDateTime;
   };
+
+  // Log the adjusted current date and time to the console
+  const currentDateTime = new Date();
+  const adjustedCurrentDateTime = new Date(currentDateTime.getTime() + 1200 * 60 * 1000); // Adding 1 hour
+  console.log(adjustedCurrentDateTime.toISOString());
+
+
+
 
   const handleUserChange = (e) => {
     const user = e.target.value;
@@ -302,6 +311,7 @@ const Bets = () => {
                 </select>
               </td>
               <td>
+              {console.log("gameStarted:", gameStarted)}
               <input
   style={{
     width: '50px',
@@ -316,8 +326,10 @@ const Bets = () => {
   maxLength="3"
   readOnly={isReadOnly(selectedUser, index)}
   title={isReadOnly(selectedUser, index) ? "✔️" : ""}
-  disabled={gameStarted}
+  disabled={gameStarted} // Ensure gameStarted is a boolean
+  
 />
+
 
               </td>
             </tr>
