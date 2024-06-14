@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { openDatabase, addOrUpdateGame, getAllGames, deleteGame } from './indexedDB'; // Adjust path as needed
-
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import gameData from './gameData/data.json';
 
@@ -12,8 +10,6 @@ const Results = () => {
   const [submittedData, setSubmittedData] = useState({});
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
-  const [scoreInput, setScoreInput] = useState('');
-  const [users, setUsers] = useState([]);
 
   // Fetch initial game data
   useEffect(() => {
@@ -90,26 +86,30 @@ const Results = () => {
     updatedGames[index].disabled = !updatedGames[index].disabled; // Toggle disabled flag
     setGames(updatedGames);
 
-    // Update IndexedDB (replace with your logic)
-    openDatabase()
-      .then(db => {
-        addOrUpdateGame(db, updatedGames[index])
-          .then(() => console.log('Game disabled/enabled successfully'))
-          .catch(error => console.error('Failed to disable/enable game:', error));
-      })
-      .catch(error => console.error('Error opening IndexedDB:', error));
+    // Simulate updating data.json (replace with actual update logic in your application)
+    fetch('/updateGameData', {
+      method: 'POST',
+      body: JSON.stringify(updatedGames),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        console.log('Game disabled/enabled successfully');
+      } else {
+        console.error('Failed to disable/enable game');
+      }
+    }).catch(error => {
+      console.error('Error toggling game disable:', error);
+    });
   };
 
-  // Fetch users from IndexedDB on component mount
-  useEffect(() => {
-    openDatabase()
-      .then(db => {
-        getAllGames(db)
-          .then(games => setUsers(games))
-          .catch(error => console.error('Error fetching users from IndexedDB:', error));
-      })
-      .catch(error => console.error('Error opening IndexedDB:', error));
-  }, []);
+  // Sort users by points in descending order
+  const sortedUsers = Object.keys(submittedData).sort((a, b) => {
+    const pointsA = calculatePoints(Object.values(submittedData[a]), resultsInput);
+    const pointsB = calculatePoints(Object.values(submittedData[b]), resultsInput);
+    return pointsB - pointsA;
+  });
 
   // Render component based on authentication status
   if (!authenticated) {
@@ -158,7 +158,27 @@ const Results = () => {
       </div>
       <button onClick={handleSubmitResults} style={styles.button}>Zatwierdź wyniki</button>
 
-      {submittedResults && <p style={styles.submittedMessage}>Wyniki zostały już przesłane.</p>}
+      {submittedResults && (
+        <div style={styles.pointsTable}>
+          <h2>Tabela punktów:</h2>
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={styles.th}>Użytkownik</th>
+                <th style={styles.th}>Punkty</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedUsers.map((user) => (
+                <tr key={user}>
+                  <td style={styles.td}>{user}</td>
+                  <td style={styles.td}>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
     </div>
   );
@@ -225,10 +245,29 @@ const styles = {
     borderRadius: '4px',
     width: '50px',
   },
-  submittedMessage: {
+  pointsTable: {
     marginTop: '20px',
-    fontSize: '16px',
-  }
+    padding: '20px',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    backgroundColor: '#00000046',
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+  },
+  th: {
+    border: '1px solid #ddd',
+    padding: '12px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    textAlign: 'center',
+  },
+  td: {
+    border: '1px solid #ddd',
+    padding: '12px',
+    textAlign: 'center',
+  },
 };
 
 export default Results;

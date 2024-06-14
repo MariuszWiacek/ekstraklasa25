@@ -100,11 +100,10 @@ const Bets = () => {
   const gameStarted = (gameDate, gameKickoff) => {
     // Convert current time to BST (UTC+1)
     const currentDateTime = new Date();
-  
-
     const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
     return currentDateTime >= gameDateTimeCEST;
   };
+  
 
 
   const handleUserChange = (e) => {
@@ -295,45 +294,41 @@ const Bets = () => {
           </tr>
         </thead>
         <tbody>
-          {games.map((game, index) => (
-            <tr key={index} style={{ borderBottom: '0.5px solid #444', opacity: game.disabled ? '0.5' : '1', pointerEvents: game.disabled ? 'none' : 'auto' }}>
-              <td>{game.date}</td>
-              <td>{game.kickoff}</td>
-              
-              <td>{game.home}</td>
-              <td>{game.away}</td>
-              <td>{results[index]}</td>
-              <td>
-                <select value={game.bet} disabled>
-                  <option value="1">1</option>
-                  <option value="X">X</option>
-                  <option value="2">2</option>
-                </select>
-              </td>
-              <td>
-              {console.log("gameStarted:", gameStarted)}
-              <input
-  style={{
-    width: '50px',
-    backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
-    cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
-    color: 'red',
-  }}
-  type="text"
-  placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
-  value={game.score}
-  onChange={(e) => handleScoreChange(index, e.target.value)}
-  maxLength="3"
-  readOnly={isReadOnly(selectedUser, index)}
-  title={isReadOnly(selectedUser, index) ? "✔️" : ""}
-  disabled={gameStarted} // Ensure gameStarted is a boolean
-  
-/>
+        {games.map((game, index) => (
+  <tr key={index} style={{ borderBottom: '0.5px solid #444', opacity: game.disabled ? '0.5' : '1', pointerEvents: game.disabled ? 'none' : 'auto' }}>
+    <td>{game.date}</td>
+    <td>{game.kickoff}</td>
+    <td>{game.home}</td>
+    <td>{game.away}</td>
+    <td>{results[index]}</td>
+    <td>
+      <select value={game.bet} disabled>
+        <option value="1">1</option>
+        <option value="X">X</option>
+        <option value="2">2</option>
+      </select>
+    </td>
+    <td>
+      <input
+        style={{
+          width: '50px',
+          backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
+          cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
+          color: 'red',
+        }}
+        type="text"
+        placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
+        value={game.score}
+        onChange={(e) => handleScoreChange(index, e.target.value)}
+        maxLength="3"
+        readOnly={isReadOnly(selectedUser, index)}
+        title={isReadOnly(selectedUser, index) ? "✔️" : ""}
+        disabled={gameStarted(game.date, game.kickoff)} // Use gameStarted to disable based on kickoff time
+      />
+    </td>
+  </tr>
+))}
 
-
-              </td>
-            </tr>
-          ))}
         </tbody>
       </table>
       <div style={{ textAlign: 'center', marginTop: '20px' }}>

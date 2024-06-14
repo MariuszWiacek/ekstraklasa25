@@ -71,7 +71,7 @@ const Home = () => {
       Euro 2024 - <p2>Tabela na żywo</p2>
     </a>
     <a
-      href="https://www.polsatsport.pl/liga/euro-2024/"
+      href="https://wyniki.onet.pl/euro2024"
       target="_blank"
       rel="noopener noreferrer"
       style={linkStyle}

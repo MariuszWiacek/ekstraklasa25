@@ -10,7 +10,7 @@
     "kickoff": "21:00",
     "venue": "Monachium",
     "date": "2024-06-14",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 2,
