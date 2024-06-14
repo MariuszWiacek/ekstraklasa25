@@ -252,7 +252,7 @@ const Bets = () => {
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <p>Pozostały czas do pierwszego meczu: {timeRemaining}</p>
+          <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
         </div>
       )}
 
