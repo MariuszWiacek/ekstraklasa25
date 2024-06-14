@@ -29,6 +29,9 @@ const Rules = () => {
             <li>Za każdy poprawny wynik otrzymuje się 3 punkty.</li>
             <li>Za każdy prawidłowy typ (1, X, 2) otrzymuje się 1 punkt.</li>
             <li>Punktacja zostanie obliczona na podstawie poprawnych wyników i typów dla wszystkich meczów w danej kolejce.</li>
+            <li>Oznaczenia w karcie : <br></br></li>
+            -✅ - 3 pkt - prawidlowy wynik odgadnięty<br></br>
+            -☑️ - 1 pkt - tylko typ odgadnięty
           </ul>
         </li>
         <li>
