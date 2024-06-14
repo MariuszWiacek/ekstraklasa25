@@ -81,9 +81,9 @@ const Home = () => {
       Euro 2024 - <p2>wiadomości, wyniki, tabele</p2>
     </a>
   
-    <div style={homeStyle}>
+    
       <img src={logo} alt="Logo" style={logoStyle} />
-      </div>
+      
     </div>
   );
 };

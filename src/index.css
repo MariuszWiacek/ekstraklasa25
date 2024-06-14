@@ -23,7 +23,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: black; /* Dark color */
+    background-color: #00200e; /* Dark color */
     opacity: 0.8; /* Adjust the opacity to make it 80% darker */
     z-index: -1; /* Place the overlay behind the content */
   }
@@ -58,6 +58,36 @@ p {
   color: aliceblue;
   font-family: "Rubik";
 }
+
+/* styles.css */
+.glossy-text {
+  font-size: 30px;
+  font-weight: bold;
+  background: linear-gradient(45deg, #828282, #fefefe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 1px;
+}
+
+.glossy-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  opacity: 0.8;
+  -webkit-mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
+  mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
+  -webkit-mask-composite: source-out;
+  mask-composite: subtract;
+  pointer-events: none;
+}
+
 p2 {
   color: #eeff007d;
   font-family: "Rubik";
@@ -119,7 +149,14 @@ code {
 .navbar-toggler.open .bar:nth-child(3) {
   transform: rotate(45deg) translate(-5px, -5px);
 }
+.nav-link {
+  color: rgb(255, 255, 255) !important; /* Initial color */
+  transition: color 0.3s ease; /* Smooth transition */
+}
 
+.nav-link:hover {
+  color: #e80000 !important; /* Change to desired color on hover */
+}
 
 
 @keyframes scrollInfoMessage {

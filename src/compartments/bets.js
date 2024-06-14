@@ -66,12 +66,16 @@ const Bets = () => {
   }, []);
 
   const updateTimeRemaining = () => {
-    // Calculate time remaining until next game
+    // Calculate time remaining until next game in BST
     const now = new Date();
-    const nextGame = games.find(game => new Date(`${game.date} ${game.kickoff}`) > now);
+    console.log(now)
+
+    const nextGame = games.find(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now); // CEST is UTC+2
+
     if (nextGame) {
-      const kickoffTime = new Date(`${nextGame.date} ${nextGame.kickoff}`);
-      const diff = kickoffTime - now;
+      const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+02:00`); // CEST kickoff time
+      const kickoffTimeBST = new Date(kickoffTimeCEST.getTime()); // Convert CEST kickoff time to BST by subtracting 1 hour
+      const diff = kickoffTimeBST - now;
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
@@ -93,20 +97,14 @@ const Bets = () => {
     return submittedData[selectedUser] && submittedData[selectedUser][index];
   };
 
-  
   const gameStarted = (gameDate, gameKickoff) => {
-    const gameDateTime = new Date(`${gameDate} ${gameKickoff}`);
+    // Convert current time to BST (UTC+1)
     const currentDateTime = new Date();
-    const adjustedCurrentDateTime = new Date(currentDateTime.getTime() + 60 * 60 * 1000); // Adding 1 hour (60 minutes * 60 seconds * 1000 milliseconds)
-    return adjustedCurrentDateTime >= gameDateTime;
+  
+
+    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
+    return currentDateTime >= gameDateTimeCEST;
   };
-
-  // Log the adjusted current date and time to the console
-  const currentDateTime = new Date();
-  const adjustedCurrentDateTime = new Date(currentDateTime.getTime() + 1200 * 60 * 1000); // Adding 1 hour
-  console.log(adjustedCurrentDateTime.toISOString());
-
-
 
 
   const handleUserChange = (e) => {
@@ -287,8 +285,9 @@ const Bets = () => {
         <thead>
           <tr>
             <th style={{ borderBottom: '0.5px solid #444' }}>Data</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Godzina</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Gospodarz</th>
+            <th style={{ borderBottom: '0.5px solid #444' }}>h</th>
+
+            <th style={{ borderBottom: '0.5px solid #444' }}>Gosp.</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>Twój Zakład</th>
@@ -300,6 +299,7 @@ const Bets = () => {
             <tr key={index} style={{ borderBottom: '0.5px solid #444', opacity: game.disabled ? '0.5' : '1', pointerEvents: game.disabled ? 'none' : 'auto' }}>
               <td>{game.date}</td>
               <td>{game.kickoff}</td>
+              
               <td>{game.home}</td>
               <td>{game.away}</td>
               <td>{results[index]}</td>

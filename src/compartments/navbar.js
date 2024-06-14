@@ -34,25 +34,19 @@ const Navbar = () => {
     position: 'fixed',
     top: 0,
     width: '100%',
-    background: scrollPosition > 0 ? 'red' : 'black',
+    background: scrollPosition > 0 ? '#00200e' : 'black',
     zIndex: 1000,
     transition: 'background-color 0.3s ease',
-  };
-
-  const logoStyle = {
-    width: '30px',
-    marginRight: '10px',
-    background: 'black',
   };
 
   const brandStyle = {
     display: 'flex',
     alignItems: 'center',
-    fontFamily: 'Impact',
-    fontSize: '36px',
-    fontStyle: 'italic',
-    letterSpacing: '2px',
-    color: scrollPosition > 0 ? 'red' : 'black',
+    textDecoration: 'none',
+    color: 'inherit',
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: scrollPosition > 0 ? 'orange' : 'black',
     transition: 'color 0.3s ease',
   };
 
@@ -63,23 +57,30 @@ const Navbar = () => {
 
 
 
+
   return (
     <nav className={`navbar navbar-expand-lg navbar-light navbar-white`} style={navbarStyle}>
       <div className="container">
-        <AnimatePresence>
-          <motion.div
-            key="superliga"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            exit={{ scale: 0, rotate: 180 }}
-            transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
-          >
-            <Link to="/" className="navbar-brand" style={brandStyle}>
-              <motion.img src={logo} alt="Logo piłkarski" style={logoStyle} initial={{ scale: 0 }} animate={{ scale: 1 }} />
-              EUROBET 2024
-            </Link>
-          </motion.div>
-        </AnimatePresence>
+      <AnimatePresence>
+      <motion.div
+        key="superliga"
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        exit={{ scale: 0, rotate: 180 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
+      >
+        <Link to="/" className="navbar-brand" style={brandStyle}>
+          {/* <motion.img
+            src={logo}
+            alt="Logo piłkarski"
+            style={logoStyle}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+          /> */}
+          <p3 className="glossy-text">EURO BET 2024</p3>
+        </Link>
+      </motion.div>
+    </AnimatePresence>
       
         <button
           className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
