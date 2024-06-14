@@ -61,9 +61,11 @@ p {
 
 /* styles.css */
 .glossy-text {
-  font-size: 30px;
+  font-family: 'Rubik';
+  font-size: 35px;
   font-weight: bold;
-  background: linear-gradient(45deg, #828282, #fefefe);
+  font-style: italic;
+  background: linear-gradient(45deg, #ffffff, #ffea02);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
@@ -155,7 +157,7 @@ code {
 }
 
 .nav-link:hover {
-  color: #e80000 !important; /* Change to desired color on hover */
+  color: #ffea02!important; /* Change to desired color on hover */
 }
 
 
