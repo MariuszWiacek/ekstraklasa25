@@ -193,7 +193,7 @@
     "venue": "Kolonia",
     "date": "2024-06-19"
     ,
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 16,
@@ -233,7 +233,7 @@
     "kickoff": "21:00",
     "venue": "Gelsenkirchen",
     "date": "2024-06-20",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 19,
