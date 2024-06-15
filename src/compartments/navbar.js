@@ -148,7 +148,7 @@ const Navbar = () => {
 
        {/* Moving Message */}
        <div style={messageContainerStyle}>
-        <Link to="/home" style={{ textDecoration: 'none' }}>
+        <Link to="/" style={{ textDecoration: 'none' }}>
           <FontAwesomeIcon icon={faHome} style={iconStyle} />
         </Link>
         <Link to="/bets" style={{ textDecoration: 'none' }}>
