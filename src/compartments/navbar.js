@@ -60,7 +60,7 @@ const Navbar = () => {
     left: 0,
     width: '100%',
     height: '50px', // Adjust the height as needed
-    backgroundColor: '#00200e',
+    backgroundColor: 'black',
     zIndex: 999,
     display: 'flex',
     alignItems: 'center',
