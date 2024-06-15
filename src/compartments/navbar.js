@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { faHome, faTableList, faFutbol } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,7 +43,6 @@ const Navbar = () => {
     display: 'flex',
     alignItems: 'center',
     textDecoration: 'none',
-    color: 'inherit',
     fontSize: '24px',
     fontWeight: 'bold',
     color: scrollPosition > 0 ? 'orange' : 'black',
@@ -58,22 +59,29 @@ const Navbar = () => {
     bottom: 0,
     left: 0,
     width: '100%',
-    height: '40px', // Adjust the height as needed
+    height: '50px', // Adjust the height as needed
     backgroundColor: '#00200e',
     zIndex: 999,
-    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between', // Space evenly between icons
+    padding: '0 10px', // Adjust padding to make space for icons
   };
 
   const messageStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    width: '100%',
-    textAlign: 'center',
-    transform: 'translate(-100%, -50%)',
-    fontSize: '12px',
-    color: '#ffea02',
+    whiteSpace: 'nowrap',
+    fontSize: '10px',
+    color: 'aliceblue',
     fontWeight: 'bold',
+    position: 'absolute',
+    top: '0%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  };
+
+
+  const iconStyle = {
+    color: '#ffea02',
   };
 
   return (
@@ -138,14 +146,23 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Moving Message */}
-      <div style={messageContainerStyle}>
+       {/* Moving Message */}
+       <div style={messageContainerStyle}>
+        <Link to="/home" style={{ textDecoration: 'none' }}>
+          <FontAwesomeIcon icon={faHome} style={iconStyle} />
+        </Link>
+        <Link to="/bets" style={{ textDecoration: 'none' }}>
+          <FontAwesomeIcon icon={faFutbol} size="1.5x" style={iconStyle} />
+        </Link>
+        <Link to="/table" style={{ textDecoration: 'none' }}>
+          <FontAwesomeIcon icon={faTableList} style={iconStyle} />
+        </Link>
         <motion.div
           style={messageStyle}
           animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 12, ease: 'linear', repeat: Infinity }}
+          transition={{ duration: 20, ease: 'linear', repeat: Infinity }}
         >
-          2 kolejka - grupy A i B juz dostępne do typowania!
+          ### 2 kolejka - grupy A i B już dostępne do typowania! ###
         </motion.div>
       </div>
     </>

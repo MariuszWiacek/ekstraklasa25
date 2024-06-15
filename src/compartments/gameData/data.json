@@ -49,7 +49,7 @@
     "kickoff": "21:00",
     "venue": "Dortmund",
     "date": "2024-06-15",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 5,

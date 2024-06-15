@@ -1,5 +1,8 @@
 import React from 'react';
 import logo from '../images/logo.jpg';
+import {faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const homeStyle = {
   textAlign: 'center',
@@ -47,6 +50,7 @@ const welcomeMessageStyle = {
   fontSize: '18px',
   fontWeight: 'bold',
   marginBottom: '10px',
+  textAlign: 'center'
 };
 
 const Home = () => {
@@ -60,6 +64,9 @@ const Home = () => {
     >
       TYPUJ - <p2>TUTAJ <br></br></p2>
     </a>
+    <a>Masz pytanie lub problem? Skontaktuj się na WhatsApp <br></br><Link to="https://wa.me/447448952003" target="_blank">
+  <FontAwesomeIcon icon={faWhatsapp} size="2x" style={{ color: '#00ff0d' }} />
+</Link></a><br></br><br></br>
     <a
       href="https://www.flashscore.pl/tabela/ABkrguJ9/EcpQtcVi/#/EcpQtcVi/table"
       target="_blank"

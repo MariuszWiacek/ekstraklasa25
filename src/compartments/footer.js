@@ -1,13 +1,16 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faFutbol } from '@fortawesome/free-solid-svg-icons';
+import { faGithub, faTwitter, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { Link } from 'react-router-dom';
+
 
 const Footer = () => {
+
+
   const footerStyle = {
     fontSize: "15px",
-    backgroundColor: 'black',
     color: 'white',
+    
   };
 
   const mwStyle = {
@@ -20,35 +23,28 @@ const Footer = () => {
     <>
       <div className="site-footer">
         <footer style={footerStyle}>
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="social-icons" style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-                  <a href="#">
+          
+              <div className="col-md-12">
+                <div className="social-icons" style={{ display: "flex", justifyContent: "space-around", padding: '50px'}}>
+                  <a href="http://github.com/MariuszWiacek">
                     <FontAwesomeIcon icon={faGithub} size="2x" />
                   </a>
+                  <Link to="https://wa.me/447448952003" target="_blank">
+                    <FontAwesomeIcon icon={faWhatsapp} size="2x" style={{ color: '#00ff0d' }} />
+                  </Link>
                   <a href="#">
-                    <FontAwesomeIcon icon={faFacebook} size="2x" />
+                    <FontAwesomeIcon icon={faTwitter} size="2x" style={{ color: '#00ccff' }} />
                   </a>
-                  <a href="#">
-                    <FontAwesomeIcon icon={faTwitter} size="2x" />
-                  </a>
-                </div>
+                  <div style={mwStyle}>
+                    <p>&copy; 2024 Created by MW</p>
+                 
               </div>
-              <div className="col-md-6" style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-                <a href="#">
-                  <FontAwesomeIcon icon={faFutbol} size="1.5x" /> Football Club
-                </a>
-                <p>&copy; Superliga</p>
-                <p>Contact Us</p>
-              </div>
+
             </div>
           </div>
         </footer>
       </div>
-      <div style={mwStyle}>
-        <p>&copy; 2023 Created by MW</p>
-      </div>
+
     </>
   );
 };
