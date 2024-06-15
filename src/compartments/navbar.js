@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import footballLogo2 from '../images/icon2.png'
-import logo from '../images/logo.jpg'
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,78 +53,102 @@ const Navbar = () => {
     fontWeight: '700',
   };
 
+  const messageContainerStyle = {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: '40px', // Adjust the height as needed
+    backgroundColor: '#00200e',
+    zIndex: 999,
+    overflow: 'hidden',
+  };
 
-
+  const messageStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    width: '100%',
+    textAlign: 'center',
+    transform: 'translate(-100%, -50%)',
+    fontSize: '12px',
+    color: '#ffea02',
+    fontWeight: 'bold',
+  };
 
   return (
-    <nav className={`navbar navbar-expand-lg navbar-light navbar-white`} style={navbarStyle}>
-      <div className="container">
-      <AnimatePresence>
-      <motion.div
-        key="superliga"
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        exit={{ scale: 0, rotate: 180 }}
-        transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
-      >
-        <Link to="/" className="navbar-brand" style={brandStyle}>
-          {/* <motion.img
-            src={logo}
-            alt="Logo piłkarski"
-            style={logoStyle}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-          /> */}
-          <p3 className="glossy-text">EURO BET 2024</p3>
-        </Link>
-      </motion.div>
-    </AnimatePresence>
-      
-        <button
-          className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
-          type="button"
-          onClick={toggleMenu}
-        >
-          <span className="bar"></span>
-          <span className="bar"></span>
-          <span className="bar"></span>
-        </button>
-        <div className={menuClass} id="navbarNav">
-          <ul className="navbar-nav" style={linksStyle}>
-            <li className="nav-item">
-              <Link to="/bets" className="nav-link" onClick={closeMenu}>
-                Zakłady
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/table" className="nav-link" onClick={closeMenu}>
-                Tabela
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/games2" className="nav-link" onClick={closeMenu}>
-                Wyniki
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/rules" className="nav-link" onClick={closeMenu}>
-                Regulamin
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/games" className="nav-link" onClick={closeMenu}>
-                Admin
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/guestbook" className="nav-link" onClick={closeMenu}>
-                Chatbox
-              </Link>
-            </li>
-          </ul>
+    <>
+      <nav className="navbar navbar-expand-lg navbar-light navbar-white" style={navbarStyle}>
+        <div className="container">
+          <motion.div
+            key="superliga"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            exit={{ scale: 0, rotate: 180 }}
+            transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
+          >
+            <Link to="/" className="navbar-brand" style={brandStyle}>
+              <p3 className="glossy-text">EURO BET 2024</p3>
+            </Link>
+          </motion.div>
+
+          <button
+            className={`navbar-toggler ${isMenuOpen ? 'open' : ''}`}
+            type="button"
+            onClick={toggleMenu}
+          >
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </button>
+          <div className={menuClass} id="navbarNav">
+            <ul className="navbar-nav" style={linksStyle}>
+              <li className="nav-item">
+                <Link to="/bets" className="nav-link" onClick={closeMenu}>
+                  Zakłady
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/table" className="nav-link" onClick={closeMenu}>
+                  Tabela
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/games2" className="nav-link" onClick={closeMenu}>
+                  Wyniki
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/rules" className="nav-link" onClick={closeMenu}>
+                  Regulamin
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/games" className="nav-link" onClick={closeMenu}>
+                  Admin
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/guestbook" className="nav-link" onClick={closeMenu}>
+                  Chatbox
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
+      </nav>
+
+      {/* Moving Message */}
+      <div style={messageContainerStyle}>
+        <motion.div
+          style={messageStyle}
+          animate={{ x: ['-100%', '100%'] }}
+          transition={{ duration: 12, ease: 'linear', repeat: Infinity }}
+        >
+          2 kolejka gr A juz dostępna do typowania
+        </motion.div>
       </div>
-    </nav>
+    </>
   );
 };
 
