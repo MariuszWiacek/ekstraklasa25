@@ -23,7 +23,7 @@
     "kickoff": "15:00",
     "venue": "Kolonia",
     "date": "2024-06-15",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 3,
