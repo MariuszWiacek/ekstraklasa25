@@ -2,7 +2,7 @@ import React from 'react';
 
 const Rules = () => {
   return (
-    <div>
+    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
       <h2>Regulamin:<hr></hr>
 
 

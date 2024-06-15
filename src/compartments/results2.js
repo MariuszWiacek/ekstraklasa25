@@ -28,6 +28,7 @@ const Results2 = () => {
       setSubmittedResults(!!data);
     });
   }, []);
+ 
 
   const calculatePoints = (bets, results) => {
     let points = 0;
@@ -42,11 +43,19 @@ const Results2 = () => {
     return points;
   };
 
+  const sortedUsers = Object.keys(submittedData).sort((a, b) => 
+    calculatePoints(Object.values(submittedData[b]), resultsInput) - 
+    calculatePoints(Object.values(submittedData[a]), resultsInput)
+  );
+  
+  let place = 1;
+
   return (
+  <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
     <div style={styles.container}>
       {submittedResults && (
         <div style={styles.resultsSection}>
-          <h2>Wyniki:</h2>
+          <h2 >Wyniki:</h2>
           <hr style={styles.hr} />
           <table style={styles.table}>
             <thead>
@@ -76,11 +85,13 @@ const Results2 = () => {
 
       {submittedResults && (
         <div style={styles.pointsSection}>
-          <hr style={styles.hr} />
-          <h3>Aktualna tabela:</h3>
+          <hr style={{color: "red"}} />
+          <h2 style={{marginLeft:"30%"}}>Aktualna tabela:</h2>
+          <hr style={{color: "red"}} />
           <table style={styles.table}>
             <thead>
               <tr>
+              <th>Miejsce</th>
                 <th>Użytkownik</th>
                 <th>Punkty</th>
               </tr>
@@ -90,6 +101,7 @@ const Results2 = () => {
                 .sort((a, b) => calculatePoints(Object.values(submittedData[b]), resultsInput) - calculatePoints(Object.values(submittedData[a]), resultsInput))
                 .map((user) => (
                   <tr key={user}>
+                    <td>{place++}</td>
                     <td>{user}</td>
                     <td>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
                   </tr>
@@ -98,6 +110,7 @@ const Results2 = () => {
           </table>
         </div>
       )}
+    </div>
     </div>
   );
 };
@@ -114,6 +127,7 @@ const styles = {
   },
   pointsSection: {
     marginTop: '20px',
+   
   },
   hr: {
     margin: '20px 0',
