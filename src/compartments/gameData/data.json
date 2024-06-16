@@ -10,7 +10,7 @@
     "kickoff": "21:00",
     "venue": "Monachium",
     "date": "2024-06-14",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 2,
@@ -23,7 +23,7 @@
     "kickoff": "15:00",
     "venue": "Kolonia",
     "date": "2024-06-15",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 3,
@@ -36,7 +36,7 @@
     "kickoff": "18:00",
     "venue": "Berlin",
     "date": "2024-06-15",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 4,
@@ -49,7 +49,7 @@
     "kickoff": "21:00",
     "venue": "Dortmund",
     "date": "2024-06-15",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 5,
