@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
-
+import { Row, Col, Container} from 'react-bootstrap'
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
   authDomain: "bets-3887b.firebaseapp.com",
@@ -16,6 +16,14 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
+const linkContainerStyle = {
+  textAlign: 'left',
+  backgroundColor: '#212529ab',
+  padding: '20px',
+  borderRadius: '10px',
+  marginBottom: '20px',
+};
+
 const calculatePoints = (bets, results) => {
   let points = 0;
   bets.forEach((bet, index) => {
@@ -28,6 +36,7 @@ const calculatePoints = (bets, results) => {
   });
   return points;
 };
+
 
 const Table = () => {
   const [tableData, setTableData] = useState([]);
@@ -82,8 +91,9 @@ const Table = () => {
   }
 
   return (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>Tabela punktów:</h2>
+    <div><h2 style={{ textAlign: 'center' }}>Tabela punktów:</h2>
+    <div><Container fluid style={linkContainerStyle}><Row><Col md={12} >
+      
       <div style={{ overflowX: 'auto' }}>
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>
           <thead>
@@ -103,7 +113,8 @@ const Table = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div></Col></Row></Container>
+    </div>
     </div>
   );
 };

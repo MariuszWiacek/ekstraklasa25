@@ -8,6 +8,13 @@ const Results2 = () => {
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
 
+  const welcomeMessageStyle = {
+  
+    fontWeight: 'bold',
+    marginBottom: '10px',
+    textAlign: 'center'
+  };
+
   useEffect(() => {
     setGames(gameData);
   }, []);
@@ -50,12 +57,12 @@ const Results2 = () => {
   
   let place = 1;
 
-  return (
-  <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
+  return (<div style={welcomeMessageStyle}><h2 >Wyniki:</h2>
+  <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', fontWeight: 'normal' }}>
     <div style={styles.container}>
       {submittedResults && (
         <div style={styles.resultsSection}>
-          <h2 >Wyniki:</h2>
+          
           <hr style={styles.hr} />
           <table style={styles.table}>
             <thead>
@@ -111,7 +118,7 @@ const Results2 = () => {
         </div>
       )}
     </div>
-    </div>
+    </div></div>
   );
 };
 

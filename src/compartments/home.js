@@ -1,8 +1,9 @@
 import React from 'react';
-import logo from '../images/logo.jpg';
+import logo from '../images/logo.png';
 import {faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Container, Row, Col } from 'react-bootstrap';
 
 const homeStyle = {
   textAlign: 'center',
@@ -27,7 +28,7 @@ const logoStyle = {
 
 const linkContainerStyle = {
   textAlign: 'left',
-  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  backgroundColor: '#212529ab',
   padding: '20px',
   borderRadius: '10px',
   marginBottom: '20px',
@@ -47,15 +48,16 @@ const linkHoverStyle = {
 };
 
 const welcomeMessageStyle = {
-  fontSize: '18px',
+  
   fontWeight: 'bold',
   marginBottom: '10px',
   textAlign: 'center'
 };
 
 const Home = () => {
-  return (<div style={linkContainerStyle}>
-    <p style={welcomeMessageStyle}>Witaj w typerze!</p>
+  
+  return (<div><h2 style={welcomeMessageStyle}>Witaj w typerze!</h2><Container fluid style={linkContainerStyle}><Row><Col md={6} >
+    
     <a
       href="/bets"
       style={linkStyle}
@@ -86,12 +88,14 @@ const Home = () => {
       onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
     >
       Euro 2024 - <p2>wiadomości, wyniki, tabele</p2>
-    </a>
-  
-    
-      <img src={logo} alt="Logo" style={logoStyle} />
       
-    </div>
+    </a></Col>
+    <Col md={6}>
+    <img src={logo} alt="Logo" style={logoStyle} />
+    
+      
+      
+      </Col></Row></Container></div>
   );
 };
 

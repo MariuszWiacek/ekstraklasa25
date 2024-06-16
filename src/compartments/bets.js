@@ -248,14 +248,14 @@ const Bets = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px' }}>
+    <div style={{  }}>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
           <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
         </div>
       )}
 
-      <div style={{ textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
+      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <select
           style={{ margin: '1px' }}
           value={selectedUser}
@@ -267,7 +267,7 @@ const Bets = () => {
             <option key={index} value={user}>{user}</option>
           ))}
         </select>
-      </div>
+     
       {missingBets && (
         <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
           Proszę dokonać zakładu dla wszystkich meczów przed zatwierdzeniem.
@@ -350,7 +350,7 @@ const Bets = () => {
         >
           Zatwierdź
         </button>
-      </div>
+      </div> </div>
       {isDataSubmitted && Object.keys(submittedData).map((user) => (
         <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
       ))}
