@@ -162,7 +162,7 @@ const Navbar = () => {
           animate={{ x: ['-100%', '100%'] }}
           transition={{ duration: 20, ease: 'linear', repeat: Infinity }}
         >
-          ### 2 kolejka - grupy A i B już dostępne do typowania! ###
+          ### 2 kolejka - grupy A, B i C już dostępne do typowania! ###
         </motion.div>
       </div>
     </>

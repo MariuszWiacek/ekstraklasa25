@@ -62,7 +62,7 @@
     "kickoff": "15:00",
     "venue": "Hamburg",
     "date": "2024-06-16",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 6,
@@ -75,7 +75,7 @@
     "kickoff": "18:00",
     "venue": "Stuttgart",
     "date": "2024-06-16",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 7,
@@ -207,7 +207,7 @@
     "venue": "Monachium",
     "date": "2024-06-20"
     ,
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 17,
@@ -220,7 +220,7 @@
     "kickoff": "18:00",
     "venue": "Frankfurt",
     "date": "2024-06-20",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 18,

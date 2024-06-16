@@ -323,7 +323,7 @@ const Bets = () => {
         maxLength="3"
         readOnly={isReadOnly(selectedUser, index)}
         title={isReadOnly(selectedUser, index) ? "✔️" : ""}
-        disabled={gameStarted(game.date, game.kickoff)} // Use gameStarted to disable based on kickoff time
+        disabled={gameStarted(game.date, game.kickoff)} 
       />
     </td>
   </tr>
