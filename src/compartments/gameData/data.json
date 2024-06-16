@@ -62,7 +62,7 @@
     "kickoff": "15:00",
     "venue": "Hamburg",
     "date": "2024-06-16",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 6,
