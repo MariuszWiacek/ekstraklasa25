@@ -101,7 +101,7 @@
     "kickoff": "15:00",
     "venue": "Monachium",
     "date": "2024-06-17",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 9,
@@ -114,7 +114,7 @@
     "kickoff": "18:00",
     "venue": "Frankfurt",
     "date": "2024-06-17",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 10,

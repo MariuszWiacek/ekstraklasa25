@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BarLoader } from 'react-spinners';
+import { AnimatePresence } from 'framer-motion';
 
 import Home from './compartments/home';
 import Navbar from './compartments/navbar';
@@ -12,66 +11,34 @@ import Guestbook from './compartments/chatbox';
 import Games2 from './compartments/results2';
 import Bets from './compartments/bets';
 import Rules from './compartments/rules';
+import Loading from './compartments/loading'; // Import the Loading component
 
-import footballLogo from './images/icon.png'; // Replace with your logo URL
-import logo from './images/logo.jpg'; // Adjust logo import as necessary
-
-function Loading() {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 2 }}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'url("../src/images/pitch.png") no-repeat center center fixed', // Adjust background image URL
-        backgroundSize: 'cover',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 9999,
-      }}
-    >
-      <div style={{ position: 'absolute', textAlign: 'center' }}>
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-        >
-          <img src={footballLogo} alt="Football Logo" style={{ width: '400px', height: '300px', marginBottom: '20px' }} />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-        >
-          <h1 style={{ color: '#F5F5DC', margin: 0 }}>SUPERLIGA 2024</h1>
-        </motion.div>
-        <BarLoader height="3px" width="100%" size="70px" color="red" />
-      </div>
-    </motion.div>
-  );
-}
+import pitch from './images/pitch.png'; // Ensure this is the correct path to your image
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Simulating a 3-second loading period
+    const handleImageLoad = () => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000); // Ensure the loading screen is shown for at least 3 seconds
+    };
+
+    const img = new Image();
+    img.src = pitch;
+    img.onload = handleImageLoad;
+
+    return () => {
+      img.onload = null; // Cleanup in case the component unmounts
+    };
   }, []);
 
   return (
     <Router>
       <AnimatePresence>
         {isLoading ? (
-          <Loading key="loading" />
+          <Loading onLoaded={() => setIsLoading(false)} key="loading" />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Navbar />
