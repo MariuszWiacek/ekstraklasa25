@@ -246,7 +246,7 @@
     "kickoff": "15:00",
     "venue": "Duesseldorf",
     "date": "2024-06-21",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 20,
@@ -259,7 +259,7 @@
     "kickoff": "18:00",
     "venue": "Berlin",
     "date": "2024-06-21",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 21,
@@ -272,7 +272,7 @@
     "kickoff": "21:00",
     "venue": "Lipsk",
     "date": "2024-06-21",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 22,

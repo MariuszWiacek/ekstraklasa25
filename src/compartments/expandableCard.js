@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './card.css'; // Import your CSS file with styles
+import '../styles/card.css'; // Import your CSS file with styles
 
 const ExpandableCard = ({ user, bets, results }) => {
   const [expanded, setExpanded] = useState(false);

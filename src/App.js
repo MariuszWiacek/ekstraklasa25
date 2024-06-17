@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
-import Home from './compartments/home';
+import Home from './pages/home';
 import Navbar from './compartments/navbar';
-import Table from './compartments/table';
+import Table from './pages/table';
 import Games from './compartments/admin';
 import Footer from './compartments/footer';
-import Guestbook from './compartments/chatbox';
-import Games2 from './compartments/results2';
+import Guestbook from './pages/chatbox';
+import Games2 from './pages/results';
 import Bets from './compartments/bets';
-import Rules from './compartments/rules';
+import Rules from './pages/rules';
 import Loading from './compartments/loading'; // Import the Loading component
 
 import pitch from './images/pitch.png'; // Ensure this is the correct path to your image

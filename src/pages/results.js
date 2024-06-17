@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
-import gameData from './gameData/data.json';
+import gameData from '../compartments/gameData/data.json';
 
 const Results2 = () => {
   const [games, setGames] = useState([]);
@@ -50,10 +50,7 @@ const Results2 = () => {
     return points;
   };
 
-  const sortedUsers = Object.keys(submittedData).sort((a, b) => 
-    calculatePoints(Object.values(submittedData[b]), resultsInput) - 
-    calculatePoints(Object.values(submittedData[a]), resultsInput)
-  );
+ 
   
   let place = 1;
 

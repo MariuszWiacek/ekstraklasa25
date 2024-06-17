@@ -5,7 +5,7 @@ import { getDatabase, ref, push, onValue } from 'firebase/database';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import './guestbook.css';
+import '../styles/guestbook.css';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGD41f7YT-UQyGZ7d1GzzB19B9wDNbg58",
@@ -19,7 +19,6 @@ const firebaseConfig = {
 };
 
 const Guestbook = () => {
-  const [name, setName] = useState('');
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [message, setMessage] = useState('');
   const [guestbookEntries, setGuestbookEntries] = useState([]);

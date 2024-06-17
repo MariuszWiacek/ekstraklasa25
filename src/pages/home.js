@@ -5,19 +5,6 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Container, Row, Col } from 'react-bootstrap';
 
-const homeStyle = {
-  textAlign: 'center',
-  background: `url("../images/pitch.png") no-repeat center center fixed`,
-  backgroundSize: 'cover',
-  padding: '20px',
-  color: '#fff',
-  fontFamily: 'Arial, sans-serif',
-  minHeight: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-};
 
 const logoStyle = {
   width: '100%',
