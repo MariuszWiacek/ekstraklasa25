@@ -97,12 +97,12 @@ const Bets = () => {
     return submittedData[selectedUser] && submittedData[selectedUser][index];
   };
 
-  // const gameStarted = (gameDate, gameKickoff) => {
-  //   // Convert current time to BST (UTC+1)
-  //   const currentDateTime = new Date();
-  //   const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
-  //   return currentDateTime >= gameDateTimeCEST;
-  // };
+  const gameStarted = (gameDate, gameKickoff) => {
+    // Convert current time to BST (UTC+1)
+    const currentDateTime = new Date();
+    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
+    return currentDateTime >= gameDateTimeCEST;
+  };
   
 
 
@@ -323,7 +323,7 @@ const Bets = () => {
         maxLength="3"
         readOnly={isReadOnly(selectedUser, index)}
         title={isReadOnly(selectedUser, index) ? "✔️" : ""}
-        // disabled={gameStarted(game.date, game.kickoff)} 
+        disabled={gameStarted(game.date, game.kickoff)} 
       />
     </td>
   </tr>
