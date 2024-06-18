@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
-import { Row, Col, Container} from 'react-bootstrap'
+import { Row, Col, Container} from 'react-bootstrap';
+import { color } from 'framer-motion';
+
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
   authDomain: "bets-3887b.firebaseapp.com",
@@ -26,17 +28,25 @@ const linkContainerStyle = {
 
 const calculatePoints = (bets, results) => {
   let points = 0;
+  let correctTypes = 0;
+  let correctResults = 0;
+
   bets.forEach((bet, index) => {
     const result = results[index];
-    if (result && bet.score === result) {
-      points += 3;
-    } else if (result && bet.bet === (result.split(':')[0] === result.split(':')[1] ? 'X' : result.split(':')[0] > result.split(':')[1] ? '1' : '2')) {
-      points += 1;
+    if (result) {
+      // Calculate points
+      if (bet.score === result) {
+        points += 3;
+        correctResults++;
+      } else if (bet.bet === (result.split(':')[0] === result.split(':')[1] ? 'X' : result.split(':')[0] > result.split(':')[1] ? '1' : '2')) {
+        points += 1;
+        correctTypes++;
+      }
     }
   });
-  return points;
-};
 
+  return { points, correctTypes, correctResults };
+};
 
 const Table = () => {
   const [tableData, setTableData] = useState([]);
@@ -59,8 +69,8 @@ const Table = () => {
 
   useEffect(() => {
     const updatedTableData = Object.keys(submittedData).map((user) => {
-      const points = calculatePoints(Object.values(submittedData[user]), results);
-      return { user, points };
+      const { points, correctTypes, correctResults } = calculatePoints(Object.values(submittedData[user]), results);
+      return { user, points, correctTypes, correctResults };
     });
 
     // Sorting table data by points in descending order
@@ -79,42 +89,50 @@ const Table = () => {
     const j = place % 10,
           k = place % 100;
     if (j === 1 && k !== 11) {
-        return place ;
+        return place + 'st';
     }
     if (j === 2 && k !== 12) {
-        return place ;
+        return place + 'nd';
     }
     if (j === 3 && k !== 13) {
-        return place ;
+        return place + 'rd';
     }
-    return place ;
-  }
+    return place + 'th';
+  };
 
   return (
-    <div><h2 style={{ textAlign: 'center' }}>Tabela punktów:</h2>
-    <div><Container fluid style={linkContainerStyle}><Row><Col md={12} >
-      
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-          <thead>
-          <tr style={{ backgroundColor: '#212529', color: 'white' }}>
-              <th style={tableHeaderStyle}>Miejsce</th>
-              <th style={tableHeaderStyle}>Użytkownik</th>
-              <th style={tableHeaderStyle}>Punkty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.map((entry, index) => (
-              <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
-                <td style={tableCellStyle}>{entry.place}</td>
-                <td style={tableCellStyle}>{entry.user}</td>
-                <td style={tableCellStyle}>{entry.points}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div></Col></Row></Container>
-    </div>
+    <div>
+      <h2 style={{ textAlign: 'center' }}>Tabela punktów:</h2>
+      <Container fluid style={linkContainerStyle}>
+        <Row>
+          <Col md={12}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                <thead>
+                  <tr style={{ backgroundColor: '#212529', color: 'white' }}>
+                    <th style={tableHeaderStyle}>Miejsce</th>
+                    <th style={tableHeaderStyle}>Użytkownik</th>
+                    <th style={tableHeaderStyle}>Punkty</th>
+                    <th style={tableHeaderStyle}>☑️ <br></br>tylko typ</th>
+                    <th style={tableHeaderStyle}>✅☑️ <br></br>typ+wynik</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableData.map((entry, index) => (
+                    <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
+                      <td style={tableCellStyle}>{entry.place}</td>
+                      <td style={tableCellStyle}>{entry.user}</td>
+                      <td style={tableCellStyle2}>{entry.points}</td>
+                      <td style={tableCellStyle}>{entry.correctTypes}</td>
+                      <td style={tableCellStyle}>{entry.correctResults}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };
@@ -132,6 +150,14 @@ const tableCellStyle = {
   padding: '10px',
   border: '1px solid #dddddd',
   textAlign: 'center',
+};
+
+const tableCellStyle2 = {
+  padding: '10px',
+  border: '1px solid #dddddd',
+  textAlign: 'center',
+  color: 'aliceblue', 
+fontWeight: 'bold'
 };
 
 export default Table;
