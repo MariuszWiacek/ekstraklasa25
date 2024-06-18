@@ -89,15 +89,15 @@ const Table = () => {
     const j = place % 10,
           k = place % 100;
     if (j === 1 && k !== 11) {
-        return place + 'st';
+        return place + '';
     }
     if (j === 2 && k !== 12) {
-        return place + 'nd';
+        return place + '';
     }
     if (j === 3 && k !== 13) {
-        return place + 'rd';
+        return place + '';
     }
-    return place + 'th';
+    return place + '';
   };
 
   return (
