@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
-import usersData from './gameData/users.json';
-import gameData from './gameData/data.json';
+import usersData from '../gameData/users.json';
+import gameData from '../gameData/data.json';
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import ExpandableCard from './expandableCard'; // Adjust the path as needed
+import ExpandableCard from '../compartments/expandableCard'; // Adjust the path as needed
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
@@ -97,12 +97,12 @@ const Bets = () => {
     return submittedData[selectedUser] && submittedData[selectedUser][index];
   };
 
-  // const gameStarted = (gameDate, gameKickoff) => {
-  //   // Convert current time to BST (UTC+1)
-  //   const currentDateTime = new Date();
-  //   const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
-  //   return currentDateTime >= gameDateTimeCEST;
-  // };
+  const gameStarted = (gameDate, gameKickoff) => {
+    // Convert current time to BST (UTC+1)
+    const currentDateTime = new Date();
+    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
+    return currentDateTime >= gameDateTimeCEST;
+  };
   
 
 
@@ -323,7 +323,7 @@ const Bets = () => {
         maxLength="3"
         readOnly={isReadOnly(selectedUser, index)}
         title={isReadOnly(selectedUser, index) ? "✔️" : ""}
-        // disabled={gameStarted(game.date, game.kickoff)} 
+        disabled={gameStarted(game.date, game.kickoff)} 
       />
     </td>
   </tr>
