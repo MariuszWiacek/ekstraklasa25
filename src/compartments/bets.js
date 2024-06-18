@@ -295,7 +295,15 @@ const Bets = () => {
         </thead>
         <tbody>
         {games.map((game, index) => (
-  <tr key={index} style={{ borderBottom: '0.5px solid #444', opacity: game.disabled ? '0.5' : '1', pointerEvents: game.disabled ? 'none' : 'auto' }}>
+  <tr
+    key={index}
+    style={{
+      borderBottom: '0.5px solid #444',
+      opacity: game.disabled ? '0.5' : '1',
+      pointerEvents: game.disabled ? 'none' : 'auto',
+      backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent', // Change background color here
+    }}
+  >
     <td>{game.date}</td>
     <td>{game.kickoff}</td>
     <td>{game.home}</td>
@@ -323,7 +331,7 @@ const Bets = () => {
         maxLength="3"
         readOnly={isReadOnly(selectedUser, index)}
         title={isReadOnly(selectedUser, index) ? "✔️" : ""}
-        disabled={gameStarted(game.date, game.kickoff)} 
+        disabled={gameStarted(game.date, game.kickoff)}
       />
     </td>
   </tr>
