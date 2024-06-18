@@ -199,7 +199,7 @@ const Bets = () => {
       }, {});
 
       if (Object.keys(newBetsToSubmit).length === 0) {
-        alert('You have already submitted your bets for all available games.');
+        alert("Już wysłałeś swoje zakłady na wszystkie dostępne gry.");
         return;
       }
 
@@ -207,11 +207,11 @@ const Bets = () => {
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: { ...userSubmittedBets, ...newBetsToSubmit } });
           setIsDataSubmitted(true);
-          alert('Results submitted successfully!');
+          alert('Wyniki dodane prawidłowo!');
         })
         .catch((error) => {
           console.error('Error submitting data:', error);
-          alert('An error occurred while submitting your bets. Please try again.');
+          alert('Podczas przesyłania Twoich zakładów wystąpił błąd. Proszę spróbuj ponownie');
         });
     } else {
       const userBetsObject = {};

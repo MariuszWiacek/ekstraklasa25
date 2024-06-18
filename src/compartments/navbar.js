@@ -70,7 +70,7 @@ const Navbar = () => {
 
   const messageStyle = {
     whiteSpace: 'nowrap',
-    fontSize: '10px',
+    fontSize: '16px',
     color: 'aliceblue',
     fontWeight: 'bold',
     position: 'absolute',
@@ -162,7 +162,7 @@ const Navbar = () => {
           animate={{ x: ['-100%', '100%'] }}
           transition={{ duration: 20, ease: 'linear', repeat: Infinity }}
         >
-          ### 2 kolejka - grupy A, B, C, D i E już dostępne do typowania! ###
+          ### 2 kolejka już dostępna do typowania !!! ###
         </motion.div>
       </div>
     </>
