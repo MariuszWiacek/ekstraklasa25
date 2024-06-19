@@ -324,7 +324,7 @@
     "kickoff": "21:00",
     "venue": "Stuttgart",
     "date": "2024-06-23",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 26,
@@ -337,7 +337,7 @@
     "kickoff": "21:00",
     "venue": "Frankfurt",
     "date": "2024-06-23",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 27,
