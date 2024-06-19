@@ -311,7 +311,7 @@
     "kickoff": "21:00",
     "venue": "Kolonia",
     "date": "2024-06-22",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 25,
