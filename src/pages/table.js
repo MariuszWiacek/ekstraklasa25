@@ -72,17 +72,24 @@ const Table = () => {
       const { points, correctTypes, correctResults } = calculatePoints(Object.values(submittedData[user]), results);
       return { user, points, correctTypes, correctResults };
     });
-
-    // Sorting table data by points in descending order
-    updatedTableData.sort((a, b) => b.points - a.points);
-
+  
+    // Sorting table data by points in descending order, and by correctResults if points are tied
+    updatedTableData.sort((a, b) => {
+      if (b.points !== a.points) {
+        return b.points - a.points;
+      } else {
+        return b.correctResults - a.correctResults;
+      }
+    });
+  
     // Assigning places (1st, 2nd, 3rd, etc.)
     updatedTableData.forEach((entry, index) => {
       entry.place = getPlace(index + 1); // index + 1 to start from 1
     });
-
+  
     setTableData(updatedTableData);
   }, [submittedData, results]);
+  
 
   // Function to get ordinal suffix for places (1st, 2nd, 3rd, etc.)
   const getPlace = (place) => {
