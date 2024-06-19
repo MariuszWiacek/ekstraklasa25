@@ -153,7 +153,7 @@
     "kickoff": "21:00",
     "venue": "Lipsk",
     "date": "2024-06-18",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 13,
