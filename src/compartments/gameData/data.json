@@ -166,7 +166,7 @@
     "kickoff": "15:00",
     "venue": "Hamburg",
     "date": "2024-06-19",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 14,
@@ -179,7 +179,7 @@
     "kickoff": "18:00",
     "venue": "Stuttgart",
     "date": "2024-06-19",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 15,
@@ -193,7 +193,7 @@
     "venue": "Kolonia",
     "date": "2024-06-19"
     ,
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 16,
