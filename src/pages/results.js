@@ -67,16 +67,16 @@ const Results = () => {
     });
 
     return {
-      home: ((betCounts.home / totalBets) * 100).toFixed(2),
-      draw: ((betCounts.draw / totalBets) * 100).toFixed(2),
-      away: ((betCounts.away / totalBets) * 100).toFixed(2),
+      home: ((betCounts.home / totalBets) * 100).toFixed(0),
+      draw: ((betCounts.draw / totalBets) * 100).toFixed(0),
+      away: ((betCounts.away / totalBets) * 100).toFixed(0),
     };
   };
 
   const getParticipationPercentage = (gameIndex) => {
     const totalUsers = Object.keys(submittedData).length;
     const usersWhoBet = Object.values(submittedData).filter(userBets => userBets[gameIndex] !== undefined).length;
-    return totalUsers > 0 ? ((usersWhoBet / totalUsers) * 100).toFixed(2) : 0;
+    return totalUsers > 0 ? ((usersWhoBet / totalUsers) * 100).toFixed(0) : 0;
   };
 
   return (
