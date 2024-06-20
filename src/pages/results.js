@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import gameData from '../compartments/gameData/data.json';
 
-const  Results = () => {
+const Results = () => {
   const [games, setGames] = useState([]);
   const [resultsInput, setResultsInput] = useState([]);
   const [submittedResults, setSubmittedResults] = useState(false);
@@ -11,7 +11,8 @@ const  Results = () => {
   const welcomeMessageStyle = {
     fontWeight: 'bold',
     marginBottom: '10px',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: window.innerWidth <= 480 ? '14px' : 'initial', // Adjust font size for mobile
   };
 
   useEffect(() => {
@@ -52,6 +53,26 @@ const  Results = () => {
     return Object.keys(submittedData).filter((user) => submittedData[user][gameIndex] && submittedData[user][gameIndex].score === resultsInput[gameIndex]);
   };
 
+  const getBetPercentages = (gameIndex) => {
+    const totalBets = Object.keys(submittedData).length;
+    if (totalBets === 0) return { home: 0, draw: 0, away: 0 };
+
+    const betCounts = { home: 0, draw: 0, away: 0 };
+
+    Object.values(submittedData).forEach((userBets) => {
+      const bet = userBets[gameIndex]?.bet;
+      if (bet === '1') betCounts.home++;
+      else if (bet === 'X') betCounts.draw++;
+      else if (bet === '2') betCounts.away++;
+    });
+
+    return {
+      home: ((betCounts.home / totalBets) * 100).toFixed(2),
+      draw: ((betCounts.draw / totalBets) * 100).toFixed(2),
+      away: ((betCounts.away / totalBets) * 100).toFixed(2),
+    };
+  };
+
   let place = 1;
 
   return (
@@ -69,22 +90,29 @@ const  Results = () => {
                     <th>Mecz</th>
                     <th>Wynik</th>
                     <th>Kto trafił prawidłowy wynik?</th>
+                    <th>Procent obstawiających</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {games.map((game, index) => (
-                    <React.Fragment key={index}>
-                      <tr style={styles.gameRow}>
-                        <td>{game.date}</td>
-                        <td>{game.home} vs {game.away}</td>
-                        <td>{resultsInput[index]}</td>
-                        <td>{getCorrectTyp(index).join(', ')}</td>
-                      </tr>
-                      <tr>
-                        <td colSpan="4"><hr style={styles.rowHr} /></td>
-                      </tr>
-                    </React.Fragment>
-                  ))}
+                  {games.map((game, index) => {
+                    const betPercentages = getBetPercentages(index);
+                    return (
+                      <React.Fragment key={index}>
+                        <tr style={styles.gameRow}>
+                          <td>{game.date}</td>
+                          <td>{game.home} vs {game.away}</td>
+                          <td>{resultsInput[index]}</td>
+                          <td>{getCorrectTyp(index).join(', ')}</td>
+                          <td>
+                            {`Home: ${betPercentages.home}%, Draw: ${betPercentages.draw}%, Away: ${betPercentages.away}%`}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan="5"><hr style={styles.rowHr} /></td>
+                        </tr>
+                      </React.Fragment>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
