@@ -12,7 +12,7 @@ const Results = () => {
     fontWeight: 'bold',
     marginBottom: '10px',
     textAlign: 'center',
-    fontSize: window.innerWidth <= 480 ? '14px' : 'initial', // Adjust font size for mobile
+    fontSize: window.innerWidth <= 480 ? '12px' : 'initial', // Adjust font size for mobile
   };
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const Results = () => {
                           <td>
                             {game.home} vs {game.away}
                             <div style={styles.percentages}>
-                              {`Home: ${betPercentages.home}%, Draw: ${betPercentages.draw}%, Away: ${betPercentages.away}%`}
+                              {`1: ${betPercentages.home}%, X: ${betPercentages.draw}%, 2: ${betPercentages.away}%`}
                             </div>
                           </td>
                           <td>{resultsInput[index]}</td>
@@ -144,6 +144,7 @@ const styles = {
     margin: '0 auto',
     borderCollapse: 'collapse',
     width: '90%',
+    fontSize: window.innerWidth <= 480 ? '12px' : 'initial', // Adjust table font size for mobile
   },
   th: {
     border: '1px solid #ddd',
@@ -159,7 +160,7 @@ const styles = {
     marginBottom: '10px',
   },
   percentages: {
-    fontSize: '12px',
+    fontSize: window.innerWidth <= 480 ? '10px' : '12px', // Adjust percentages font size for mobile
     color: '#ddd',
     marginTop: '5px',
   },
