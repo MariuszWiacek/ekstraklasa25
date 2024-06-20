@@ -73,9 +73,9 @@ const Results = () => {
     };
   };
 
-  const getBettingParticipationPercentage = () => {
+  const getParticipationPercentage = (gameIndex) => {
     const totalUsers = Object.keys(submittedData).length;
-    const usersWhoBet = Object.values(submittedData).filter(userBets => Object.keys(userBets).length > 0).length;
+    const usersWhoBet = Object.values(submittedData).filter(userBets => userBets[gameIndex] !== undefined).length;
     return totalUsers > 0 ? ((usersWhoBet / totalUsers) * 100).toFixed(2) : 0;
   };
 
@@ -87,7 +87,6 @@ const Results = () => {
           {submittedResults && (
             <div style={styles.resultsSection}>
               <hr style={styles.hr} />
-              <p>{`Percentage of players who have made a bet: ${getBettingParticipationPercentage()}%`}</p>
               <table style={styles.table}>
                 <thead>
                   <tr>
@@ -95,11 +94,13 @@ const Results = () => {
                     <th>Mecz</th>
                     <th>Wynik</th>
                     <th>Kto trafił prawidłowy wynik?</th>
+                    <th>Udział w zakładach (%)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {games.map((game, index) => {
                     const betPercentages = getBetPercentages(index);
+                    const participationPercentage = getParticipationPercentage(index);
                     return (
                       <React.Fragment key={index}>
                         <tr style={styles.gameRow}>
@@ -112,9 +113,10 @@ const Results = () => {
                           </td>
                           <td>{resultsInput[index]}</td>
                           <td>{getCorrectTyp(index).join(', ')}</td>
+                          <td>{participationPercentage}%</td>
                         </tr>
                         <tr>
-                          <td colSpan="4"><hr style={styles.rowHr} /></td>
+                          <td colSpan="5"><hr style={styles.rowHr} /></td>
                         </tr>
                       </React.Fragment>
                     );
