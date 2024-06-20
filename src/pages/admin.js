@@ -11,6 +11,12 @@ const Results = () => {
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const handleKeyPress = (event, action) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission if any
+      action(); // Execute the action associated with the Enter key press
+    }
+  };
 
   useEffect(() => {
     setGames(gameData);
@@ -66,6 +72,11 @@ const Results = () => {
         alert('Wystąpił błąd podczas przesyłania wyników. Spróbuj ponownie.');
       });
   };
+  
+  // No change needed in button code, it remains the same
+  
+  
+  
 
   const handlePasswordSubmit = () => {
     if (password === 'maniek123') {
@@ -108,12 +119,16 @@ const Results = () => {
       <div style={styles.authContainer}>
         <h2>Hasło Admina:</h2>
         <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <button onClick={handlePasswordSubmit} style={styles.button}>Zatwierdź</button>
+  type="password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  style={styles.input}
+  onKeyPress={(e) => handleKeyPress(e, handlePasswordSubmit)}
+/>
+
+<button onClick={handleSubmitResults} style={styles.button}>
+    Zatwierdź wyniki
+  </button>
       </div>
     );
   }
@@ -127,14 +142,16 @@ const Results = () => {
             <p>{game.home} vs {game.away}:</p>
             {editMode ? (
               <input
-                type="text"
-                maxLength="3"
-                placeholder="x:x"
-                value={resultsInput[index] || ''}
-                onChange={(e) => handleResultChange(index, e.target.value)}
-                style={styles.resultInput}
-                disabled={game.disabled}
-              />
+              type="text"
+              maxLength="3"
+              placeholder="x:x"
+              value={resultsInput[index] || ''}
+              onChange={(e) => handleResultChange(index, e.target.value)}
+              style={styles.resultInput}
+              disabled={game.disabled}
+              onKeyPress={(e) => handleKeyPress(e, handleSubmitResults)}
+            />
+            
             ) : (
               <span>{resultsInput[index] || 'Brak wyniku'}</span>
             )}

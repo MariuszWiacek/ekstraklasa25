@@ -8,12 +8,54 @@ const Results = () => {
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
 
-  const welcomeMessageStyle = {
-    fontWeight: 'bold',
-    marginBottom: '10px',
-    textAlign: 'center',
-    fontSize: window.innerWidth <= 480 ? '12px' : 'initial', // Adjust font size for mobile
+  const styles = {
+    container: {
+      textAlign: 'left',
+      margin: '20px',
+    },
+    resultsSection: {
+      textAlign: 'center',
+      color: 'red',
+      marginBottom: '20px',
+    },
+    hr: {
+      margin: '20px 0',
+    },
+    rowHr: {
+      border: '0',
+      borderTop: '1px solid #ddd',
+      margin: '10px 0',
+    },
+    table: {
+      margin: '0 auto',
+      borderCollapse: 'collapse',
+      width: '90%',
+      fontSize: window.innerWidth <= 480 ? '12px' : 'initial', // Adjust table font size for mobile
+    },
+    th: {
+      border: '1px solid #ddd',
+      padding: '8px',
+      backgroundColor: '#4CAF50',
+      color: 'white',
+    },
+    td: {
+      border: '1px solid #ddd',
+      padding: '8px',
+    },
+    gameRow: {
+      marginBottom: '10px',
+    },
+    percentages: {
+      fontSize: window.innerWidth <= 480 ? '10px' : '12px', // Adjust percentages font size for mobile
+      color: 'red', // Change percentages color to red
+      marginTop: '5px',
+    },
+    goldFraction: {
+      color: 'gold',
+      fontWeight: 'bold',
+    },
   };
+
 
   useEffect(() => {
     setGames(gameData);
@@ -73,14 +115,14 @@ const Results = () => {
     };
   };
 
-  const getParticipationPercentage = (gameIndex) => {
+  const getParticipationFraction = (gameIndex) => {
     const totalUsers = Object.keys(submittedData).length;
     const usersWhoBet = Object.values(submittedData).filter(userBets => userBets[gameIndex] !== undefined).length;
-    return totalUsers > 0 ? ((usersWhoBet / totalUsers) * 100).toFixed(0) : 0;
+    return `${usersWhoBet}/${totalUsers}`;
   };
 
   return (
-    <div style={welcomeMessageStyle}>
+    <div style={styles.welcomeMessageStyle}>
       <h2>Wyniki:</h2>
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', fontWeight: 'normal' }}>
         <div style={styles.container}>
@@ -94,13 +136,12 @@ const Results = () => {
                     <th>Mecz</th>
                     <th>Wynik</th>
                     <th>Kto trafił prawidłowy wynik?</th>
-                    <th>Udział w zakładach (%)</th>
+                    <th>Udział w zakładach</th>
                   </tr>
                 </thead>
                 <tbody>
                   {games.map((game, index) => {
                     const betPercentages = getBetPercentages(index);
-                    const participationPercentage = getParticipationPercentage(index);
                     return (
                       <React.Fragment key={index}>
                         <tr style={styles.gameRow}>
@@ -110,10 +151,13 @@ const Results = () => {
                             <div style={styles.percentages}>
                               {`1: ${betPercentages.home}%, X: ${betPercentages.draw}%, 2: ${betPercentages.away}%`}
                             </div>
+
                           </td>
                           <td>{resultsInput[index]}</td>
                           <td>{getCorrectTyp(index).join(', ')}</td>
-                          <td>{participationPercentage}%</td>
+                          <td style={getParticipationFraction(index) === '14/14' ? styles.goldFraction : {}}>
+                            {getParticipationFraction(index)}
+                          </td>
                         </tr>
                         <tr>
                           <td colSpan="5"><hr style={styles.rowHr} /></td>
@@ -129,50 +173,6 @@ const Results = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    textAlign: 'left',
-    margin: '20px',
-  },
-  resultsSection: {
-    textAlign: 'center',
-    color: 'red',
-    marginBottom: '20px',
-  },
-  hr: {
-    margin: '20px 0',
-  },
-  rowHr: {
-    border: '0',
-    borderTop: '1px solid #ddd',
-    margin: '10px 0',
-  },
-  table: {
-    margin: '0 auto',
-    borderCollapse: 'collapse',
-    width: '90%',
-    fontSize: window.innerWidth <= 480 ? '12px' : 'initial', // Adjust table font size for mobile
-  },
-  th: {
-    border: '1px solid #ddd',
-    padding: '8px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-  },
-  td: {
-    border: '1px solid #ddd',
-    padding: '8px',
-  },
-  gameRow: {
-    marginBottom: '10px',
-  },
-  percentages: {
-    fontSize: window.innerWidth <= 480 ? '10px' : '12px', // Adjust percentages font size for mobile
-    color: '#ddd',
-    marginTop: '5px',
-  },
 };
 
 export default Results;
