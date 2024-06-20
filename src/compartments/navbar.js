@@ -122,7 +122,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/games2" className="nav-link" onClick={closeMenu}>
+                <Link to="/results" className="nav-link" onClick={closeMenu}>
                   Wyniki
                 </Link>
               </li>
@@ -132,7 +132,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/games" className="nav-link" onClick={closeMenu}>
+                <Link to="/admin" className="nav-link" onClick={closeMenu}>
                   Admin
                 </Link>
               </li>

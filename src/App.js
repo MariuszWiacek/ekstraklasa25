@@ -5,10 +5,10 @@ import { AnimatePresence } from 'framer-motion';
 import Home from './pages/home';
 import Navbar from './compartments/navbar';
 import Table from './pages/table';
-import Games from './compartments/admin';
+import Admin from './pages/admin';
 import Footer from './compartments/footer';
 import Guestbook from './pages/chatbox';
-import Games2 from './pages/results';
+import Results from './pages/results';
 import Bets from './compartments/bets';
 import Rules from './pages/rules';
 import Loading from './compartments/loading'; // Import the Loading component
@@ -47,8 +47,8 @@ function App() {
                 <Route path="/" element={<Home />} /> 
                 <Route path="/rules" element={<Rules />} />
                 <Route path="/table" element={<Table />} />
-                <Route path="/games" element={<Games />} />
-                <Route path="/games2" element={<Games2 />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/results" element={<Results />} />
                 <Route path="/guestbook" element={<Guestbook />} />
                 <Route path="/bets" element={<Bets />} />
               </Routes>

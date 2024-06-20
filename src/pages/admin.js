@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import gameData from '../gameData/data.json';
-import ExpandableCard from '../compartments/expandableCard';
 
 const Admin = () => {
   const [games, setGames] = useState([]);
@@ -10,7 +9,6 @@ const Admin = () => {
   const [submittedData, setSubmittedData] = useState({});
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
-  const [editMode, setEditMode] = useState(false);
   const [betCounts, setBetCounts] = useState({});
   const [nonBettors, setNonBettors] = useState({});
 
@@ -45,7 +43,7 @@ const Admin = () => {
 
   useEffect(() => {
     const nonBettorsData = {};
-    Object.keys(submittedData).forEach(user => {
+    Object.keys(submittedData).forEach((user) => {
       for (let i = 0; i < games.length; i++) {
         if (!submittedData[user][i]) {
           if (!nonBettorsData[i]) {
@@ -57,19 +55,6 @@ const Admin = () => {
     });
     setNonBettors(nonBettorsData);
   }, [submittedData, games]);
-
-  const calculatePoints = (bets, results) => {
-    let points = 0;
-    bets.forEach((bet, index) => {
-      const result = results[index];
-      if (result && bet.score === result) {
-        points += 3;
-      } else if (result && bet.bet === (result.split(':')[0] === result.split(':')[1] ? 'X' : result.split(':')[0] > result.split(':')[1] ? '1' : '2')) {
-        points += 1;
-      }
-    });
-    return points;
-  };
 
   const handleResultChange = (index, result) => {
     setResultsInput(prevResults => {
@@ -83,7 +68,6 @@ const Admin = () => {
     set(ref(getDatabase(), 'results'), resultsInput)
       .then(() => {
         setSubmittedResults(true);
-        setEditMode(false);
         alert('Wyniki zostały pomyślnie przesłane!');
       })
       .catch((error) => {
@@ -100,30 +84,11 @@ const Admin = () => {
     }
   };
 
-  const sortedUsers = Object.keys(submittedData).sort((a, b) => {
-    const pointsA = calculatePoints(Object.values(submittedData[a]), resultsInput);
-    const pointsB = calculatePoints(Object.values(submittedData[b]), resultsInput);
-    return pointsB - pointsA;
-  });
-
-  if (!authenticated) {
-    return (
-      <div style={styles.authContainer}>
-        <h2>Hasło Admina:</h2>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-          onKeyPress={(e) => handleKeyPress(e, handlePasswordSubmit)}
-        />
-
-        <button onClick={handleSubmitResults} style={styles.button}>
-          Zatwierdź wyniki
-        </button>
-      </div>
-    );
-  }
+  const handleKeyPress = (event, callback) => {
+    if (event.key === 'Enter') {
+      callback();
+    }
+  };
 
   return (
     <div style={styles.resultsContainer}>
@@ -131,84 +96,33 @@ const Admin = () => {
       <div style={styles.gamesContainer}>
         {games.map((game, index) => (
           <div key={index} style={styles.gameEntry}>
-            <p>{game.home} vs {game.away}:</p>
-            {editMode ? (
+            <div style={styles.gameInfo}>
+              <p>{game.home} vs {game.away}:</p>
               <input
                 type="text"
-                maxLength="3"
-                placeholder="x:x"
+                maxLength="5" // Allow 5 characters (e.g., "x:y")
+                placeholder="x:y"
                 value={resultsInput[index] || ''}
                 onChange={(e) => handleResultChange(index, e.target.value)}
                 style={styles.resultInput}
-                onKeyPress={(e) => handleKeyPress(e, handleSubmitResults)}
+                onKeyDown={(e) => handleKeyPress(e, handleSubmitResults)}
               />
-            ) : (
-              <span>{resultsInput[index] || 'Brak wyniku'}</span>
-            )}
-            <div style={styles.betInfo}>
-              <p>{`${betCounts[index]?.home || 0}/${Object.keys(submittedData).length}`} - 1</p>
-              <p>{`${betCounts[index]?.draw || 0}/${Object.keys(submittedData).length}`} - X</p>
-              <p>{`${betCounts[index]?.away || 0}/${Object.keys(submittedData).length}`} - 2</p>
-              <p>Nie obstawili: {nonBettors[index]?.join(', ') || 'brak'}</p>
+            </div>
+            <div style={styles.nonBettors}>
+              <p>Nie obstawili:</p>
+              <p>{nonBettors[index]?.join(', ') || 'brak'}</p>
             </div>
           </div>
         ))}
       </div>
-      <button onClick={() => setEditMode(!editMode)} style={styles.button}>
-        {editMode ? 'Zakończ Edycję' : 'Edytuj Wyniki'}
+      <button onClick={handleSubmitResults} style={styles.button}>
+        Zatwierdź wyniki
       </button>
-      {editMode && (
-        <button onClick={handleSubmitResults} style={styles.button}>
-          Zatwierdź wyniki
-        </button>
-      )}
-
-      {submittedResults && (
-        <div style={styles.pointsTable}>
-          <h2>Tabela punktów:</h2>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>Użytkownik</th>
-                <th style={styles.th}>Punkty</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedUsers.map((user) => (
-                <tr key={user}>
-                  <td style={styles.td}>{user}</td>
-                  <td style={styles.td}>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <div style={styles.expandableCardsContainer}>
-        {sortedUsers.map((user, userIndex) => (
-          <ExpandableCard
-            key={userIndex}
-            user={user}
-            bets={submittedData[user]}
-            results={resultsInput}
-          />
-        ))}
-      </div>
     </div>
   );
 };
 
 const styles = {
-  authContainer: {
-    textAlign: 'center',
-    margin: '20px auto',
-    maxWidth: '400px',
-    padding: '20px',
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    backgroundColor: '#00000046',
-  },
   resultsContainer: {
     textAlign: 'center',
     margin: '10px auto',
@@ -217,15 +131,6 @@ const styles = {
     border: '1px solid #ddd',
     borderRadius: '8px',
     backgroundColor: '#00000046',
-  },
-  input: {
-    margin: '10px 0',
-    padding: '8px',
-    fontSize: '16px',
-    width: '100%',
-    boxSizing: 'border-box',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
   },
   button: {
     padding: '10px 20px',
@@ -241,53 +146,28 @@ const styles = {
   gamesContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'left',
+    alignItems: 'center', // Center align the game entries
   },
   gameEntry: {
+    marginBottom: '10px',
+  },
+  gameInfo: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'left',
-    margin: '10px 0',
+    alignItems: 'center',
+    marginBottom: '5px',
   },
   resultInput: {
     marginLeft: '10px',
     padding: '8px',
-    fontSize: '16px',
+    fontSize: '12px',
     textAlign: 'center',
     boxSizing: 'border-box',
     border: '1px solid #ddd',
     borderRadius: '4px',
-    width: '50px',
+    width: '40px',
   },
-  pointsTable: {
-    marginTop: '20px',
-    padding: '20px',
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    backgroundColor: '#00000046',
-  },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-  },
-  th: {
-    border: '1px solid #ddd',
-    padding: '12px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
+  nonBettors: {
     textAlign: 'center',
-  },
-  td: {
-    border: '1px solid #ddd',
-    padding: '12px',
-    textAlign: 'center',
-  },
-  expandableCardsContainer: {
-    marginTop: '20px',
-  },
-  betInfo: {
-    marginTop: '5px',
-    fontSize: '12px',
   },
 };
 
