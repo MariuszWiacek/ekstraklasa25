@@ -350,8 +350,7 @@
     "kickoff": "21:00",
     "venue": "Duesseldorf",
     "date": "2024-06-24",
-    "disabled": true
-  },
+    "disabled": false,
   {
     "id": 28,
     "home": "Chorwacja",
@@ -363,7 +362,7 @@
     "kickoff": "21:00",
     "venue": "Lipsk",
     "date": "2024-06-24",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 29,
