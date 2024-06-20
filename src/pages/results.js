@@ -73,6 +73,12 @@ const Results = () => {
     };
   };
 
+  const getBettingParticipationPercentage = () => {
+    const totalUsers = Object.keys(submittedData).length;
+    const usersWhoBet = Object.values(submittedData).filter(userBets => Object.keys(userBets).length > 0).length;
+    return totalUsers > 0 ? ((usersWhoBet / totalUsers) * 100).toFixed(2) : 0;
+  };
+
   return (
     <div style={welcomeMessageStyle}>
       <h2>Wyniki:</h2>
@@ -81,6 +87,7 @@ const Results = () => {
           {submittedResults && (
             <div style={styles.resultsSection}>
               <hr style={styles.hr} />
+              <p>{`Percentage of players who have made a bet: ${getBettingParticipationPercentage()}%`}</p>
               <table style={styles.table}>
                 <thead>
                   <tr>
