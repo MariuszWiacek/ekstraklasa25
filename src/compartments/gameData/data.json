@@ -324,7 +324,7 @@
     "kickoff": "21:00",
     "venue": "Stuttgart",
     "date": "2024-06-23",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 26,
@@ -337,7 +337,7 @@
     "kickoff": "21:00",
     "venue": "Frankfurt",
     "date": "2024-06-23",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 27,
@@ -350,7 +350,7 @@
     "kickoff": "21:00",
     "venue": "Duesseldorf",
     "date": "2024-06-24",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 28,
@@ -363,7 +363,7 @@
     "kickoff": "21:00",
     "venue": "Lipsk",
     "date": "2024-06-24",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 29,
@@ -376,7 +376,7 @@
     "kickoff": "18:00",
     "venue": "Dortmund",
     "date": "2024-06-25",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 30,
@@ -389,7 +389,7 @@
     "kickoff": "18:00",
     "venue": "Berlin",
     "date": "2024-06-25",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 31,
@@ -402,7 +402,7 @@
     "kickoff": "21:00",
     "venue": "Kolonia",
     "date": "2024-06-25",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 32,
@@ -415,7 +415,7 @@
     "kickoff": "21:00",
     "venue": "Monachium",
     "date": "2024-06-25",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 33,
@@ -428,7 +428,7 @@
     "kickoff": "18:00",
     "venue": "Frankfurt",
     "date": "2024-06-26",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 34,
@@ -441,7 +441,7 @@
     "kickoff": "18:00",
     "venue": "Stuttgart",
     "date": "2024-06-26",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 35,
@@ -454,7 +454,7 @@
     "kickoff": "21:00",
     "venue": "Hamburg",
     "date": "2024-06-26",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 36,
@@ -467,7 +467,7 @@
     "kickoff": "21:00",
     "venue": "Gelsenkirchen",
     "date": "2024-06-26",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 37,
