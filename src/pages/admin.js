@@ -3,7 +3,7 @@ import { getDatabase, ref, set, onValue } from 'firebase/database';
 import gameData from '../gameData/data.json';
 import ExpandableCard from '../compartments/expandableCard';
 
-const Results = () => {
+const Admin = () => {
   const [games, setGames] = useState([]);
   const [resultsInput, setResultsInput] = useState([]);
   const [submittedResults, setSubmittedResults] = useState(false);
@@ -11,12 +11,8 @@ const Results = () => {
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const handleKeyPress = (event, action) => {
-    if (event.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission if any
-      action(); // Execute the action associated with the Enter key press
-    }
-  };
+  const [betCounts, setBetCounts] = useState({});
+  const [nonBettors, setNonBettors] = useState({});
 
   useEffect(() => {
     setGames(gameData);
@@ -38,6 +34,29 @@ const Results = () => {
       setSubmittedResults(!!data);
     });
   }, []);
+
+  useEffect(() => {
+    const betCountsRef = ref(getDatabase(), 'betCounts');
+    onValue(betCountsRef, (snapshot) => {
+      const data = snapshot.val();
+      setBetCounts(data || {});
+    });
+  }, []);
+
+  useEffect(() => {
+    const nonBettorsData = {};
+    Object.keys(submittedData).forEach(user => {
+      for (let i = 0; i < games.length; i++) {
+        if (!submittedData[user][i]) {
+          if (!nonBettorsData[i]) {
+            nonBettorsData[i] = [];
+          }
+          nonBettorsData[i].push(user);
+        }
+      }
+    });
+    setNonBettors(nonBettorsData);
+  }, [submittedData, games]);
 
   const calculatePoints = (bets, results) => {
     let points = 0;
@@ -72,11 +91,6 @@ const Results = () => {
         alert('Wystąpił błąd podczas przesyłania wyników. Spróbuj ponownie.');
       });
   };
-  
-  // No change needed in button code, it remains the same
-  
-  
-  
 
   const handlePasswordSubmit = () => {
     if (password === 'maniek123') {
@@ -84,28 +98,6 @@ const Results = () => {
     } else {
       alert('Nieprawidłowe hasło. Spróbuj ponownie.');
     }
-  };
-
-  const handleToggleDisableGame = (index) => {
-    const updatedGames = [...games];
-    updatedGames[index].disabled = !updatedGames[index].disabled;
-    setGames(updatedGames);
-
-    fetch('/updateGameData', {
-      method: 'POST',
-      body: JSON.stringify(updatedGames),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
-      if (response.ok) {
-        console.log('Game disabled/enabled successfully');
-      } else {
-        console.error('Failed to disable/enable game');
-      }
-    }).catch(error => {
-      console.error('Error toggling game disable:', error);
-    });
   };
 
   const sortedUsers = Object.keys(submittedData).sort((a, b) => {
@@ -119,16 +111,16 @@ const Results = () => {
       <div style={styles.authContainer}>
         <h2>Hasło Admina:</h2>
         <input
-  type="password"
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-  style={styles.input}
-  onKeyPress={(e) => handleKeyPress(e, handlePasswordSubmit)}
-/>
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={styles.input}
+          onKeyPress={(e) => handleKeyPress(e, handlePasswordSubmit)}
+        />
 
-<button onClick={handleSubmitResults} style={styles.button}>
-    Zatwierdź wyniki
-  </button>
+        <button onClick={handleSubmitResults} style={styles.button}>
+          Zatwierdź wyniki
+        </button>
       </div>
     );
   }
@@ -142,28 +134,23 @@ const Results = () => {
             <p>{game.home} vs {game.away}:</p>
             {editMode ? (
               <input
-              type="text"
-              maxLength="3"
-              placeholder="x:x"
-              value={resultsInput[index] || ''}
-              onChange={(e) => handleResultChange(index, e.target.value)}
-              style={styles.resultInput}
-              disabled={game.disabled}
-              onKeyPress={(e) => handleKeyPress(e, handleSubmitResults)}
-            />
-            
+                type="text"
+                maxLength="3"
+                placeholder="x:x"
+                value={resultsInput[index] || ''}
+                onChange={(e) => handleResultChange(index, e.target.value)}
+                style={styles.resultInput}
+                onKeyPress={(e) => handleKeyPress(e, handleSubmitResults)}
+              />
             ) : (
               <span>{resultsInput[index] || 'Brak wyniku'}</span>
             )}
-            <button
-              onClick={() => handleToggleDisableGame(index)}
-              style={{
-                ...styles.button,
-                backgroundColor: game.disabled ? '#15ff007d' : '#ff19007d'
-              }}
-            >
-              {game.disabled ? 'Włącz grę' : 'Wyłącz grę'}
-            </button>
+            <div style={styles.betInfo}>
+              <p>{`${betCounts[index]?.home || 0}/${Object.keys(submittedData).length}`} - 1</p>
+              <p>{`${betCounts[index]?.draw || 0}/${Object.keys(submittedData).length}`} - X</p>
+              <p>{`${betCounts[index]?.away || 0}/${Object.keys(submittedData).length}`} - 2</p>
+              <p>Nie obstawili: {nonBettors[index]?.join(', ') || 'brak'}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -258,7 +245,8 @@ const styles = {
   },
   gameEntry: {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'left',
     margin: '10px 0',
   },
   resultInput: {
@@ -297,6 +285,10 @@ const styles = {
   expandableCardsContainer: {
     marginTop: '20px',
   },
+  betInfo: {
+    marginTop: '5px',
+    fontSize: '12px',
+  },
 };
 
-export default Results;
+export default Admin;
