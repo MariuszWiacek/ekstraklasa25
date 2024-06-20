@@ -73,8 +73,6 @@ const Results = () => {
     };
   };
 
-  let place = 1;
-
   return (
     <div style={welcomeMessageStyle}>
       <h2>Wyniki:</h2>
@@ -90,7 +88,6 @@ const Results = () => {
                     <th>Mecz</th>
                     <th>Wynik</th>
                     <th>Kto trafił prawidłowy wynik?</th>
-                    <th>Procent obstawiających</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -100,47 +97,21 @@ const Results = () => {
                       <React.Fragment key={index}>
                         <tr style={styles.gameRow}>
                           <td>{game.date}</td>
-                          <td>{game.home} vs {game.away}</td>
+                          <td>
+                            {game.home} vs {game.away}
+                            <div style={styles.percentages}>
+                              {`Home: ${betPercentages.home}%, Draw: ${betPercentages.draw}%, Away: ${betPercentages.away}%`}
+                            </div>
+                          </td>
                           <td>{resultsInput[index]}</td>
                           <td>{getCorrectTyp(index).join(', ')}</td>
-                          <td>
-                            {`Home: ${betPercentages.home}%, Draw: ${betPercentages.draw}%, Away: ${betPercentages.away}%`}
-                          </td>
                         </tr>
                         <tr>
-                          <td colSpan="5"><hr style={styles.rowHr} /></td>
+                          <td colSpan="4"><hr style={styles.rowHr} /></td>
                         </tr>
                       </React.Fragment>
                     );
                   })}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {submittedResults && (
-            <div style={styles.pointsSection}>
-              <hr style={{color: "red"}} />
-              <h2 style={{marginLeft:"30%"}}>Aktualna tabela:</h2>
-              <hr style={{color: "red"}} />
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Miejsce</th>
-                    <th>Użytkownik</th>
-                    <th>Punkty</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(submittedData)
-                    .sort((a, b) => calculatePoints(Object.values(submittedData[b]), resultsInput) - calculatePoints(Object.values(submittedData[a]), resultsInput))
-                    .map((user) => (
-                      <tr key={user}>
-                        <td>{place++}</td>
-                        <td>{user}</td>
-                        <td>{calculatePoints(Object.values(submittedData[user]), resultsInput)}</td>
-                      </tr>
-                    ))}
                 </tbody>
               </table>
             </div>
@@ -160,9 +131,6 @@ const styles = {
     textAlign: 'center',
     color: 'red',
     marginBottom: '20px',
-  },
-  pointsSection: {
-    marginTop: '20px',
   },
   hr: {
     margin: '20px 0',
@@ -189,6 +157,11 @@ const styles = {
   },
   gameRow: {
     marginBottom: '10px',
+  },
+  percentages: {
+    fontSize: '12px',
+    color: '#ddd',
+    marginTop: '5px',
   },
 };
 
