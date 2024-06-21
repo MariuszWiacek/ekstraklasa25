@@ -74,12 +74,12 @@ const Results = () => {
 
   return (
     <div className="text-left mx-1 my-1">
-      <h2 className="text-2xl font-bold mb-5">Wyniki:</h2>
+      <h2 className="text-xl font-bold mb-b">Wyniki:</h2>
       <div className="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
         {submittedResults && (
           <div className="text-center text-red-500 mb-5">
             <hr className="my-5" />
-            <table className="table-auto mx-auto w-full max-w-5xl border-collapse">
+            <table className="table-auto mx-2 w-full max-w-5xl border-collapse">
               <thead>
                 <tr>
                   <th className="border p-2 bg-green-600 text-white">Data</th>
