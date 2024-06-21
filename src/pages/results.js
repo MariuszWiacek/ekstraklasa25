@@ -73,7 +73,7 @@ const Results = () => {
   };
 
   return (
-    <div className="text-left mx-2 my-5">
+    <div className="text-left mx-1 my-1">
       <h2 className="text-2xl font-bold mb-5">Wyniki:</h2>
       <div className="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
         {submittedResults && (
