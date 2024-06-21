@@ -207,7 +207,7 @@
     "venue": "Monachium",
     "date": "2024-06-20"
     ,
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 17,
@@ -220,7 +220,7 @@
     "kickoff": "18:00",
     "venue": "Frankfurt",
     "date": "2024-06-20",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 18,
@@ -233,7 +233,7 @@
     "kickoff": "21:00",
     "venue": "Gelsenkirchen",
     "date": "2024-06-20",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 19,
