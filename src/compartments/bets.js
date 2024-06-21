@@ -252,11 +252,7 @@ const Bets = () => {
     <div style={{}}>
     {timeRemaining && (
       <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-        <img
-          src={doboju}
-          alt="Dobpoju Image"
-          style={{ maxWidth: '100%', height: 'auto', marginBottom: '16px' }}
-        />
+      
         <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
       </div>
     )}
