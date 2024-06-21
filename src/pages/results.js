@@ -65,11 +65,11 @@ const Results = () => {
   return (
     <div className="text-left mx-1 my-1" style={{ backgroundColor: 'rgba(33, 37, 41, 0.67)' }}>
       <h2 className="text-center font-bold mb-3">Wyniki:</h2>
-      <div className="bg-gray-800 text-gray p-1 rounded-lg shadow-lg">
+      <div className="bg-gray-800 text-gray p-1 rounded-lg shadow-lg overflow-x-auto">
         {submittedResults && (
           <div className="text-center text-red-500 mb-5">
             <hr className="my-5" />
-            <table className="table-auto mx-2 w-full max-w-5xl border-collapse">
+            <table className="table-auto mx-2 w-full max-w-screen-md border-collapse">
               <thead>
                 <tr>
                   <th className="border p-2 bg-green-600 text-gray">Data</th>
@@ -88,7 +88,7 @@ const Results = () => {
                         <td className="border p-2">{game.date}</td>
                         <td className="border p-2">
                           {game.home} vs {game.away}
-                          <div style={{ fontSize: '10px', fontWeight: 'bold', display: 'flex', textAlign: 'center', gap: '6px' }}>
+                          <div style={{ fontSize: '10px', fontWeight: 'bold', display: 'flex', textAlign: 'center', gap: '6px', marginTop: '4px' }}>
                             <div style={{ color: 'yellow' }}>1:</div>
                             <div style={{ color: 'red' }}>{betPercentages.home}%</div>, 
                             <div style={{ color: 'yellow' }}>X:</div>
