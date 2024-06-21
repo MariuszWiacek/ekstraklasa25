@@ -64,7 +64,6 @@ const Results = () => {
 
   return (
     <div className="text-left mx-1 my-1" style={{ backgroundColor: 'rgba(33, 37, 41, 0.67)' }}>
-      <h2 className="text-center font-bold mb-3">Wyniki:</h2>
       <div className="bg-gray-800 text-gray p-1 rounded-lg shadow-lg overflow-x-auto">
         {submittedResults && (
           <div className="text-center text-red-500 mb-5">
