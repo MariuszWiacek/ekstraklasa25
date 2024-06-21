@@ -8,55 +8,6 @@ const Results = () => {
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
 
-  const styles = {
-    container: {
-      textAlign: 'left',
-      margin: '20px',
-    },
-    resultsSection: {
-      textAlign: 'center',
-      color: 'red',
-      marginBottom: '20px',
-    },
-    hr: {
-      margin: '20px 0',
-    },
-    rowHr: {
-      border: '0',
-      borderTop: '1px solid #ddd',
-      margin: '10px 0',
-    },
-    table: {
-      margin: '0 auto',
-      borderCollapse: 'collapse',
-      width: '90%',
-      fontSize: window.innerWidth <= 480 ? '12px' : 'initial', // Adjust table font size for mobile
-    },
-    th: {
-      border: '1px solid #ddd',
-      padding: '8px',
-      backgroundColor: '#4CAF50',
-      color: 'white',
-    },
-    td: {
-      border: '1px solid #ddd',
-      padding: '8px',
-    },
-    gameRow: {
-      marginBottom: '10px',
-    },
-    percentages: {
-      fontSize: window.innerWidth <= 480 ? '10px' : '12px', // Adjust percentages font size for mobile
-      color: 'red', // Change percentages color to red
-      marginTop: '5px',
-    },
-    goldFraction: {
-      color: 'gold',
-      fontWeight: 'bold',
-    },
-  };
-
-
   useEffect(() => {
     setGames(gameData);
   }, []);
@@ -122,54 +73,51 @@ const Results = () => {
   };
 
   return (
-    <div style={styles.welcomeMessageStyle}>
-      <h2>Wyniki:</h2>
-      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', fontWeight: 'normal' }}>
-        <div style={styles.container}>
-          {submittedResults && (
-            <div style={styles.resultsSection}>
-              <hr style={styles.hr} />
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Data</th>
-                    <th>Mecz</th>
-                    <th>Wynik</th>
-                    <th>Kto trafił prawidłowy wynik?</th>
-                    <th>Udział w zakładach</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {games.map((game, index) => {
-                    const betPercentages = getBetPercentages(index);
-                    return (
-                      <React.Fragment key={index}>
-                        <tr style={styles.gameRow}>
-                          <td>{game.date}</td>
-                          <td>
-                            {game.home} vs {game.away}
-                            <div style={styles.percentages}>
-                              {`1: ${betPercentages.home}%, X: ${betPercentages.draw}%, 2: ${betPercentages.away}%`}
-                            </div>
-
-                          </td>
-                          <td>{resultsInput[index]}</td>
-                          <td>{getCorrectTyp(index).join(', ')}</td>
-                          <td style={getParticipationFraction(index) === '14/14' ? styles.goldFraction : {}}>
-                            {getParticipationFraction(index)}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colSpan="5"><hr style={styles.rowHr} /></td>
-                        </tr>
-                      </React.Fragment>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+    <div className="text-left m-5">
+      <h2 className="text-2xl font-bold mb-5">Wyniki:</h2>
+      <div className="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+        {submittedResults && (
+          <div className="text-center text-red-500 mb-5">
+            <hr className="my-5" />
+            <table className="table-auto mx-auto w-11/12 border-collapse">
+              <thead>
+                <tr>
+                  <th className="border p-2 bg-green-600 text-white">Data</th>
+                  <th className="border p-2 bg-green-600 text-white">Mecz</th>
+                  <th className="border p-2 bg-green-600 text-white">Wynik</th>
+                  <th className="border p-2 bg-green-600 text-white">Kto trafił prawidłowy wynik?</th>
+                  <th className="border p-2 bg-green-600 text-white">Udział w zakładach</th>
+                </tr>
+              </thead>
+              <tbody>
+                {games.map((game, index) => {
+                  const betPercentages = getBetPercentages(index);
+                  return (
+                    <React.Fragment key={index}>
+                      <tr className="mb-2">
+                        <td className="border p-2">{game.date}</td>
+                        <td className="border p-2">
+                          {game.home} vs {game.away}
+                          <div className="text-red-500 mt-2 text-sm">
+                            {`1: ${betPercentages.home}%, X: ${betPercentages.draw}%, 2: ${betPercentages.away}%`}
+                          </div>
+                        </td>
+                        <td className="border p-2">{resultsInput[index]}</td>
+                        <td className="border p-2">{getCorrectTyp(index).join(', ')}</td>
+                        <td className={`border p-2 ${getParticipationFraction(index) === '14/14' ? 'text-yellow-500 font-bold' : ''}`}>
+                          {getParticipationFraction(index)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan="5"><hr className="border-t border-gray-300 my-2" /></td>
+                      </tr>
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
