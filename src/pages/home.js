@@ -1,17 +1,66 @@
 import React from 'react';
-import logo from '../images/logo.png';
-import {faWhatsapp } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
-import doboju from '../images/doboju.jpeg'
+import logo from '../images/logo.png';
 
+const Home = () => {
+  return (
+    <div>
+      <h2 style={welcomeMessageStyle}>Witaj w typerze!</h2>
+      <Container fluid style={linkContainerStyle}>
+        <Row>
+          <Col md={6}>
+            <a
+              href="/bets"
+              style={linkStyle}
+              onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
+            >
+              TYPUJ - <p>TUTAJ</p>
+            </a>
+            <p>
+              Masz pytanie lub problem? Skontaktuj się na WhatsApp
+              <br />
+              <Link to="https://wa.me/447448952003" target="_blank">
+                <FontAwesomeIcon icon={faWhatsapp} size="2x" style={{ color: '#00ff0d' }} />
+              </Link>
+            </p>
+            <a
+              href="https://www.flashscore.pl/tabela/ABkrguJ9/EcpQtcVi/#/EcpQtcVi/table"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={linkStyle}
+              onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
+            >
+              Euro 2024 - <p>Tabela na żywo</p>
+            </a>
+            <a
+              href="https://wyniki.onet.pl/euro2024"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={linkStyle}
+              onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
+            >
+              Euro 2024 - <p>wiadomości, wyniki, tabele</p>
+            </a>
+          </Col>
+          <Col md={6} className="text-center">
+            <img src={logo} alt="Logo" style={logoStyle} />
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
+};
 
-const logoStyle = {
-  width: '100%',
-  maxWidth: '300px',
-  height: 'auto',
-  margin: '20px auto',
+const welcomeMessageStyle = {
+  fontWeight: 'bold',
+  marginBottom: '10px',
+  textAlign: 'center',
 };
 
 const linkContainerStyle = {
@@ -35,57 +84,11 @@ const linkHoverStyle = {
   color: '#ff6347',
 };
 
-const welcomeMessageStyle = {
-  
-  fontWeight: 'bold',
-  marginBottom: '10px',
-  textAlign: 'center'
-};
-
-const Home = () => {
-  
-  return (<div><h2 style={welcomeMessageStyle}>Witaj w typerze! </div>
-    </div><Container fluid style={linkContainerStyle}><Row><Col md={6} >
-    
-    <a
-      href="/bets"
-      style={linkStyle}
-      onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
-      onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
-    >
-      TYPUJ - <p2>TUTAJ <br></br></p2>
-    </a>
-    <a>Masz pytanie lub problem? Skontaktuj się na WhatsApp <br></br><Link to="https://wa.me/447448952003" target="_blank">
-  <FontAwesomeIcon icon={faWhatsapp} size="2x" style={{ color: '#00ff0d' }} />
-</Link></a><br></br><br></br>
-    <a
-      href="https://www.flashscore.pl/tabela/ABkrguJ9/EcpQtcVi/#/EcpQtcVi/table"
-      target="_blank"
-      rel="noopener noreferrer"
-      style={linkStyle}
-      onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
-      onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
-    >
-      Euro 2024 - <p2>Tabela na żywo</p2>
-    </a>
-    <a
-      href="https://wyniki.onet.pl/euro2024"
-      target="_blank"
-      rel="noopener noreferrer"
-      style={linkStyle}
-      onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
-      onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
-    >
-      Euro 2024 - <p2>wiadomości, wyniki, tabele</p2>
-      
-    </a></Col>
-    <Col md={6}>
-    <img src={logo} alt="Logo" style={logoStyle} />
-    
-      
-      
-      </Col></Row></Container></div>
-  );
+const logoStyle = {
+  width: '100%',
+  maxWidth: '300px',
+  height: 'auto',
+  margin: '20px auto',
 };
 
 export default Home;
