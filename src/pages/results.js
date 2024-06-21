@@ -29,35 +29,25 @@ const Results = () => {
     });
   }, []);
 
-  const calculatePoints = (bets, results) => {
-    let points = 0;
-    bets.forEach((bet, index) => {
-      const result = results[index];
-      if (result && bet.score === result) {
-        points += 3;
-      } else if (result && bet.bet === (result.split(':')[0] === result.split(':')[1] ? 'X' : result.split(':')[0] > result.split(':')[1] ? '1' : '2')) {
-        points += 1;
-      }
-    });
-    return points;
-  };
-
   const getCorrectTyp = (gameIndex) => {
     return Object.keys(submittedData).filter((user) => submittedData[user][gameIndex] && submittedData[user][gameIndex].score === resultsInput[gameIndex]);
   };
 
   const getBetPercentages = (gameIndex) => {
-    const totalBets = Object.keys(submittedData).length;
-    if (totalBets === 0) return { home: 0, draw: 0, away: 0 };
-
     const betCounts = { home: 0, draw: 0, away: 0 };
+    let totalBets = 0;
 
     Object.values(submittedData).forEach((userBets) => {
       const bet = userBets[gameIndex]?.bet;
-      if (bet === '1') betCounts.home++;
-      else if (bet === 'X') betCounts.draw++;
-      else if (bet === '2') betCounts.away++;
+      if (bet) {
+        totalBets++;
+        if (bet === '1') betCounts.home++;
+        else if (bet === 'X') betCounts.draw++;
+        else if (bet === '2') betCounts.away++;
+      }
     });
+
+    if (totalBets === 0) return { home: 0, draw: 0, away: 0 };
 
     return {
       home: ((betCounts.home / totalBets) * 100).toFixed(0),
@@ -73,20 +63,20 @@ const Results = () => {
   };
 
   return (
-    <div className="text-left mx-1 my-1">
-      <h2 className="text-xl font-bold mb-b">Wyniki:</h2>
-      <div className="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+    <div className="text-left mx-1 my-1" style={{ backgroundColor: 'rgba(33, 37, 41, 0.67)' }}>
+      <h2 className="text-center font-bold mb-3">Wyniki:</h2>
+      <div className="bg-gray-800 text-gray p-1 rounded-lg shadow-lg">
         {submittedResults && (
           <div className="text-center text-red-500 mb-5">
             <hr className="my-5" />
             <table className="table-auto mx-2 w-full max-w-5xl border-collapse">
               <thead>
                 <tr>
-                  <th className="border p-2 bg-green-600 text-white">Data</th>
-                  <th className="border p-2 bg-green-600 text-white">Mecz</th>
-                  <th className="border p-2 bg-green-600 text-white">Wynik</th>
-                  <th className="border p-2 bg-green-600 text-white">Kto trafił prawidłowy wynik?</th>
-                  <th className="border p-2 bg-green-600 text-white">Udział w zakładach</th>
+                  <th className="border p-2 bg-green-600 text-gray">Data</th>
+                  <th className="border p-2 bg-green-600 text-gray">Mecz</th>
+                  <th className="border p-2 bg-green-600 text-gray">Wynik</th>
+                  <th className="border p-2 bg-green-600 text-gray">Kto trafił prawidłowy wynik?</th>
+                  <th className="border p-2 bg-green-600 text-gray">Udział w zakładach</th>
                 </tr>
               </thead>
               <tbody>
@@ -98,8 +88,13 @@ const Results = () => {
                         <td className="border p-2">{game.date}</td>
                         <td className="border p-2">
                           {game.home} vs {game.away}
-                          <div className="text-red-500 mt-2 text-sm">
-                            {`1: ${betPercentages.home}%, X: ${betPercentages.draw}%, 2: ${betPercentages.away}%`}
+                          <div style={{ fontSize: '10px', fontWeight: 'bold', display: 'flex', textAlign: 'center', gap: '6px' }}>
+                            <div style={{ color: 'yellow' }}>1:</div>
+                            <div style={{ color: 'red' }}>{betPercentages.home}%</div>, 
+                            <div style={{ color: 'yellow' }}>X:</div>
+                            <div style={{ color: 'red' }}>{betPercentages.draw}%</div>, 
+                            <div style={{ color: 'yellow' }}>2:</div>
+                            <div style={{ color: 'red' }}>{betPercentages.away}%</div>
                           </div>
                         </td>
                         <td className="border p-2">{resultsInput[index]}</td>
@@ -109,7 +104,7 @@ const Results = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td colSpan="5"><hr className="border-t border-gray-300 my-2" /></td>
+                        <td colSpan="5"><hr className="border-t border-gray-100 my-0" /></td>
                       </tr>
                     </React.Fragment>
                   );

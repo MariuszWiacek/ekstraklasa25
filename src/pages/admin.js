@@ -91,84 +91,55 @@ const Admin = () => {
   };
 
   return (
-    <div style={styles.resultsContainer}>
-      <h2>Wprowadź wyniki:</h2>
-      <div style={styles.gamesContainer}>
+    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
+      <h2 className="text-xl font-bold mb-4">Wprowadź wyniki:</h2>
+      <div className="flex flex-col items-center">
         {games.map((game, index) => (
-          <div key={index} style={styles.gameEntry}>
-            <div style={styles.gameInfo}>
+          <div key={index} className="mb-4">
+            <div className="flex items-center mb-2">
               <p>{game.home} vs {game.away}:</p>
               <input
                 type="text"
-                maxLength="5" // Allow 5 characters (e.g., "x:y")
-                placeholder="x:y"
+                maxLength="3"
+                placeholder="x:x"
                 value={resultsInput[index] || ''}
                 onChange={(e) => handleResultChange(index, e.target.value)}
-                style={styles.resultInput}
+                className="ml-2 p-2 text-center border border-gray-300 rounded-md w-16"
                 onKeyDown={(e) => handleKeyPress(e, handleSubmitResults)}
               />
             </div>
-            <div style={styles.nonBettors}>
-              <p>Nie obstawili:</p>
-              <p>{nonBettors[index]?.join(', ') || 'brak'}</p>
-            </div>
+            {nonBettors[index]?.length === 14 ? (
+              <div className="text-center mb-1">
+                <p className="mb-1 text-red-500">Nie obstawili:</p>
+                <p2 className="text-red-500">Nikt jeszcze nie typował</p2>
+              </div>
+            ) : nonBettors[index]?.length > 0 ? (
+              <div className="text-center mb-1">
+                <p className="mb-1">Nie obstawili:</p>
+                <p>{nonBettors[index].join(', ')}</p>
+              </div>
+            ) : null}
           </div>
         ))}
       </div>
-      <button onClick={handleSubmitResults} style={styles.button}>
-        Zatwierdź wyniki
-      </button>
-    </div>
-  );
-};
-
-const styles = {
-  resultsContainer: {
-    textAlign: 'center',
-    margin: '10px auto',
-    width: '80%',
-    padding: '20px',
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    backgroundColor: '#00000046',
-  },
-  button: {
-    padding: '10px 20px',
-    fontSize: '12px',
-    backgroundColor: '#4CAF50',
+      <button
+  onClick={handleSubmitResults}
+  style={{
+    backgroundColor: 'red',
     color: 'white',
+    fontWeight: 'bold',
+    padding: '10px 20px',
+    borderRadius: '4px',
     border: 'none',
     cursor: 'pointer',
     margin: '10px',
-    borderRadius: '4px',
     boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-  },
-  gamesContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center', // Center align the game entries
-  },
-  gameEntry: {
-    marginBottom: '10px',
-  },
-  gameInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '5px',
-  },
-  resultInput: {
-    marginLeft: '10px',
-    padding: '8px',
-    fontSize: '12px',
-    textAlign: 'center',
-    boxSizing: 'border-box',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    width: '40px',
-  },
-  nonBettors: {
-    textAlign: 'center',
-  },
+  }}
+>
+  Zatwierdź wyniki
+</button>
+    </div>
+  );
 };
 
 export default Admin;
