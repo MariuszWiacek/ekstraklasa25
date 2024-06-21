@@ -108,8 +108,6 @@ const Table = () => {
   };
 
   return (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>Tabela punktów:</h2>
       <Container fluid style={linkContainerStyle}>
         <Row>
           <Col md={12}>
@@ -140,7 +138,6 @@ const Table = () => {
           </Col>
         </Row>
       </Container>
-    </div>
   );
 };
 
