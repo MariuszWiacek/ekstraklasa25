@@ -8,6 +8,7 @@ import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import ExpandableCard from './expandableCard'; // Adjust the path as needed
+import doboju from '../images/doboju.jpeg'
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
@@ -248,12 +249,19 @@ const Bets = () => {
   };
 
   return (
-    <div style={{  }}>
-      {timeRemaining && (
-        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
-        </div>
-      )}
+    <div style={{}}>
+    {timeRemaining && (
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+        <img
+          src={doboju}
+          alt="Dobpoju Image"
+          style={{ maxWidth: '100%', height: 'auto', marginBottom: '16px' }}
+        />
+        <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
+      </div>
+    )}
+  
+     
 
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <select

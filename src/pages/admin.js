@@ -90,6 +90,39 @@ const Admin = () => {
     }
   };
 
+  // If not authenticated, show password form
+  if (!authenticated) {
+    return (
+      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
+        <h2 className="text-xl font-bold mb-4">Wprowadź hasło:</h2>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onKeyPress={(e) => handleKeyPress(e, handlePasswordSubmit)}
+          className="p-2 text-center border border-gray-300 rounded-md"
+          style={{ marginRight: '10px' }}
+        />
+        <button
+          onClick={handlePasswordSubmit}
+          style={{
+            backgroundColor: 'red',
+            color: 'white',
+            fontWeight: 'bold',
+            padding: '10px 20px',
+            borderRadius: '4px',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+          }}
+        >
+          Zaloguj
+        </button>
+      </div>
+    );
+  }
+
+  // If authenticated, show admin panel
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
       <h2 className="text-xl font-bold mb-4">Wprowadź wyniki:</h2>
@@ -123,21 +156,21 @@ const Admin = () => {
         ))}
       </div>
       <button
-  onClick={handleSubmitResults}
-  style={{
-    backgroundColor: 'red',
-    color: 'white',
-    fontWeight: 'bold',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer',
-    margin: '10px',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-  }}
->
-  Zatwierdź wyniki
-</button>
+        onClick={handleSubmitResults}
+        style={{
+          backgroundColor: 'red',
+          color: 'white',
+          fontWeight: 'bold',
+          padding: '10px 20px',
+          borderRadius: '4px',
+          border: 'none',
+          cursor: 'pointer',
+          margin: '10px',
+          boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+        }}
+      >
+        Zatwierdź wyniki
+      </button>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import {faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Container, Row, Col } from 'react-bootstrap';
+import doboju from '../images/doboju.jpeg'
 
 
 const logoStyle = {
@@ -43,7 +44,13 @@ const welcomeMessageStyle = {
 
 const Home = () => {
   
-  return (<div><h2 style={welcomeMessageStyle}>Witaj w typerze!</h2><Container fluid style={linkContainerStyle}><Row><Col md={6} >
+  return (<div><h2 style={welcomeMessageStyle}>Witaj w typerze! DO BOJU POLSKA!</h2><div style={{ textAlign: 'center', marginBottom: '16px' }}>
+    <img
+      src={doboju}
+      alt="Dobpoju Image"
+      style={{ maxWidth: '100%', height: 'auto', marginBottom: '16px' }}
+    />
+    </div><Container fluid style={linkContainerStyle}><Row><Col md={6} >
     
     <a
       href="/bets"
