@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { faHome, faTableList, faFutbol } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faTableList, faFutbol, faComments } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Chatbox from '../pages/chatbox'; // 
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isChatboxOpen, setIsChatboxOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,8 +31,20 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  const menuClass = isMenuOpen ? 'collapse navbar-collapse show' : 'collapse navbar-collapse';
+  const toggleChatbox = () => {
+    setIsChatboxOpen(!isChatboxOpen);
+  };
 
+  const menuClass = isMenuOpen ? 'collapse navbar-collapse show' : 'collapse navbar-collapse';
+  const toggleButtonStyle = {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    color: 'aliceblue',
+    fontSize: '16px',
+    fontWeight: 'bold',
+  };
   const navbarStyle = {
     position: 'fixed',
     top: 0,
@@ -135,17 +150,13 @@ const Navbar = () => {
                 <Link to="/admin" className="nav-link" onClick={closeMenu}>
                   Admin
                 </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/guestbook" className="nav-link" onClick={closeMenu}>
-                  Chatbox
-                </Link>
+              
               </li>
             </ul>
           </div>
         </div>
       </nav>
-
+      <Chatbox isOpen={isChatboxOpen} toggleChatbox={toggleChatbox} />
        {/* Moving Message */}
        <div style={messageContainerStyle}>
         <Link to="/" style={{ textDecoration: 'none' }}>
@@ -157,6 +168,10 @@ const Navbar = () => {
         <Link to="/table" style={{ textDecoration: 'none' }}>
           <FontAwesomeIcon icon={faTableList} style={iconStyle} />
         </Link>
+        <button onClick={toggleChatbox} style={toggleButtonStyle}>
+          <p3 style={{ color: 'aliceblue', marginRight: '8px' }}>chatbox</p3>
+          <FontAwesomeIcon icon={faComments} style={iconStyle} />
+        </button>
         <motion.div
           style={messageStyle}
           animate={{ x: ['-100%', '100%'] }}
@@ -165,6 +180,8 @@ const Navbar = () => {
           ### cała runda grupowa już dostępna do typowania ###
         </motion.div>
       </div>
+       {/* Chatbox Component */}
+       {isChatboxOpen && <Chatbox isOpen={isChatboxOpen} toggleChatbox={toggleChatbox} />}
     </>
   );
 };

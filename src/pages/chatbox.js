@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, push, onValue } from 'firebase/database';
 import { initializeApp } from "firebase/app";
@@ -18,7 +16,7 @@ const firebaseConfig = {
   measurementId: "G-1TZ4B0BK9D"
 };
 
-const Guestbook = () => {
+const Chatbox = ({ isOpen, toggleChatbox }) => {
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [message, setMessage] = useState('');
   const [guestbookEntries, setGuestbookEntries] = useState([]);
@@ -29,14 +27,18 @@ const Guestbook = () => {
   const analytics = getAnalytics(secondaryApp);
   const db = getDatabase(secondaryApp);
 
+  useEffect(() => {
+    // Scroll to the bottom of the chat container when the component mounts or when guestbookEntries change
+    scrollToBottom();
+  }, [guestbookEntries]);
+
   const scrollToBottom = () => {
-    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
-    // Scroll to the bottom of the chat container when the component mounts
-    scrollToBottom();
-
     // Fetch guestbook entries from Firebase when the component mounts
     const entriesRef = ref(db, 'guestbookEntries');
     onValue(entriesRef, (snapshot) => {
@@ -70,13 +72,73 @@ const Guestbook = () => {
 
     // Clear the input fields
     setMessage('');
-    scrollToBottom(); // Scroll to the bottom after submitting a new message
+  };
+
+  const chatboxStyle = {
+    position: 'fixed',
+    bottom: isOpen ? '0' : '-400px', // Adjust as per your needs
+    right: '20px',
+    width: '300px',
+    height: '400px',
+    backgroundColor: isOpen ? '#008131' : '#fff', // Change background color based on isOpen state
+    boxShadow: '0px 0px 10px rgba(0,0,0,0.1)',
+    borderRadius: '10px 10px 0 0',
+    transition: 'bottom 0.3s ease',
+    zIndex: 1001,
+    display: 'flex',
+    flexDirection: 'column',
+  };
+
+  const headerStyle = {
+    backgroundColor: isOpen ? 'darkgreen' : '#007bff', // Adjust header background color
+    color: 'white',
+    padding: '10px',
+    borderTopLeftRadius: '10px',
+    borderTopRightRadius: '10px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  };
+
+  const closeButtonStyle = {
+    background: 'none',
+    border: 'none',
+    color: 'white',
+    fontSize: '16px',
+    cursor: 'pointer',
+  };
+
+  const messagesContainerStyle = {
+    fontFamily: 'Rubik, sans-serif',
+    fontSize: '14px',
+    flex: 1,
+    border: '1px solid #ccc',
+    padding: '10px',
+    backgroundColor: '#2727277b',
+    borderRadius: '8px',
+    overflowY: 'scroll',
+    scrollbarWidth: 'thin',
+    scrollbarColor: '#888888 #f0f0f0',
+    maxHeight: '400px',
+    marginBottom: '10px', // Adjust margin as needed
+  };
+
+  const messageStyle = {
+    whiteSpace: 'nowrap',
+    fontSize: '16px',
+    color: 'aliceblue',
+    fontWeight: 'bold',
   };
 
   return (
-    <div className="chatbox">
-      <div className="messages" style={{ marginBottom: '1%' }} ref={chatContainerRef}>
-        <br></br>
+    <div style={chatboxStyle}>
+      <div style={headerStyle}>
+        Chatbox
+        <button style={closeButtonStyle} onClick={toggleChatbox}>
+          &times;
+        </button>
+      </div>
+      <div className="messages" style={messagesContainerStyle} ref={chatContainerRef}>
         <h2 className="chat-title" style={{ textAlign: 'center', color: 'aliceblue', textDecoration: 'underline', marginBottom: '5%' }}>Chatbox:</h2>
         <ul className="message-list">
           {guestbookEntries.map((entry, index) => (
@@ -84,35 +146,35 @@ const Guestbook = () => {
               <strong className="username" style={{ color: "red" }}>{entry.name}:</strong> <strong style={{ color: "aliceblue" }}>{entry.message}</strong>
               <div className="date-time" style={{ color: "grey", fontSize:'10px' }}>wysłano :  {new Date(entry.dateAndTime).toLocaleString()}</div>
             </div>
-          )).reverse() // Reverse the order when mapping to display newest messages at the top
+          )).reverse() // Reverse the order when mapping to display newest messages at the bottom
         }
         </ul>
       </div>
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit} style={{ padding: '10px' }}>
         <input
           type="text"
           className="username-input"
-          placeholder="Your username"
+          placeholder="uzytkownik"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          style={{ marginBottom: '10px', width: '100%', padding: '8px' }}
         />
         <input
           type="text"
           className="message-input"
-          placeholder="Type your message..."
+          placeholder="wiadomość"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           required
+          style={{ marginBottom: '10px', width: '100%', padding: '8px' }}
         />
-        <button type="submit" className="send-button">
-          Send
+        <button type="submit" className="send-button" style={{ color: 'aliceblue', width: '100%', padding: '10px' }}>
+          Wyślij
         </button>
       </form>
     </div>
   );
 };
 
-
-export default Guestbook;
-
+export default Chatbox;
