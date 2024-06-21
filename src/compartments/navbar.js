@@ -177,7 +177,7 @@ const Navbar = () => {
           animate={{ x: ['-100%', '100%'] }}
           transition={{ duration: 20, ease: 'linear', repeat: Infinity }}
         >
-          ### cała runda grupowa już dostępna do typowania ###
+          
         </motion.div>
       </div>
        {/* Chatbox Component */}
