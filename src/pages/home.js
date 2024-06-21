@@ -44,12 +44,7 @@ const welcomeMessageStyle = {
 
 const Home = () => {
   
-  return (<div><h2 style={welcomeMessageStyle}>Witaj w typerze! DO BOJU POLSKA!</h2><div style={{ textAlign: 'center', marginBottom: '16px' }}>
-    <img
-      src={doboju}
-      alt="Dobpoju Image"
-      style={{ maxWidth: '100%', height: 'auto', marginBottom: '16px' }}
-    />
+  return (<div><h2 style={welcomeMessageStyle}>Witaj w typerze! </div>
     </div><Container fluid style={linkContainerStyle}><Row><Col md={6} >
     
     <a
