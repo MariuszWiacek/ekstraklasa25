@@ -8,10 +8,9 @@ import logo from '../images/logo.png';
 const Home = () => {
   return (
     <div>
-      <h2 style={welcomeMessageStyle}>Witaj w typerze!</h2>
       <Container fluid style={linkContainerStyle}>
         <Row>
-          <Col md={6}>
+          <Col md={6}><H2>Witaj w typerze<H2>
             <a
               href="/bets"
               style={linkStyle}
