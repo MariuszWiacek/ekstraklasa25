@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
-import { Row, Col, Container} from 'react-bootstrap';
-import { color } from 'framer-motion';
+import { Row, Col, Container } from 'react-bootstrap';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
@@ -52,6 +51,7 @@ const Table = () => {
   const [tableData, setTableData] = useState([]);
   const [results, setResults] = useState({});
   const [submittedData, setSubmittedData] = useState({});
+  const previousTableData = useRef([]);
 
   useEffect(() => {
     const resultsRef = ref(database, 'results');
@@ -72,7 +72,7 @@ const Table = () => {
       const { points, correctTypes, correctResults } = calculatePoints(Object.values(submittedData[user]), results);
       return { user, points, correctTypes, correctResults };
     });
-  
+
     // Sorting table data by points in descending order, and by correctResults if points are tied
     updatedTableData.sort((a, b) => {
       if (b.points !== a.points) {
@@ -81,30 +81,69 @@ const Table = () => {
         return b.correctResults - a.correctResults;
       }
     });
-  
+
     // Assigning places (1st, 2nd, 3rd, etc.)
     updatedTableData.forEach((entry, index) => {
       entry.place = getPlace(index + 1); // index + 1 to start from 1
+
+      // Determine if the place has improved or decreased
+      const previousEntry = previousTableData.current.find(e => e.user === entry.user);
+      if (previousEntry) {
+        entry.trend = previousEntry.place > entry.place ? 'up' : previousEntry.place < entry.place ? 'down' : 'same';
+      } else {
+        entry.trend = 'same';
+      }
     });
-  
+
+    // Update the previous table data
+    previousTableData.current = updatedTableData;
+
     setTableData(updatedTableData);
   }, [submittedData, results]);
-  
 
   // Function to get ordinal suffix for places (1st, 2nd, 3rd, etc.)
   const getPlace = (place) => {
     const j = place % 10,
-          k = place % 100;
+      k = place % 100;
     if (j === 1 && k !== 11) {
-        return place + '';
+      return place + '';
     }
     if (j === 2 && k !== 12) {
-        return place + '';
+      return place + '';
     }
     if (j === 3 && k !== 13) {
-        return place + '';
+      return place + '';
     }
     return place + '';
+  };
+
+  // Styles for table header and cell
+  const tableHeaderStyle = {
+    padding: '10px',
+    border: '1px solid #dddddd',
+    backgroundColor: '#212529',
+    color: 'white',
+    textAlign: 'center',
+  };
+
+  const tableCellStyle = {
+    padding: '10px',
+    border: '1px solid #dddddd',
+    textAlign: 'center',
+  };
+
+  const tableCellStyle2 = {
+    padding: '10px',
+    border: '1px solid #dddddd',
+    textAlign: 'center',
+    color: 'aliceblue',
+    fontWeight: 'bold'
+  };
+
+  const trendStyle = {
+    up: { color: 'green' },
+    down: { color: 'red' },
+    same: { display: 'none' }
   };
 
   return (
@@ -128,7 +167,13 @@ const Table = () => {
                   {tableData.map((entry, index) => (
                     <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
                       <td style={tableCellStyle}>{entry.place}</td>
-                      <td style={tableCellStyle}>{entry.user}</td>
+                      <td style={tableCellStyle}>
+                        {entry.user}
+                        <span style={trendStyle[entry.trend]}>
+                          {entry.trend === 'up' && '▲'}
+                          {entry.trend === 'down' && '▼'}
+                        </span>
+                      </td>
                       <td style={tableCellStyle2}>{entry.points}</td>
                       <td style={tableCellStyle}>{entry.correctTypes}</td>
                       <td style={tableCellStyle}>{entry.correctResults}</td>
@@ -142,29 +187,6 @@ const Table = () => {
       </Container>
     </div>
   );
-};
-
-// Styles for table header and cell
-const tableHeaderStyle = {
-  padding: '10px',
-  border: '1px solid #dddddd',
-  backgroundColor: '#212529',
-  color: 'white',
-  textAlign: 'center',
-};
-
-const tableCellStyle = {
-  padding: '10px',
-  border: '1px solid #dddddd',
-  textAlign: 'center',
-};
-
-const tableCellStyle2 = {
-  padding: '10px',
-  border: '1px solid #dddddd',
-  textAlign: 'center',
-  color: 'aliceblue', 
-fontWeight: 'bold'
 };
 
 export default Table;
