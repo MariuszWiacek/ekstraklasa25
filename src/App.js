@@ -9,7 +9,7 @@ import Admin from './pages/admin';
 import Footer from './compartments/footer';
 import Guestbook from './pages/chatbox';
 import Results from './pages/results';
-import Bets from './compartments/bets';
+import Bets from './pages/bets';
 import Rules from './pages/rules';
 import Loading from './compartments/loading'; // Import the Loading component
 
