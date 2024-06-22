@@ -33,7 +33,7 @@ const Home = () => {
               </a>
             </p>
             <a
-              href="https://www.flashscore.pl/tabela/ABkrguJ9/EcpQtcVi/#/EcpQtcVi/table"
+              href="https://www.flashscore.pl/tabela/ABkrguJ9/EcpQtcVi/#/EcpQtcVi/live"
               target="_blank"
               rel="noopener noreferrer"
               style={linkStyle}
