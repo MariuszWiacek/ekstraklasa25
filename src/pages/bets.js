@@ -104,6 +104,8 @@ const Bets = () => {
     const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
     return currentDateTime >= gameDateTimeCEST;
   };
+  
+
 
   const handleUserChange = (e) => {
     const user = e.target.value;
@@ -170,26 +172,12 @@ const Bets = () => {
         ? { ...game, score: formattedScore, bet: autoDetectBetType(formattedScore) }
         : game
     );
-
-    // Check if score is valid (contains numbers before and after the colon)
-    const isValidScore = formattedScore.match(/^\d+:\d+$/);
-    setGames(updatedGames.map((game, index) =>
-      index === gameId
-        ? { ...game, invalidScore: !isValidScore }
-        : game
-    ));
+    setGames(updatedGames);
   };
 
   const handleSubmit = () => {
     if (!selectedUser) {
-      alert('Wybierz użytkownika');
-      return;
-    }
-
-    const invalidScores = games.some(game => game.invalidScore || game.score === '');
-
-    if (invalidScores) {
-      alert('Wprowadzony wynik ma nieprawidłowy format');
+      alert('Please select a user.');
       return;
     }
 
@@ -257,20 +245,26 @@ const Bets = () => {
           : game
       )
     );
+
   };
 
   return (
     <div style={{}}>
-      {timeRemaining && (
-        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
-        </div>
-      )}
+    {timeRemaining && (
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+      
+        <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
+      </div>
+    )}
+  
+     
+
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <select
           style={{ margin: '1px' }}
           value={selectedUser}
           onChange={handleUserChange}
+
         >
           <option value="">Twój login</option>
           {Object.keys(usersData).map((user, index) => (
@@ -295,6 +289,7 @@ const Bets = () => {
           <tr>
             <th style={{ borderBottom: '0.5px solid #444' }}>Data</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>h</th>
+
             <th style={{ borderBottom: '0.5px solid #444' }}>Gosp.</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
             <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
