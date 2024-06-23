@@ -298,7 +298,7 @@
     "kickoff": "18:00",
     "venue": "Dortmund",
     "date": "2024-06-22",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 24,
@@ -311,7 +311,7 @@
     "kickoff": "21:00",
     "venue": "Kolonia",
     "date": "2024-06-22",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 25,
