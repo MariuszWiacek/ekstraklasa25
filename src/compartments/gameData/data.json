@@ -324,7 +324,7 @@
     "kickoff": "21:00",
     "venue": "Stuttgart",
     "date": "2024-06-23",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 26,
@@ -337,7 +337,7 @@
     "kickoff": "21:00",
     "venue": "Frankfurt",
     "date": "2024-06-23",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 27,
@@ -471,7 +471,7 @@
   },
   {
     "id": 37,
-    "home": "1A",
+    "home": "Niemcy",
     "away": "2C",
     "score": "",
     "bet": "",
@@ -484,7 +484,7 @@
   },
   {
     "id": 38,
-    "home": "2A",
+    "home": "Szwajcaria",
     "away": "2B",
     "score": "",
     "bet": "",
@@ -523,7 +523,7 @@
   },
   {
     "id": 41,
-    "home": "1F",
+    "home": "Portugalia",
     "away": "3ABC",
     "score": "",
     "bet": "",
