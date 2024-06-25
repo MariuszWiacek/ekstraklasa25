@@ -33,8 +33,8 @@ const Bets = () => {
   const [submittedData, setSubmittedData] = useState({});
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [missingBets, setMissingBets] = useState(false);
-  const [results, setResults] = useState({}); // State to hold the results
-  const [timeRemaining, setTimeRemaining] = useState(''); // Define timeRemaining state
+  const [results, setResults] = useState({});
+  const [timeRemaining, setTimeRemaining] = useState('');
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
@@ -48,8 +48,8 @@ const Bets = () => {
       }
     });
 
-    const dbRef = ref(database, 'submittedData');
-    onValue(dbRef, (snapshot) => {
+    const dbRef = firebase.database().ref('submittedData');
+    dbRef.on('value', (snapshot) => {
       const data = snapshot.val();
       if (data) {
         setSubmittedData(data);
@@ -57,8 +57,8 @@ const Bets = () => {
       }
     });
 
-    const resultsRef = ref(database, 'results');
-    onValue(resultsRef, (snapshot) => {
+    const resultsRef = firebase.database().ref('results');
+    resultsRef.on('value', (snapshot) => {
       const data = snapshot.val();
       if (data) {
         setResults(data);
@@ -67,16 +67,12 @@ const Bets = () => {
   }, []);
 
   const updateTimeRemaining = () => {
-    // Calculate time remaining until next game in BST
     const now = new Date();
-    console.log(now)
-
     const nextGame = games.find(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now); // CEST is UTC+2
 
     if (nextGame) {
       const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+02:00`); // CEST kickoff time
-      const kickoffTimeBST = new Date(kickoffTimeCEST.getTime()); // Convert CEST kickoff time to BST by subtracting 1 hour
-      const diff = kickoffTimeBST - now;
+      const diff = kickoffTimeCEST - now;
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
@@ -93,19 +89,15 @@ const Bets = () => {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
-  // Define isReadOnly function with index parameter
   const isReadOnly = (selectedUser, index) => {
     return submittedData[selectedUser] && submittedData[selectedUser][index];
   };
 
   const gameStarted = (gameDate, gameKickoff) => {
-    // Convert current time to BST (UTC+1)
     const currentDateTime = new Date();
     const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
     return currentDateTime >= gameDateTimeCEST;
   };
-  
-
 
   const handleUserChange = (e) => {
     const user = e.target.value;
@@ -114,46 +106,8 @@ const Bets = () => {
     setGames(gameData.map(game => ({ ...game, score: '' }))); // Clear game scores
   };
 
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setSelectedUser(user.displayName);
-      }
-    });
-
-    const dbRef = ref(database, 'submittedData');
-    onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setSubmittedData(data);
-        setIsDataSubmitted(true);
-      }
-    });
-
-    const resultsRef = ref(database, 'results');
-    onValue(resultsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setResults(data);
-      }
-    });
-
-    // Calculate time remaining until the first game
-    const now = new Date();
-    const nextGame = games.find(game => new Date(`${game.date} ${game.kickoff}`) > now);
-    if (nextGame) {
-      const kickoffTime = new Date(`${nextGame.date} ${nextGame.kickoff}`);
-      const diff = kickoffTime - now;
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      setTimeRemaining(`${hours}h :${minutes}min :${seconds}s`);
-    }
-  }, [games, database]);
-
   const autoDetectBetType = (score) => {
     const [homeScore, awayScore] = score.split(':').map(Number);
-
     if (homeScore === awayScore) {
       return 'X';
     } else if (homeScore > awayScore) {
@@ -200,7 +154,7 @@ const Bets = () => {
       }, {});
 
       if (Object.keys(newBetsToSubmit).length === 0) {
-        alert("Już wysłałeś swoje zakłady na wszystkie dostępne gry.");
+        alert("You have already submitted your bets for all available games.");
         return;
       }
 
@@ -208,11 +162,11 @@ const Bets = () => {
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: { ...userSubmittedBets, ...newBetsToSubmit } });
           setIsDataSubmitted(true);
-          alert('Wyniki dodane prawidłowo!');
+          alert('Bets submitted successfully!');
         })
         .catch((error) => {
           console.error('Error submitting data:', error);
-          alert('Podczas przesyłania Twoich zakładów wystąpił błąd. Proszę spróbuj ponownie');
+          alert('An error occurred while submitting your bets. Please try again.');
         });
     } else {
       const userBetsObject = {};
@@ -231,11 +185,11 @@ const Bets = () => {
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: userBetsObject });
           setIsDataSubmitted(true);
-          alert('Wyniki zostały pomyślnie przesłane!')
+          alert('Bets submitted successfully!');
         })
         .catch((error) => {
           console.error('Error submitting data:', error);
-          alert('Wystąpił błąd podczas przesyłania Twoich zakładów. Spróbuj ponownie.');
+          alert('An error occurred while submitting your bets. Please try again.');
         });
     }
     setGames(prevGames =>
@@ -245,124 +199,116 @@ const Bets = () => {
           : game
       )
     );
-
   };
 
   return (
-    <div style={{}}>
-    {timeRemaining && (
-      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-      
-        <p>Pozostały czas do kolejnego meczu: {timeRemaining}</p>
-      </div>
-    )}
-  
-     
-
+    <div>
+      {timeRemaining && (
+        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+          <p>Time remaining until the next game: {timeRemaining}</p>
+        </div>
+      )}
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <select
           style={{ margin: '1px' }}
           value={selectedUser}
           onChange={handleUserChange}
-
         >
-          <option value="">Twój login</option>
+          <option value="">Select your user</option>
           {Object.keys(usersData).map((user, index) => (
             <option key={index} value={user}>{user}</option>
           ))}
         </select>
-     
-      {missingBets && (
-        <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
-          Proszę dokonać zakładu dla wszystkich meczów przed zatwierdzeniem.
-        </div>
-      )}
-      <table
-        style={{
-          width: '100%',
-          border: '0px solid #444',
-          borderCollapse: 'collapse',
-          marginTop: '5%',
-        }}
-      >
-        <thead>
-          <tr>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Data</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>h</th>
-
-            <th style={{ borderBottom: '0.5px solid #444' }}>Gosp.</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Twój Zakład</th>
-            <th style={{ borderBottom: '0.5px solid #444' }}>Wpisz Wynik</th>
-          </tr>
-        </thead>
-        <tbody>
-        {games.map((game, index) => (
-  <tr
-    key={index}
-    style={{
-      borderBottom: '0.5px solid #444',
-      opacity: game.disabled ? '0.5' : '1',
-      pointerEvents: game.disabled ? 'none' : 'auto',
-      backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent', // Change background color here
-    }}
-  >
-    <td>{game.date}</td>
-    <td>{game.kickoff}</td>
-    <td>{game.home}</td>
-    <td>{game.away}</td>
-    <td>{results[index]}</td>
-    <td>
-      <select value={game.bet} disabled>
-        <option value="1">1</option>
-        <option value="X">X</option>
-        <option value="2">2</option>
-      </select>
-    </td>
-    <td>
-      <input
-        style={{
-          width: '50px',
-          backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
-          cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
-          color: 'red',
-        }}
-        type="text"
-        placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
-        value={game.score}
-        onChange={(e) => handleScoreChange(index, e.target.value)}
-        maxLength="3"
-        readOnly={isReadOnly(selectedUser, index)}
-        title={isReadOnly(selectedUser, index) ? "✔️" : ""}
-        disabled={gameStarted(game.date, game.kickoff)}
-      />
-    </td>
-  </tr>
-))}
-
-        </tbody>
-      </table>
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <button
+        {missingBets && (
+          <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
+            Please place a bet for all games before submitting.
+          </div>
+        )}
+        <table
           style={{
-            backgroundColor: '#DC3545',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            display: 'inlineblock',
-            margin: '10px',
-            fontSize: '14px',
-            width: '60%',
-            transition: 'backgroundcolor 0.3s',
+            width: '100%',
+            border: '0px solid #444',
+            borderCollapse: 'collapse',
+            marginTop: '5%',
           }}
-          onClick={handleSubmit}
         >
-          Zatwierdź
-        </button>
-      </div> </div>
+          <thead>
+            <tr>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Date</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Time</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Home</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Away</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Result</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Your Bet</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Enter Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {games.map((game, index) => (
+              <tr
+                key={index}
+                style={{
+                  borderBottom: '0.5px solid #444',
+                  opacity: game.disabled ? '0.5' : '1',
+                  pointerEvents: game.disabled ? 'none' : 'auto',
+                  // backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
+                }}
+              >
+                <td>{game.date}</td>
+                <td>{game.kickoff}</td>
+                <td>{game.home}</td>
+                <td>{game.away}</td>
+                <td>{results[index]}</td>
+                <td>
+                  <select value={game.bet} disabled>
+                    <option value="1">1</option>
+                    <option value="X">X</option>
+                    <option value="2">2</option>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    style={{
+                      width: '50px',
+                      backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
+                      cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
+                      color: 'red',
+                    }}
+                    type="text"
+                    placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
+                    value={game.score}
+                    onChange={(e) => handleScoreChange(index, e.target.value)}
+                    maxLength="3"
+                    readOnly={isReadOnly(selectedUser, index)}
+                    title={isReadOnly(selectedUser, index) ? "✔️" : ""}
+                    disabled={gameStarted(game.date, game.kickoff)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <button
+            style={{
+              backgroundColor: '#DC3545',
+              color: 'white',
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              display: 'inline-block',
+              margin: '10px',
+              fontSize: '14px',
+              width: '60%',
+              transition: 'background-color 0.3s',
+            }}
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
       {isDataSubmitted && Object.keys(submittedData).map((user) => (
         <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
       ))}
