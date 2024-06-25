@@ -361,7 +361,7 @@
     "kickoff": "21:00",
     "venue": "Lipsk",
     "date": "2024-06-24",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 29,
@@ -483,7 +483,7 @@
   {
     "id": 38,
     "home": "2A",
-    "away": "2B",
+    "away": "Włochy",
     "score": "",
     "bet": "",
     "result": "",
@@ -508,7 +508,7 @@
   },
   {
     "id": 40,
-    "home": "1B",
+    "home": "Hiszpania",
     "away": "3ADEF",
     "score": "",
     "bet": "",
