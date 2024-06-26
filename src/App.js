@@ -13,7 +13,7 @@ import Bets from './pages/bets';
 import Rules from './pages/rules';
 import Loading from './compartments/loading'; // Import the Loading component
 
-import pitch from './images/pitch.png'; // Ensure this is the correct path to your image
+import pitch from './images/pitc.jpeg'; // Ensure this is the correct path to your image
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
