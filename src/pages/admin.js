@@ -144,7 +144,7 @@ const Admin = () => {
             {nonBettors[index]?.length === 14 ? (
               <div className="text-center mb-1">
                 <p className="mb-1 text-red-500">Nie obstawili:</p>
-                <p2 className="text-red-500">Nikt jeszcze nie typował</p2>
+                <h5 className="text-red-500">Nikt jeszcze nie typował</h5>
               </div>
             ) : nonBettors[index]?.length > 0 ? (
               <div className="text-center mb-1">

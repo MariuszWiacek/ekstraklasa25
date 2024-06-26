@@ -350,7 +350,7 @@
     "kickoff": "21:00",
     "venue": "Duesseldorf",
     "date": "2024-06-24",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 28,
@@ -363,7 +363,7 @@
     "kickoff": "21:00",
     "venue": "Lipsk",
     "date": "2024-06-24",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 29,
@@ -376,7 +376,7 @@
     "kickoff": "18:00",
     "venue": "Dortmund",
     "date": "2024-06-25",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 30,
@@ -389,7 +389,7 @@
     "kickoff": "18:00",
     "venue": "Berlin",
     "date": "2024-06-25",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 31,
@@ -402,7 +402,7 @@
     "kickoff": "21:00",
     "venue": "Kolonia",
     "date": "2024-06-25",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 32,
@@ -415,7 +415,7 @@
     "kickoff": "21:00",
     "venue": "Monachium",
     "date": "2024-06-25",
-    "disabled": false
+    "disabled": true
   },
   {
     "id": 33,
@@ -472,7 +472,7 @@
   {
     "id": 37,
     "home": "Niemcy",
-    "away": "2C",
+    "away": "Dania",
     "score": "",
     "bet": "",
     "result": "",
@@ -480,12 +480,12 @@
     "kickoff": "21:00",
     "venue": "Dortmund",
     "date": "2024-06-29",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 38,
     "home": "Szwajcaria",
-    "away": "2B",
+    "away": "Włochy",
     "score": "",
     "bet": "",
     "result": "",
@@ -493,11 +493,11 @@
     "kickoff": "18:00",
     "venue": "Berlin",
     "date": "2024-06-29",
-    "disabled": true
+    "disabled": false
   },
   {
     "id": 39,
-    "home": "1C",
+    "home": "Anglia",
     "away": "3DEF",
     "score": "",
     "bet": "",
@@ -510,7 +510,7 @@
   },
   {
     "id": 40,
-    "home": "1B",
+    "home": "Hiszpania",
     "away": "3ADEF",
     "score": "",
     "bet": "",
@@ -536,7 +536,7 @@
   },
   {
     "id": 42,
-    "home": "2D",
+    "home": "Francja",
     "away": "2E",
     "score": "",
     "bet": "",
@@ -562,7 +562,7 @@
   },
   {
     "id": 44,
-    "home": "1D",
+    "home": "Austria",
     "away": "2F",
     "score": "",
     "bet": "",

@@ -111,7 +111,7 @@ const Navbar = () => {
             transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
           >
             <Link to="/" className="navbar-brand" style={brandStyle}>
-              <p3 className="glossy-text">EURO BET 2024</p3>
+              <h5 className="glossy-text">EURO BET 2024</h5>
             </Link>
           </motion.div>
 
@@ -163,13 +163,13 @@ const Navbar = () => {
           <FontAwesomeIcon icon={faHome} style={iconStyle} />
         </Link>
         <Link to="/bets" style={{ textDecoration: 'none' }}>
-          <FontAwesomeIcon icon={faFutbol} size="1.5x" style={iconStyle} />
+          <FontAwesomeIcon icon={faFutbol} size="1x" style={iconStyle} />
         </Link>
         <Link to="/table" style={{ textDecoration: 'none' }}>
           <FontAwesomeIcon icon={faTableList} style={iconStyle} />
         </Link>
         <button onClick={toggleChatbox} style={toggleButtonStyle}>
-          <p3 style={{ color: 'aliceblue', marginRight: '8px' }}>chatbox</p3>
+          <h5 style={{ color: 'aliceblue', marginRight: '8px' }}>chatbox</h5>
           <FontAwesomeIcon icon={faComments} style={iconStyle} />
         </button>
         <motion.div

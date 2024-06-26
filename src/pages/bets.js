@@ -8,7 +8,7 @@ import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import ExpandableCard from '../compartments/expandableCard'; // Adjust the path as needed
-import doboju from '../images/doboju.jpeg'
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
@@ -251,7 +251,7 @@ const Bets = () => {
                   borderBottom: '0.5px solid #444',
                   opacity: game.disabled ? '0.5' : '1',
                   pointerEvents: game.disabled ? 'none' : 'auto',
-                  // backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
+                  backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
                 }}
               >
                 <td>{game.date}</td>
