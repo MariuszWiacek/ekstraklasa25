@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
-import usersData from '../compartments/gameData/users.json';
-import gameData from '../compartments/gameData/data.json';
+import usersData from '../gameData/users.json';
+import gameData from '../gameData/data.json';
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
@@ -204,7 +204,7 @@ const Bets = () => {
     <div>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <p>Time remaining until the next game: {timeRemaining}</p>
+          <p>Do kolejnego meczu pozostało: {timeRemaining}</p>
         </div>
       )}
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
@@ -213,7 +213,7 @@ const Bets = () => {
           value={selectedUser}
           onChange={handleUserChange}
         >
-          <option value="">Select your user</option>
+          <option value="">Wybierz użytkownika</option>
           {Object.keys(usersData).map((user, index) => (
             <option key={index} value={user}>{user}</option>
           ))}
@@ -233,13 +233,13 @@ const Bets = () => {
         >
           <thead>
             <tr>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Date</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Time</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Home</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Away</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Result</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Your Bet</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Enter Score</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Data</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Godzina</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Gospodarz</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Twój Zakład</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Wprowadź Wynik</th>
             </tr>
           </thead>
           <tbody>
@@ -304,7 +304,7 @@ const Bets = () => {
             }}
             onClick={handleSubmit}
           >
-            Submit
+            Prześlij
           </button>
         </div>
       </div>

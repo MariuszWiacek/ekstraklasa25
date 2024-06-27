@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
-import gameData from '../compartments/gameData/data.json';
+import gameData from '../gameData/data.json';
 
 const Results = () => {
   const [games, setGames] = useState([]);
