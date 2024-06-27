@@ -510,7 +510,7 @@
   {
     "id": 40,
     "home": "Hiszpania",
-    "away": "3ADEF",
+    "away": "Gruzja",
     "score": "",
     "bet": "",
     "result": "",
@@ -523,7 +523,7 @@
   {
     "id": 41,
     "home": "Portugalia",
-    "away": "3ABC",
+    "away": "Słowenia",
     "score": "",
     "bet": "",
     "result": "",
@@ -536,7 +536,7 @@
   {
     "id": 42,
     "home": "Francja",
-    "away": "2E",
+    "away": "Belgia",
     "score": "",
     "bet": "",
     "result": "",
@@ -548,8 +548,8 @@
   },
   {
     "id": 43,
-    "home": "1E",
-    "away": "3ABCD",
+    "home": "Rumunia",
+    "away": "Holandia",
     "score": "",
     "bet": "",
     "result": "",
@@ -562,7 +562,7 @@
   {
     "id": 44,
     "home": "Austria",
-    "away": "2F",
+    "away": "Turcja",
     "score": "",
     "bet": "",
     "result": "",
