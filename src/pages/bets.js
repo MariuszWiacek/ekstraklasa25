@@ -9,7 +9,6 @@ import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import ExpandableCard from '../compartments/expandableCard'; // Adjust the path as needed
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
   authDomain: "bets-3887b.firebaseapp.com",
@@ -131,7 +130,7 @@ const Bets = () => {
 
   const handleSubmit = () => {
     if (!selectedUser) {
-      alert('Please select a user.');
+      alert('Proszę wybrać użytkownika.');
       return;
     }
 
@@ -154,7 +153,7 @@ const Bets = () => {
       }, {});
 
       if (Object.keys(newBetsToSubmit).length === 0) {
-        alert("You have already submitted your bets for all available games.");
+        alert("Wszystkie zakłady zostały już przesłane.");
         return;
       }
 
@@ -162,11 +161,11 @@ const Bets = () => {
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: { ...userSubmittedBets, ...newBetsToSubmit } });
           setIsDataSubmitted(true);
-          alert('Bets submitted successfully!');
+          alert('Zakłady zostały pomyślnie przesłane!');
         })
         .catch((error) => {
-          console.error('Error submitting data:', error);
-          alert('An error occurred while submitting your bets. Please try again.');
+          console.error('Błąd podczas przesyłania danych:', error);
+          alert('Wystąpił błąd podczas przesyłania zakładów. Proszę spróbować ponownie.');
         });
     } else {
       const userBetsObject = {};
@@ -185,11 +184,11 @@ const Bets = () => {
         .then(() => {
           setSubmittedData({ ...submittedData, [selectedUser]: userBetsObject });
           setIsDataSubmitted(true);
-          alert('Bets submitted successfully!');
+          alert('Zakłady zostały pomyślnie przesłane!');
         })
         .catch((error) => {
-          console.error('Error submitting data:', error);
-          alert('An error occurred while submitting your bets. Please try again.');
+          console.error('Błąd podczas przesyłania danych:', error);
+          alert('Wystąpił błąd podczas przesyłania zakładów. Proszę spróbować ponownie.');
         });
     }
     setGames(prevGames =>
@@ -221,7 +220,7 @@ const Bets = () => {
         </select>
         {missingBets && (
           <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
-            Please place a bet for all games before submitting.
+            Proszę obstawić wszystkie mecze przed przesłaniem.
           </div>
         )}
         <table
