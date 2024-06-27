@@ -468,21 +468,8 @@
     "date": "2024-06-26",
     "disabled" : "false"
   },
-  {
+{
     "id": 37,
-    "home": "Niemcy",
-    "away": "Dania",
-    "score": "",
-    "bet": "",
-    "result": "",
-    "type": "1/8 finału (I)",
-    "kickoff": "21:00",
-    "venue": "Dortmund",
-    "date": "2024-06-29",
-    "disabled" : "false"
-  },
-  {
-    "id": 38,
     "home": "Szwajcaria",
     "away": "Włochy",
     "score": "",
@@ -494,6 +481,20 @@
     "date": "2024-06-29",
     "disabled" : "false"
   },
+  {
+    "id": 38,
+    "home": "Niemcy",
+    "away": "Dania",
+    "score": "",
+    "bet": "",
+    "result": "",
+    "type": "1/8 finału (I)",
+    "kickoff": "21:00",
+    "venue": "Dortmund",
+    "date": "2024-06-29",
+    "disabled" : "false"
+  },
+  
   {
     "id": 39,
     "home": "Anglia",
