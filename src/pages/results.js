@@ -88,11 +88,11 @@ const Results = () => {
                       <td className="border p-2">
                         {game.home} vs {game.away}
                         <div className="flex justify-center gap-1 mt-1 small-font">
-                          <span style={{ color: 'yellow' }}>1:</span>
+                          <span style={{ color: 'yellow' }}> 1: </span>
                           <span style={{ color: 'red' }}>{betPercentages.home}%</span>
-                          <span style={{ color: 'yellow' }}>X:</span>
+                          <span style={{ color: 'yellow' }}> X: </span>
                           <span style={{ color: 'red' }}>{betPercentages.draw}%</span>
-                          <span style={{ color: 'yellow' }}>2:</span>
+                          <span style={{ color: 'yellow' }}> 2: </span>
                           <span style={{ color: 'red' }}>{betPercentages.away}%</span>
                         </div>
                       </td>
