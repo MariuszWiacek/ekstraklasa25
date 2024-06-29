@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import gameData from '../gameData/data.json';
+import '../styles/results.css';
 
 const Results = () => {
   const [games, setGames] = useState([]);
@@ -65,16 +66,16 @@ const Results = () => {
   return (
     <div className="text-left bg-gray-800 text-gray-200 p-4 rounded-lg shadow-lg">
       {submittedResults && (
-        <div className="text-center text-red-500 mb-5 overflow-x-auto">
+        <div className="text-center text-red-500 mb-5 table-container">
           <hr className="my-5" />
-          <table className="table-auto mx-2 w-full border-collapse min-w-max">
+          <table className="table-auto w-full">
             <thead>
               <tr>
-                <th className="border p-2 bg-green-600 text-gray-100">Data</th>
-                <th className="border p-2 bg-green-600 text-gray-100">Mecz</th>
-                <th className="border p-2 bg-green-600 text-gray-100">Wynik</th>
-                <th className="border p-2 bg-green-600 text-gray-100">Kto trafił prawidłowy wynik?</th>
-                <th className="border p-2 bg-green-600 text-gray-100">Udział w zakładach</th>
+                <th className="border bg-green-600 text-gray-100">Data</th>
+                <th className="border bg-green-600 text-gray-100">Mecz</th>
+                <th className="border bg-green-600 text-gray-100">Wynik</th>
+                <th className="border bg-green-600 text-gray-100">Kto trafił prawidłowy wynik?</th>
+                <th className="border bg-green-600 text-gray-100">Udział w zakładach</th>
               </tr>
             </thead>
             <tbody>
@@ -85,8 +86,8 @@ const Results = () => {
                     <tr className="mb-2">
                       <td className="border p-2">{game.date}</td>
                       <td className="border p-2">
-                        {game.home} vs {game.away}<bR></bR>
-                        <div style={{ fontSize: '8px', fontWeight: 'bold', display: 'inline-flex', alignItems: 'left', gap: '6px', marginTop: '4px' }}>
+                        {game.home} vs {game.away}
+                        <div className="flex justify-center gap-1 mt-1 small-font">
                           <span style={{ color: 'yellow' }}>1:</span>
                           <span style={{ color: 'red' }}>{betPercentages.home}%</span>
                           <span style={{ color: 'yellow' }}>X:</span>
