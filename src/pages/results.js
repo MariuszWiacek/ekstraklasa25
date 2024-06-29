@@ -63,56 +63,54 @@ const Results = () => {
   };
 
   return (
-    <div className="text-left" style={{ backgroundColor: 'rgba(33, 37, 41, 0.67)' }}>
-      <div className="bg-gray-800 text-gray p-1 rounded-lg shadow-lg">
-        {submittedResults && (
-          <div className="text-center text-red-500 mb-5">
-            <hr className="my-5" />
-            <table className="table-auto mx-2 w-full max-w-screen-md border-collapse">
-              <thead>
-                <tr>
-                  <th className="border p-2 bg-green-600 text-gray">Data</th>
-                  <th className="border p-2 bg-green-600 text-gray">Mecz</th>
-                  <th className="border p-2 bg-green-600 text-gray">Wynik</th>
-                  <th className="border p-2 bg-green-600 text-gray">Kto trafił prawidłowy wynik?</th>
-                  <th className="border p-2 bg-green-600 text-gray">Udział w zakładach</th>
-                </tr>
-              </thead>
-              <tbody>
-                {games.map((game, index) => {
-                  const betPercentages = getBetPercentages(index);
-                  return (
-                    <React.Fragment key={index}>
-                      <tr className="mb-2">
-                        <td className="border p-2">{game.date}</td>
-                        <td className="border p-2">
-                          {game.home} vs {game.away}
-                          <div style={{ fontSize: '10px', fontWeight: 'bold', display: 'flex', textAlign: 'center', gap: '6px', marginTop: '4px' }}>
-                            <div style={{ color: 'yellow' }}>1:</div>
-                            <div style={{ color: 'red' }}>{betPercentages.home}%</div>, 
-                            <div style={{ color: 'yellow' }}>X:</div>
-                            <div style={{ color: 'red' }}>{betPercentages.draw}%</div>, 
-                            <div style={{ color: 'yellow' }}>2:</div>
-                            <div style={{ color: 'red' }}>{betPercentages.away}%</div>
-                          </div>
-                        </td>
-                        <td className="border p-2">{resultsInput[index]}</td>
-                        <td className="border p-2">{getCorrectTyp(index).join(', ')}</td>
-                        <td className={`border p-2 ${getParticipationFraction(index) === '14/14' ? 'text-yellow-500 font-bold' : ''}`}>
-                          {getParticipationFraction(index)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colSpan="5"><hr className="border-t border-gray-100 my-0" /></td>
-                      </tr>
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+    <div className="text-left bg-gray-800 text-gray p-1 rounded-lg shadow-lg" style={{ backgroundColor: 'rgba(33, 37, 41, 0.67)' }}>
+      {submittedResults && (
+        <div className="text-center text-red-500 mb-5 overflow-x-auto">
+          <hr className="my-5" />
+          <table className="table-auto mx-2 w-full border-collapse min-w-max">
+            <thead>
+              <tr>
+                <th className="border p-2 bg-green-600 text-gray">Data</th>
+                <th className="border p-2 bg-green-600 text-gray">Mecz</th>
+                <th className="border p-2 bg-green-600 text-gray">Wynik</th>
+                <th className="border p-2 bg-green-600 text-gray">Kto trafił prawidłowy wynik?</th>
+                <th className="border p-2 bg-green-600 text-gray">Udział w zakładach</th>
+              </tr>
+            </thead>
+            <tbody>
+              {games.map((game, index) => {
+                const betPercentages = getBetPercentages(index);
+                return (
+                  <React.Fragment key={index}>
+                    <tr className="mb-2">
+                      <td className="border p-2">{game.date}</td>
+                      <td className="border p-2">
+                        {game.home} vs {game.away}
+                        <div style={{ fontSize: '10px', fontWeight: 'bold', display: 'flex', textAlign: 'center', gap: '6px', marginTop: '4px' }}>
+                          <div style={{ color: 'yellow' }}>1:</div>
+                          <div style={{ color: 'red' }}>{betPercentages.home}%</div>, 
+                          <div style={{ color: 'yellow' }}>X:</div>
+                          <div style={{ color: 'red' }}>{betPercentages.draw}%</div>, 
+                          <div style={{ color: 'yellow' }}>2:</div>
+                          <div style={{ color: 'red' }}>{betPercentages.away}%</div>
+                        </div>
+                      </td>
+                      <td className="border p-2">{resultsInput[index]}</td>
+                      <td className="border p-2">{getCorrectTyp(index).join(', ')}</td>
+                      <td className={`border p-2 ${getParticipationFraction(index) === '14/14' ? 'text-yellow-500 font-bold' : ''}`}>
+                        {getParticipationFraction(index)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan="5"><hr className="border-t border-gray-100 my-0" /></td>
+                    </tr>
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
