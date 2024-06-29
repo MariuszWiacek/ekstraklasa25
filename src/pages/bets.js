@@ -205,6 +205,8 @@ const Bets = () => {
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
           <p>Do kolejnego meczu pozostało: {timeRemaining}</p>
+
+          <p style={{ color: "red" }}>UWAGA! w fazie pucharowej obstawiamy wynik do 90min, bez dogrywki !</p>
         </div>
       )}
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
