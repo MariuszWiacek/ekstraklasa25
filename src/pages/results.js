@@ -63,18 +63,18 @@ const Results = () => {
   };
 
   return (
-    <div className="text-left bg-gray-800 text-gray p-1 rounded-lg shadow-lg" style={{ backgroundColor: 'rgba(33, 37, 41, 0.67)' }}>
+    <div className="text-left bg-gray-800 text-gray-200 p-4 rounded-lg shadow-lg">
       {submittedResults && (
         <div className="text-center text-red-500 mb-5 overflow-x-auto">
           <hr className="my-5" />
           <table className="table-auto mx-2 w-full border-collapse min-w-max">
             <thead>
               <tr>
-                <th className="border p-2 bg-green-600 text-gray">Data</th>
-                <th className="border p-2 bg-green-600 text-gray">Mecz</th>
-                <th className="border p-2 bg-green-600 text-gray">Wynik</th>
-                <th className="border p-2 bg-green-600 text-gray">Kto trafił prawidłowy wynik?</th>
-                <th className="border p-2 bg-green-600 text-gray">Udział w zakładach</th>
+                <th className="border p-2 bg-green-600 text-gray-100">Data</th>
+                <th className="border p-2 bg-green-600 text-gray-100">Mecz</th>
+                <th className="border p-2 bg-green-600 text-gray-100">Wynik</th>
+                <th className="border p-2 bg-green-600 text-gray-100">Kto trafił prawidłowy wynik?</th>
+                <th className="border p-2 bg-green-600 text-gray-100">Udział w zakładach</th>
               </tr>
             </thead>
             <tbody>
@@ -85,14 +85,14 @@ const Results = () => {
                     <tr className="mb-2">
                       <td className="border p-2">{game.date}</td>
                       <td className="border p-2">
-                        {game.home} vs {game.away}
-                        <div style={{ fontSize: '10px', fontWeight: 'bold', display: 'flex', textAlign: 'center', gap: '6px', marginTop: '4px' }}>
-                          <div style={{ color: 'yellow' }}>1:</div>
-                          <div style={{ color: 'red' }}>{betPercentages.home}%</div>, 
-                          <div style={{ color: 'yellow' }}>X:</div>
-                          <div style={{ color: 'red' }}>{betPercentages.draw}%</div>, 
-                          <div style={{ color: 'yellow' }}>2:</div>
-                          <div style={{ color: 'red' }}>{betPercentages.away}%</div>
+                        {game.home} vs {game.away}<bR></bR>
+                        <div style={{ fontSize: '8px', fontWeight: 'bold', display: 'inline-flex', alignItems: 'left', gap: '6px', marginTop: '4px' }}>
+                          <span style={{ color: 'yellow' }}>1:</span>
+                          <span style={{ color: 'red' }}>{betPercentages.home}%</span>
+                          <span style={{ color: 'yellow' }}>X:</span>
+                          <span style={{ color: 'red' }}>{betPercentages.draw}%</span>
+                          <span style={{ color: 'yellow' }}>2:</span>
+                          <span style={{ color: 'red' }}>{betPercentages.away}%</span>
                         </div>
                       </td>
                       <td className="border p-2">{resultsInput[index]}</td>
