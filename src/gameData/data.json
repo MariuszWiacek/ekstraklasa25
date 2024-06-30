@@ -479,7 +479,7 @@
     "kickoff": "18:00",
     "venue": "Berlin",
     "date": "2024-06-29",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 38,
@@ -492,7 +492,7 @@
     "kickoff": "21:00",
     "venue": "Dortmund",
     "date": "2024-06-29",
-    "disabled" : false
+    "disabled" : true
   },
   
   {
@@ -576,7 +576,7 @@
   {
     "id": 45,
     "home": "III",
-    "away": "I",
+    "away": "Niemcy",
     "score": "",
     "bet": "",
     "result": "",
@@ -615,7 +615,7 @@
   {
     "id": 48,
     "home": "IV",
-    "away": "II",
+    "away": "Szwajcaria",
     "score": "",
     "bet": "",
     "result": "",
