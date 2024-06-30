@@ -83,6 +83,7 @@ const Results = () => {
                 const betPercentages = getBetPercentages(index);
                 return (
                   <React.Fragment key={index}>
+                    
                     <tr className="mb-2">
                       <td className="border p-2">{game.date}</td>
                       <td className="border p-2">

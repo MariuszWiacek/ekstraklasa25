@@ -146,7 +146,7 @@ const Table = () => {
     same: { display: 'none' }
   };
 
-  return (
+  return ( 
       <Container fluid style={linkContainerStyle}>
         <Row>
           <Col md={12}>

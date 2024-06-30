@@ -506,7 +506,7 @@
     "kickoff": "18:00",
     "venue": "Gelsenkirchen",
     "date": "2024-06-30",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 40,
@@ -519,7 +519,7 @@
     "kickoff": "21:00",
     "venue": "Kolonia",
     "date": "2024-06-30",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 41,
@@ -614,7 +614,7 @@
   },
   {
     "id": 48,
-    "home": "IV",
+    "home": "Anglia",
     "away": "Szwajcaria",
     "score": "",
     "bet": "",
@@ -623,7 +623,7 @@
     "kickoff": "18:00",
     "venue": "Duesseldorf",
     "date": "2024-07-06",
-    "disabled" : true
+    "disabled" : false
   },
   {
     "id": 49,
