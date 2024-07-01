@@ -584,7 +584,7 @@
     "kickoff": "18:00",
     "venue": "Stuttgart",
     "date": "2024-07-05",
-    "disabled" : true
+    "disabled" : false
   },
   {
     "id": 46,
