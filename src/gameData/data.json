@@ -575,7 +575,7 @@
   },
   {
     "id": 45,
-    "home": "III",
+    "home": "Hiszpania",
     "away": "Niemcy",
     "score": "",
     "bet": "",
@@ -588,8 +588,8 @@
   },
   {
     "id": 46,
-    "home": "V",
-    "away": "VI",
+    "home": "Portugalia/Słowenia",
+    "away": "Francja",
     "score": "",
     "bet": "",
     "result": "",
@@ -601,19 +601,6 @@
   },
   {
     "id": 47,
-    "home": "VII",
-    "away": "VIII",
-    "score": "",
-    "bet": "",
-    "result": "",
-    "type": "1/4 finału (3)",
-    "kickoff": "21:00",
-    "venue": "Berlin",
-    "date": "2024-07-06",
-    "disabled" : true
-  },
-  {
-    "id": 48,
     "home": "Anglia",
     "away": "Szwajcaria",
     "score": "",
@@ -625,6 +612,20 @@
     "date": "2024-07-06",
     "disabled" : false
   },
+  {
+    "id": 48,
+    "home": "Rumunia/Holandia",
+    "away": "Austria/Turcja",
+    "score": "",
+    "bet": "",
+    "result": "",
+    "type": "1/4 finału (3)",
+    "kickoff": "21:00",
+    "venue": "Berlin",
+    "date": "2024-07-06",
+    "disabled" : true
+  },
+  
   {
     "id": 49,
     "home": "III/I",
