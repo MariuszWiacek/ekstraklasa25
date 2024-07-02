@@ -156,8 +156,8 @@ const Table = () => {
                   <tr style={{ backgroundColor: '#212529', color: 'white' }}>
                     <th style={tableHeaderStyle}>Miejsce</th>
                     <th style={tableHeaderStyle}>Użytkownik</th>
-                    <th style={tableHeaderStyle}>Punkty</th>
-                    <th style={tableHeaderStyle}>☑️ <br></br>tylko typ</th>
+                    <th style={tableHeaderStyle}>Pkt</th>
+                    <th style={tableHeaderStyle}>☑️ <br></br>typ</th>
                     <th style={tableHeaderStyle}>✅☑️ <br></br>typ+wynik</th>
                   </tr>
                 </thead>

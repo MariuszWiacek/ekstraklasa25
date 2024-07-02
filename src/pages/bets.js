@@ -215,7 +215,7 @@ const Bets = () => {
           value={selectedUser}
           onChange={handleUserChange}
         >
-          <option value="">Wybierz użytkownika</option>
+          <option value="">Użytkownik</option>
           {Object.keys(usersData).map((user, index) => (
             <option key={index} value={user}>{user}</option>
           ))}
@@ -240,8 +240,8 @@ const Bets = () => {
               <th style={{ borderBottom: '0.5px solid #444' }}>Gospodarz</th>
               <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
               <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Twój Zakład</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Wprowadź Wynik</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Zakład</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
             </tr>
           </thead>
           <tbody>
