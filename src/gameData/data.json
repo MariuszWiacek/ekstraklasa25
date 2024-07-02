@@ -532,7 +532,7 @@
     "kickoff": "21:00",
     "venue": "Frankfurt",
     "date": "2024-07-01",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 42,
@@ -545,7 +545,7 @@
     "kickoff": "18:00",
     "venue": "Duesseldorf",
     "date": "2024-07-01",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 43,

@@ -240,8 +240,8 @@ const Bets = () => {
               <th style={{ borderBottom: '0.5px solid #444' }}>Gospodarz</th>
               <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
               <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Zakład</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
+              <th style={{ borderBottom: '0.5px solid #444' }}></th>
+              <th style={{ borderBottom: '0.5px solid #444' }}>Typ</th>
             </tr>
           </thead>
           <tbody>
