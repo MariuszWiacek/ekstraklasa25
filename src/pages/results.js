@@ -74,8 +74,8 @@ const Results = () => {
                 <th className="border bg-green-600 text-gray-100">Data</th>
                 <th className="border bg-green-600 text-gray-100">Mecz</th>
                 <th className="border bg-green-600 text-gray-100">Wynik</th>
-                <th className="border bg-green-600 text-gray-100">Kto trafił prawidłowy wynik?</th>
-                <th className="border bg-green-600 text-gray-100">Udział w zakładach</th>
+                <th className="border bg-green-600 text-gray-100">Kto trafił wynik?</th>
+                <th className="border bg-green-600 text-gray-100">Udział</th>
               </tr>
             </thead>
             <tbody>
