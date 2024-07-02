@@ -588,7 +588,7 @@
   },
   {
     "id": 46,
-    "home": "Portugalia/Słowenia",
+    "home": "Portugalia",
     "away": "Francja",
     "score": "",
     "bet": "",
@@ -597,7 +597,7 @@
     "kickoff": "21:00",
     "venue": "Hamburg",
     "date": "2024-07-05",
-    "disabled" : true
+    "disabled" : false
   },
   {
     "id": 47,
