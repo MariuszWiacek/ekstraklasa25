@@ -571,7 +571,7 @@
     "kickoff": "21:00",
     "venue": "Lipsk",
     "date": "2024-07-02",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 45,
