@@ -623,13 +623,13 @@
     "kickoff": "21:00",
     "venue": "Berlin",
     "date": "2024-07-06",
-    "disabled" : true
+    "disabled" : false
   },
   
   {
     "id": 49,
-    "home": "III/I",
-    "away": "V/VI",
+    "home": "Hiszpania/Niemcy",
+    "away": "Portugalia/Francja",
     "score": "",
     "bet": "",
     "result": "",
@@ -641,8 +641,8 @@
   },
   {
     "id": 50,
-    "home": "VII/VIII",
-    "away": "IV/II",
+    "home": "Holandia/Turcja",
+    "away": "Szwajcaria/Anglia",
     "score": "",
     "bet": "",
     "result": "",

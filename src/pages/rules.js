@@ -37,17 +37,20 @@ const Rules = () => {
         <li>
           <strong style={{color:'red'}}>Rozstrzygnięcie:</strong>
           <ul>
-            <li>W przypadku, gdy dwóch lub więcej uczestników uzyska tę samą liczbę punktów, rozstrzygające będą dodatkowe kryteria, takie jak:
-              <ul>
-                <li>Liczba poprawnych wyników,</li>
-              </ul>
-            </li>
+          <li>W przypadku, gdy dwóch lub więcej uczestników uzyska tę samą liczbę punktów, rozstrzygające będą dodatkowe kryteria, takie jak:
+  <ul>
+    <li>Liczba poprawnych wyników,</li>
+  </ul>
+</li>
+<li>W przypadku tej samej liczby punktów i liczby poprawnych wyników, nagroda za zajęte miejsca sumowana jest i dzielona równo między tych uczestników.</li>
+<li>Przykład: Jeśli trzy osoby zajmują pierwsze miejsce, suma nagród za pierwsze, drugie i trzecie miejsce jest dzielona równo, co oznacza, że każda z tych osób otrzymuje - pula nagród / 3 osoby.</li>
+<li>Uczestnicy zajmujący kolejne miejsca nie otrzymują nagród przeznaczonych dla miejsc, które zostały rozdysponowane ex aequo.</li>
+
           </ul>
         </li>
         <li>
           <strong style={{color:'red'}}>Inne Warunki:</strong>
           <ul>
-            <li>Organizator zastrzega sobie prawo do interpretacji regulaminu oraz wprowadzenia zmian w przypadku potrzeby.</li>
             <li>Uczestnicy, którzy naruszają regulamin lub podejmują próby oszustwa, zostaną zdyskwalifikowani.</li>
             <hr></hr>
           </ul>
