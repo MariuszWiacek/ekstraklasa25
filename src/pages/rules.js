@@ -43,8 +43,19 @@ const Rules = () => {
   </ul>
 </li>
 <li>W przypadku tej samej liczby punktów i liczby poprawnych wyników, nagroda za zajęte miejsca sumowana jest i dzielona równo między tych uczestników.</li>
-<li>Przykład: Jeśli trzy osoby zajmują pierwsze miejsce, suma nagród za pierwsze, drugie i trzecie miejsce jest dzielona równo, co oznacza, że każda z tych osób otrzymuje - pula nagród / 3 osoby.</li>
+<li>Przykłady:
+  <ul>
+    <li>Jeśli dwie osoby zajmują pierwsze miejsce, suma nagród za pierwsze i drugie miejsce jest dzielona równo między te osoby.</li>
+    <li>Jeśli trzy osoby zajmują pierwsze miejsce, suma nagród za pierwsze, drugie i trzecie miejsce jest dzielona równo między te osoby.</li>
+    <li>Jeśli dwie osoby zajmują drugie miejsce, suma nagród za drugie i trzecie miejsce jest dzielona równo między te osoby.</li>
+    <li>Jeśli trzy osoby zajmują drugie miejsce, suma nagród za drugie i trzecie miejsce jest dzielona równo między te osoby.</li>
+    <li>Jeśli cztery osoby zajmują trzecie miejsce, nagroda za trzecie miejsce jest dzielona równo między te osoby.</li>
+    <li>Jeśli dwie osoby zajmują pierwsze miejsce, a trzy osoby zajmują drugie miejsce, suma nagród za pierwsze i drugie miejsce jest dzielona równo między dwie osoby na pierwszym miejscu, a suma nagród za trzecie miejsce jest dzielona równo między trzy osoby na drugim miejscu.</li>
+  </ul>
+</li>
+<li>W przypadku, gdy pula nagród jest ograniczona, a liczba uczestników zajmujących ex aequo miejsca powoduje, że suma nagród jest niższa niż przydzielona na te miejsca, nagrody są dzielone proporcjonalnie.</li>
 <li>Uczestnicy zajmujący kolejne miejsca nie otrzymują nagród przeznaczonych dla miejsc, które zostały rozdysponowane ex aequo.</li>
+
 
           </ul>
         </li>
