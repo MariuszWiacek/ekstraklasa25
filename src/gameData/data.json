@@ -628,8 +628,8 @@
   
   {
     "id": 49,
-    "home": "Hiszpania/Niemcy",
-    "away": "Portugalia/Francja",
+    "home": "His/Nie",
+    "away": "Por/Fra",
     "score": "",
     "bet": "",
     "result": "",
@@ -641,8 +641,8 @@
   },
   {
     "id": 50,
-    "home": "Holandia/Turcja",
-    "away": "Szwajcaria/Anglia",
+    "home": "Hol/Tur",
+    "away": "Szw/Ang",
     "score": "",
     "bet": "",
     "result": "",
