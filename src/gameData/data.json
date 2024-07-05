@@ -637,7 +637,7 @@
     "kickoff": "21:00",
     "venue": "Monachium",
     "date": "2024-07-09",
-    "disabled" : true
+    "disabled" : false
   },
   {
     "id": 50,
