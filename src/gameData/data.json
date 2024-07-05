@@ -584,7 +584,7 @@
     "kickoff": "18:00",
     "venue": "Stuttgart",
     "date": "2024-07-05",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 46,
@@ -597,7 +597,7 @@
     "kickoff": "21:00",
     "venue": "Hamburg",
     "date": "2024-07-05",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 47,
@@ -628,8 +628,8 @@
   
   {
     "id": 49,
-    "home": "Hiszpania/Niemcy",
-    "away": "Portugalia/Francja",
+    "home": "Hiszpania",
+    "away": "Francja",
     "score": "",
     "bet": "",
     "result": "",
