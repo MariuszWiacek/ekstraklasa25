@@ -250,9 +250,7 @@ const Bets = () => {
                 key={index}
                 style={{
                   borderBottom: '0.5px solid #444',
-                  opacity: game.disabled ? '0.5' : '1',
-                  pointerEvents: game.disabled ? 'none' : 'auto',
-                  backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
+                  
                 }}
               >
                 <td>{game.date}</td>
@@ -271,7 +269,9 @@ const Bets = () => {
                   <input
                     style={{
                       width: '50px',
-                      
+                      backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
+                      cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
+                      color: 'red',
                     }}
                     type="text"
                     placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
