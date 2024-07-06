@@ -271,9 +271,7 @@ const Bets = () => {
                   <input
                     style={{
                       width: '50px',
-                      backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
-                      cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
-                      color: 'red',
+                      
                     }}
                     type="text"
                     placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
