@@ -610,7 +610,7 @@
     "kickoff": "18:00",
     "venue": "Duesseldorf",
     "date": "2024-07-06",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 48,
@@ -623,7 +623,7 @@
     "kickoff": "21:00",
     "venue": "Berlin",
     "date": "2024-07-06",
-    "disabled" : false
+    "disabled" : true
   },
   
   {
@@ -641,8 +641,8 @@
   },
   {
     "id": 50,
-    "home": "Hol/Tur",
-    "away": "Szw/Ang",
+    "home": "Holandia",
+    "away": "Anglia",
     "score": "",
     "bet": "",
     "result": "",
