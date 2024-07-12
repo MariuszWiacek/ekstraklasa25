@@ -9,7 +9,9 @@ const Home = () => {
     <div>
       <Container fluid style={linkContainerStyle}>
         <Row>
+        <h5 style={{fontSize: "30px", color:"gold"}}>Typera EURO 2024 wygrywa - PIOTR! <br></br></h5><h2>Gratulacje !<hr></hr></h2><hr></hr>
           <Col md={6}>
+          
             <h2 style={welcomeMessageStyle}>Witaj w typerze</h2>
             <a
               href="/bets"

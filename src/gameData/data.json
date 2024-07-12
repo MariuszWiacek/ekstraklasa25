@@ -637,7 +637,7 @@
     "kickoff": "21:00",
     "venue": "Monachium",
     "date": "2024-07-09",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 50,
@@ -650,12 +650,12 @@
     "kickoff": "21:00",
     "venue": "Dortmund",
     "date": "2024-07-10",
-    "disabled" : false
+    "disabled" : true
   },
   {
     "id": 51,
-    "home": "FINAL",
-    "away": "FINAL",
+    "home": "Hiszpania",
+    "away": "Anglia",
     "score": "",
     "bet": "",
     "result": "",
@@ -663,7 +663,7 @@
     "kickoff": "21:00",
     "venue": "Berlin",
     "date": "2024-07-14",
-    "disabled" : true
+    "disabled" : false
   }
   
 ]

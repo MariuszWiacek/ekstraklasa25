@@ -204,6 +204,7 @@ const Bets = () => {
     <div>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+           <h1 style={{ color: "red" }}>Typera EURO 2024 wygrywa - Piotr !</h1>
           <p>Do kolejnego meczu pozostało: {timeRemaining}</p>
 
           <p style={{ color: "red" }}>UWAGA! w fazie pucharowej obstawiamy wynik do 90min, bez dogrywki !</p>
