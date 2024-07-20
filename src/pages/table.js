@@ -4,14 +4,14 @@ import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCKjpxvNMm3Cb-cA8cPskPY6ROPsg8XO4Q",
-  authDomain: "bets-3887b.firebaseapp.com",
-  databaseURL: "https://bets-3887b-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "bets-3887b",
-  storageBucket: "bets-3887b.appspot.com",
-  messagingSenderId: "446338011209",
-  appId: "1:446338011209:web:bc4a33a19b763564992f98",
-  measurementId: "G-W9EB371N7C"
+  apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
+  authDomain: "polskibet-71ef6.firebaseapp.com",
+  databaseURL: "https://polskibet-71ef6-default-rtdb.europe-west1.firebasedatabase.app/",
+  projectId: "polskibet-71ef6",
+  storageBucket: "polskibet-71ef6.appspot.com",
+  messagingSenderId: "185818867502",
+  appId: "1:185818867502:web:b582993ede95b06f80bcbf",
+  measurementId: "G-VRP9QW7LRN"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
