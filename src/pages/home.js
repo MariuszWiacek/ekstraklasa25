@@ -2,17 +2,17 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { Container, Row, Col } from 'react-bootstrap';
-import logo from '../images/logo.png';
+import logo from '../images/ekstra.png';
 
 const Home = () => {
   return (
     <div>
       <Container fluid style={linkContainerStyle}>
         <Row>
-        <h5 style={{fontSize: "30px", color:"gold"}}>Typera EURO 2024 wygrywa - PIOTR! <br></br></h5><h2>Gratulacje !<hr></hr></h2><hr></hr>
+        
           <Col md={6}>
           
-            <h2 style={welcomeMessageStyle}>Witaj w typerze</h2>
+            <h2 style={welcomeMessageStyle}>Witaj w typerze LIGI POLSKIEJ</h2><hr></hr>
             <a
               href="/bets"
               style={linkStyle}
@@ -66,7 +66,7 @@ const Home = () => {
 
 const welcomeMessageStyle = {
   fontWeight: 'bold',
-  marginBottom: '10px',
+  marginBottom: '8px',
   textAlign: 'center',
 };
 

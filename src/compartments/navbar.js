@@ -49,7 +49,7 @@ const Navbar = () => {
     position: 'fixed',
     top: 0,
     width: '100%',
-    background: scrollPosition > 0 ? '#00200e' : 'black',
+    background: scrollPosition > 0 ? 'black' : 'black',
     zIndex: 1000,
     transition: 'background-color 0.3s ease',
   };
@@ -111,7 +111,7 @@ const Navbar = () => {
             transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
           >
             <Link to="/" className="navbar-brand" style={brandStyle}>
-              <h5 className="glossy-text">EURO BET 2024</h5>
+              <h5 className="glossy-text">eXtraBet</h5>
             </Link>
           </motion.div>
 
