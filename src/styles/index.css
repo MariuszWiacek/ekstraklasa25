@@ -62,7 +62,7 @@ p {
 /* styles.css */
 .glossy-text {
   font-family: 'Rubik';
-  font-size: 35px;
+  font-size: 30px;
   font-weight: bold;
   font-style: italic;
   background: linear-gradient(45deg, #ffffff, #ffea02);
@@ -71,6 +71,7 @@ p {
   position: relative;
   display: inline-block;
   margin-left: 10px;
+  margin-right: 10px;
   margin-top: 1px;
 }
 
@@ -254,7 +255,7 @@ code {
   }
   span {
     font-weight: bold;
-    font-size: 8px !important;
+    font-size: 10px !important;
   }
   p {
     font-size: 12px;

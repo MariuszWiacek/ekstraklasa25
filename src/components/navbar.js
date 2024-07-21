@@ -111,7 +111,7 @@ const Navbar = () => {
             transition={{ type: 'spring', stiffness: 100, damping: 10, duration: 1.5 }}
           >
             <Link to="/" className="navbar-brand" style={brandStyle}>
-              <h5 className="glossy-text">eXtraBet</h5>
+              <h5 className="glossy-text">EKSTRA BET 24/25</h5>
             </Link>
           </motion.div>
 

@@ -7,33 +7,45 @@ import gameData from '../gameData/data.json';
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import ExpandableCard from '../compartments/expandableCard'; // Adjust the path as needed
+import ExpandableCard from '../components/expandableCard';
+import Pagination from '../components/Pagination'; // Custom component for pagination
+
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
-    authDomain: "polskibet-71ef6.firebaseapp.com",
-    databaseURL: "https://polskibet-71ef6-default-rtdb.europe-west1.firebasedatabase.app/",
-    projectId: "polskibet-71ef6",
-    storageBucket: "polskibet-71ef6.appspot.com",
-    messagingSenderId: "185818867502",
-    appId: "1:185818867502:web:b582993ede95b06f80bcbf",
-    measurementId: "G-VRP9QW7LRN"
-  };
+  apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
+  authDomain: "polskibet-71ef6.firebaseapp.com",
+  databaseURL: "https://polskibet-71ef6-default-rtdb.europe-west1.firebasedatabase.app/",
+  projectId: "polskibet-71ef6",
+  storageBucket: "polskibet-71ef6.appspot.com",
+  messagingSenderId: "185818867502",
+  appId: "1:185818867502:web:b582993ede95b06f80bcbf",
+  measurementId: "G-VRP9QW7LRN"
+};
 
-firebase.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-const database = getDatabase(firebaseApp);
+const auth = getAuth();
+const database = getDatabase();
+
+const groupGamesIntoKolejki = (games) => {
+  const kolejki = [];
+  for (let i = 0; i < games.length; i += 9) {
+    kolejki.push({
+      id: Math.floor(i / 9) + 1,
+      games: games.slice(i, i + 9)
+    });
+  }
+  return kolejki;
+};
 
 const Bets = () => {
-  const [games, setGames] = useState(gameData);
+  const [kolejki, setKolejki] = useState(groupGamesIntoKolejki(gameData));
   const [selectedUser, setSelectedUser] = useState('');
   const [submittedData, setSubmittedData] = useState({});
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
-  const [missingBets, setMissingBets] = useState(false);
   const [results, setResults] = useState({});
   const [timeRemaining, setTimeRemaining] = useState('');
+  const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0);
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
@@ -47,8 +59,8 @@ const Bets = () => {
       }
     });
 
-    const dbRef = firebase.database().ref('submittedData');
-    dbRef.on('value', (snapshot) => {
+    const dbRef = ref(database, 'submittedData');
+    onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         setSubmittedData(data);
@@ -56,21 +68,26 @@ const Bets = () => {
       }
     });
 
-    const resultsRef = firebase.database().ref('results');
-    resultsRef.on('value', (snapshot) => {
+    const resultsRef = ref(database, 'results');
+    onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         setResults(data);
       }
     });
+
+    const now = new Date();
+    const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
+    const kolejkaIndex = Math.floor(nextGameIndex / 9);
+    setCurrentKolejkaIndex(kolejkaIndex);
   }, []);
 
   const updateTimeRemaining = () => {
     const now = new Date();
-    const nextGame = games.find(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now); // CEST is UTC+2
+    const nextGame = gameData.find(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
 
     if (nextGame) {
-      const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+02:00`); // CEST kickoff time
+      const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+02:00`);
       const diff = kickoffTimeCEST - now;
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -80,12 +97,12 @@ const Bets = () => {
   };
 
   useEffect(() => {
-    updateTimeRemaining(); // Update time remaining when component mounts
-  }, [games]); // Trigger update when games change
+    updateTimeRemaining();
+  }, [kolejki]);
 
   useEffect(() => {
-    const interval = setInterval(updateTimeRemaining, 1000); // Update time remaining every second
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    const interval = setInterval(updateTimeRemaining, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const isReadOnly = (selectedUser, index) => {
@@ -94,7 +111,7 @@ const Bets = () => {
 
   const gameStarted = (gameDate, gameKickoff) => {
     const currentDateTime = new Date();
-    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`); // CEST game time
+    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`);
     return currentDateTime >= gameDateTimeCEST;
   };
 
@@ -102,7 +119,6 @@ const Bets = () => {
     const user = e.target.value;
     setSelectedUser(user);
     localStorage.setItem('selectedUser', user);
-    setGames(gameData.map(game => ({ ...game, score: '' }))); // Clear game scores
   };
 
   const autoDetectBetType = (score) => {
@@ -120,12 +136,15 @@ const Bets = () => {
     const cleanedScore = newScore.replace(/[^0-9:]/g, '');
     const formattedScore = cleanedScore.replace(/^(?:(\d))([^:]*$)/, '$1:$2');
 
-    const updatedGames = games.map((game, index) =>
-      index === gameId
-        ? { ...game, score: formattedScore, bet: autoDetectBetType(formattedScore) }
-        : game
-    );
-    setGames(updatedGames);
+    const updatedKolejki = kolejki.map(kolejka => ({
+      ...kolejka,
+      games: kolejka.games.map(game =>
+        game.id === gameId
+          ? { ...game, score: formattedScore, bet: autoDetectBetType(formattedScore) }
+          : game
+      )
+    }));
+    setKolejki(updatedKolejki);
   };
 
   const handleSubmit = () => {
@@ -134,68 +153,50 @@ const Bets = () => {
       return;
     }
 
-    const userSubmittedBets = submittedData[selectedUser];
+    const currentKolejka = kolejki[currentKolejkaIndex];
+    const userSubmittedBets = submittedData[selectedUser] || {};
 
-    if (userSubmittedBets) {
-      const alreadySubmittedGames = Object.keys(userSubmittedBets).map(Number);
-      const alreadySubmittedIds = new Set(alreadySubmittedGames);
-
-      const newBetsToSubmit = games.reduce((newBets, game, index) => {
-        if (game.score && !alreadySubmittedIds.has(index)) {
-          newBets[index] = {
-            home: game.home,
-            away: game.away,
-            score: game.score,
-            bet: autoDetectBetType(game.score),
-          };
-        }
-        return newBets;
-      }, {});
-
-      if (Object.keys(newBetsToSubmit).length === 0) {
-        alert("Wszystkie zakłady zostały już przesłane.");
-        return;
+    const newBetsToSubmit = currentKolejka.games.reduce((newBets, game) => {
+      if (game.score && !userSubmittedBets[game.id]) {
+        newBets[game.id] = {
+          home: game.home,
+          away: game.away,
+          score: game.score,
+          bet: autoDetectBetType(game.score),
+          kolejkaId: currentKolejka.id,
+        };
       }
+      return newBets;
+    }, {});
 
-      set(ref(database, `submittedData/${selectedUser}`), { ...userSubmittedBets, ...newBetsToSubmit })
-        .then(() => {
-          setSubmittedData({ ...submittedData, [selectedUser]: { ...userSubmittedBets, ...newBetsToSubmit } });
-          setIsDataSubmitted(true);
-          alert('Zakłady zostały pomyślnie przesłane!');
-        })
-        .catch((error) => {
-          console.error('Błąd podczas przesyłania danych:', error);
-          alert('Wystąpił błąd podczas przesyłania zakładów. Proszę spróbować ponownie.');
-        });
-    } else {
-      const userBetsObject = {};
-      games.forEach((game, index) => {
-        if (game.score) {
-          userBetsObject[index] = {
-            home: game.home,
-            away: game.away,
-            score: game.score,
-            bet: autoDetectBetType(game.score),
-          };
-        }
+    if (Object.keys(newBetsToSubmit).length === 0) {
+      alert("Wszystkie zakłady zostały już przesłane.");
+      return;
+    }
+
+    set(ref(database, `submittedData/${selectedUser}`), { ...userSubmittedBets, ...newBetsToSubmit })
+      .then(() => {
+        setSubmittedData({ ...submittedData, [selectedUser]: { ...userSubmittedBets, ...newBetsToSubmit } });
+        setIsDataSubmitted(true);
+        alert('Zakłady zostały pomyślnie przesłane!');
+      })
+      .catch((error) => {
+        console.error('Błąd podczas przesyłania danych:', error);
+        alert('Wystąpił błąd podczas przesyłania zakładów. Proszę spróbować ponownie.');
       });
 
-      set(ref(database, `submittedData/${selectedUser}`), userBetsObject)
-        .then(() => {
-          setSubmittedData({ ...submittedData, [selectedUser]: userBetsObject });
-          setIsDataSubmitted(true);
-          alert('Zakłady zostały pomyślnie przesłane!');
-        })
-        .catch((error) => {
-          console.error('Błąd podczas przesyłania danych:', error);
-          alert('Wystąpił błąd podczas przesyłania zakładów. Proszę spróbować ponownie.');
-        });
-    }
-    setGames(prevGames =>
-      prevGames.map(game =>
-        submittedData[selectedUser] && submittedData[selectedUser][game.id]
-          ? { ...game, readOnly: true }
-          : game
+    setKolejki(prevKolejki =>
+      prevKolejki.map((kolejka, idx) =>
+        idx === currentKolejkaIndex
+          ? {
+            ...kolejka,
+            games: kolejka.games.map(game =>
+              userSubmittedBets[game.id]
+                ? { ...game, readOnly: true }
+                : game
+            )
+          }
+          : kolejka
       )
     );
   };
@@ -204,9 +205,8 @@ const Bets = () => {
     <div>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-           <h1 style={{ color: "red" }}> </h1>
+          <h1 style={{ color: "red" }}> </h1>
           <p>Do kolejnego meczu pozostało: {timeRemaining}</p>
-
           <p style={{ color: "red" }}>Typer eXtraBet Polska liga już wkrótce!</p>
         </div>
       )}
@@ -221,11 +221,11 @@ const Bets = () => {
             <option key={index} value={user}>{user}</option>
           ))}
         </select>
-        {missingBets && (
-          <div style={{ textAlign: 'center', color: 'red', fontSize: '16px', marginBottom: '10px' }}>
-            Proszę obstawić wszystkie mecze przed przesłaniem.
-          </div>
-        )}
+        <Pagination
+          currentPage={currentKolejkaIndex}
+          totalPages={kolejki.length}
+          onPageChange={(page) => setCurrentKolejkaIndex(page)}
+        />
         <table
           style={{
             width: '100%',
@@ -246,7 +246,7 @@ const Bets = () => {
             </tr>
           </thead>
           <tbody>
-            {games.map((game, index) => (
+            {kolejki[currentKolejkaIndex].games.map((game, index) => (
               <tr
                 key={index}
                 style={{
@@ -260,7 +260,7 @@ const Bets = () => {
                 <td>{game.kickoff}</td>
                 <td>{game.home}</td>
                 <td>{game.away}</td>
-                <td>{results[index]}</td>
+                <td>{results[game.id]}</td>
                 <td>
                   <select value={game.bet} disabled>
                     <option value="1">1</option>
@@ -272,17 +272,17 @@ const Bets = () => {
                   <input
                     style={{
                       width: '50px',
-                      backgroundColor: game.score ? (isReadOnly(selectedUser, index) ? 'transparent' : 'white') : 'white',
-                      cursor: isReadOnly(selectedUser, index) ? 'not-allowed' : 'text',
+                      backgroundColor: game.score ? (isReadOnly(selectedUser, game.id) ? 'transparent' : 'white') : 'white',
+                      cursor: isReadOnly(selectedUser, game.id) ? 'not-allowed' : 'text',
                       color: 'red',
                     }}
                     type="text"
-                    placeholder={isReadOnly(selectedUser, index) ? "✔️" : "x:x"}
+                    placeholder={isReadOnly(selectedUser, game.id) ? "✔️" : "x:x"}
                     value={game.score}
-                    onChange={(e) => handleScoreChange(index, e.target.value)}
+                    onChange={(e) => handleScoreChange(game.id, e.target.value)}
                     maxLength="3"
-                    readOnly={isReadOnly(selectedUser, index)}
-                    title={isReadOnly(selectedUser, index) ? "✔️" : ""}
+                    readOnly={isReadOnly(selectedUser, game.id)}
+                    title={isReadOnly(selectedUser, game.id) ? "✔️" : ""}
                     disabled={gameStarted(game.date, game.kickoff)}
                   />
                 </td>

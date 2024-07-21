@@ -3,15 +3,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 import Home from './pages/home';
-import Navbar from './compartments/navbar';
+import Navbar from './components/navbar';
 import Table from './pages/table';
 import Admin from './pages/admin';
-import Footer from './compartments/footer';
+import Footer from './components/footer';
 import Guestbook from './pages/chatbox';
 import Results from './pages/results';
 import Bets from './pages/bets';
 import Rules from './pages/rules';
-import Loading from './compartments/loading'; // Import the Loading component
+import Loading from './components/loading'; // Import the Loading component
 
 import pitch from './images/pitc.jpeg'; // Ensure this is the correct path to your image
 

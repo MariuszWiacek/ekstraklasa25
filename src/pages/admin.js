@@ -4,16 +4,21 @@ import gameData from '../gameData/data.json';
 
 const Admin = () => {
   const [games, setGames] = useState([]);
-  const [resultsInput, setResultsInput] = useState([]);
+  const [resultsInput, setResultsInput] = useState({});
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [betCounts, setBetCounts] = useState({});
   const [nonBettors, setNonBettors] = useState({});
+  const [selectedKolejka, setSelectedKolejka] = useState(1);
 
   useEffect(() => {
     setGames(gameData);
+
+    // Initialize the current kolejka based on games
+    const currentKolejka = Math.floor((gameData.findIndex(game => game.id === 1) / 9)) + 1;
+    setSelectedKolejka(currentKolejka);
   }, []);
 
   useEffect(() => {
@@ -28,7 +33,7 @@ const Admin = () => {
     const resultsRef = ref(getDatabase(), 'results');
     onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
-      setResultsInput(data || []);
+      setResultsInput(data || {});
       setSubmittedResults(!!data);
     });
   }, []);
@@ -44,24 +49,23 @@ const Admin = () => {
   useEffect(() => {
     const nonBettorsData = {};
     Object.keys(submittedData).forEach((user) => {
-      for (let i = 0; i < games.length; i++) {
-        if (!submittedData[user][i]) {
-          if (!nonBettorsData[i]) {
-            nonBettorsData[i] = [];
+      games.forEach((game) => {
+        if (!submittedData[user][game.id]) {
+          if (!nonBettorsData[game.id]) {
+            nonBettorsData[game.id] = [];
           }
-          nonBettorsData[i].push(user);
+          nonBettorsData[game.id].push(user);
         }
-      }
+      });
     });
     setNonBettors(nonBettorsData);
   }, [submittedData, games]);
 
-  const handleResultChange = (index, result) => {
-    setResultsInput(prevResults => {
-      const updatedResults = [...prevResults];
-      updatedResults[index] = result;
-      return updatedResults;
-    });
+  const handleResultChange = (gameId, result) => {
+    setResultsInput(prevResults => ({
+      ...prevResults,
+      [gameId]: result
+    }));
   };
 
   const handleSubmitResults = () => {
@@ -88,6 +92,14 @@ const Admin = () => {
     if (event.key === 'Enter') {
       callback();
     }
+  };
+
+  // Calculate games for the selected kolejka
+  const getGamesForKolejka = (kolejkaNumber) => {
+    return games.filter(game => {
+      const gameIndex = games.indexOf(game);
+      return Math.floor(gameIndex / 9) + 1 === kolejkaNumber;
+    });
   };
 
   // If not authenticated, show password form
@@ -126,30 +138,43 @@ const Admin = () => {
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
       <h2 className="text-xl font-bold mb-4">Wprowadź wyniki:</h2>
+      <div className="mb-4">
+        <label htmlFor="kolejka" className="mr-4">Wybierz kolejkę:</label>
+        <select
+          id="kolejka"
+          value={selectedKolejka}
+          onChange={(e) => setSelectedKolejka(Number(e.target.value))}
+          className="p-2 text-center border border-gray-300 rounded-md"
+        >
+          {[1, 2, 3, 4].map(num => (
+            <option key={num} value={num}>Kolejka {num}</option>
+          ))}
+        </select>
+      </div>
       <div className="flex flex-col items-center">
-        {games.map((game, index) => (
-          <div key={index} className="mb-4">
+        {getGamesForKolejka(selectedKolejka).map((game) => (
+          <div key={game.id} className="mb-4">
             <div className="flex items-center mb-2">
               <p>{game.home} vs {game.away}:</p>
               <input
                 type="text"
                 maxLength="3"
                 placeholder="x:x"
-                value={resultsInput[index] || ''}
-                onChange={(e) => handleResultChange(index, e.target.value)}
+                value={resultsInput[game.id] || ''}
+                onChange={(e) => handleResultChange(game.id, e.target.value)}
                 className="ml-2 p-2 text-center border border-gray-300 rounded-md w-16"
                 onKeyDown={(e) => handleKeyPress(e, handleSubmitResults)}
               />
             </div>
-            {nonBettors[index]?.length === 14 ? (
+            {nonBettors[game.id]?.length === 0 ? (
               <div className="text-center mb-1">
                 <p className="mb-1 text-red-500">Nie obstawili:</p>
                 <h5 className="text-red-500">Nikt jeszcze nie typował</h5>
               </div>
-            ) : nonBettors[index]?.length > 0 ? (
+            ) : nonBettors[game.id]?.length > 0 ? (
               <div className="text-center mb-1">
                 <p className="mb-1">Nie obstawili:</p>
-                <p>{nonBettors[index].join(', ')}</p>
+                <p>{nonBettors[game.id].join(', ')}</p>
               </div>
             ) : null}
           </div>
