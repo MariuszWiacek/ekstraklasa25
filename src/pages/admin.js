@@ -17,8 +17,9 @@ const Admin = () => {
     setGames(gameData);
 
     // Initialize the current kolejka based on games
-    const gameIndex = gameData.findIndex(game => game.id === 1);
-    const currentKolejka = gameIndex !== -1 ? Math.floor(gameData[gameIndex].id / 9) + 1 : 1;
+    const totalGames = gameData.length;
+    const gamesPerKolejka = 9;
+    const currentKolejka = Math.ceil(totalGames / gamesPerKolejka);
     setSelectedKolejka(currentKolejka);
   }, []);
 
@@ -97,12 +98,10 @@ const Admin = () => {
 
   // Calculate games for the selected kolejka
   const getGamesForKolejka = (kolejkaNumber) => {
-    return games.filter(game => {
-      // Calculate the index of the game
-      const gameIndex = games.findIndex(g => g.id === game.id);
-      // Correctly determine the kolejka based on 9 games per kolejka
-      return gameIndex !== -1 && Math.floor((gameIndex) / 9) + 1 === kolejkaNumber;
-    });
+    const gamesPerKolejka = 9;
+    const startIndex = (kolejkaNumber - 1) * gamesPerKolejka;
+    const endIndex = startIndex + gamesPerKolejka;
+    return games.slice(startIndex, endIndex);
   };
 
   // If not authenticated, show password form

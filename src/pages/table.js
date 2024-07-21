@@ -30,8 +30,11 @@ const calculatePoints = (bets, results) => {
   let correctTypes = 0;
   let correctResults = 0;
 
-  bets.forEach((bet, index) => {
-    const result = results[index];
+  console.log("Calculating points for bets:", bets);
+  console.log("Against results:", results);
+
+  bets.forEach((bet) => {
+    const result = results[bet.id]; // Ensure we're using the correct game ID
     if (result) {
       // Calculate points
       if (bet.score === result) {
@@ -57,19 +60,25 @@ const Table = () => {
     const resultsRef = ref(database, 'results');
     onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
+      console.log("Results data:", data); // Debugging log
       setResults(data || {});
     });
 
     const submittedDataRef = ref(database, 'submittedData');
     onValue(submittedDataRef, (snapshot) => {
       const data = snapshot.val();
+      console.log("Submitted data:", data); // Debugging log
       setSubmittedData(data || {});
     });
   }, []);
 
   useEffect(() => {
     const updatedTableData = Object.keys(submittedData).map((user) => {
-      const { points, correctTypes, correctResults } = calculatePoints(Object.values(submittedData[user]), results);
+      const bets = Object.entries(submittedData[user]).map(([id, bet]) => ({
+        ...bet,
+        id // Use the key as the ID for correct mapping
+      }));
+      const { points, correctTypes, correctResults } = calculatePoints(bets, results);
       return { user, points, correctTypes, correctResults };
     });
 
@@ -146,43 +155,43 @@ const Table = () => {
     same: { display: 'none' }
   };
 
-  return ( 
-      <Container fluid style={linkContainerStyle}>
-        <Row>
-          <Col md={12}>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#212529', color: 'white' }}>
-                    <th style={tableHeaderStyle}>Miejsce</th>
-                    <th style={tableHeaderStyle}>Użytkownik</th>
-                    <th style={tableHeaderStyle}>Pkt</th>
-                    <th style={tableHeaderStyle}>☑️ <br></br>typ</th>
-                    <th style={tableHeaderStyle}>✅☑️ <br></br>typ+wynik</th>
+  return (
+    <Container fluid style={linkContainerStyle}>
+      <Row>
+        <Col md={12}><h2 style={{textAlign: 'center'}}>Tabela</h2><hr></hr>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr style={{ backgroundColor: '#212529', color: 'white' }}>
+                  <th style={tableHeaderStyle}>Miejsce</th>
+                  <th style={tableHeaderStyle}>Użytkownik</th>
+                  <th style={tableHeaderStyle}>Pkt</th>
+                  <th style={tableHeaderStyle}>☑️ <br></br>typ</th>
+                  <th style={tableHeaderStyle}>✅☑️ <br></br>typ+wynik</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.map((entry, index) => (
+                  <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
+                    <td style={tableCellStyle}>{entry.place}</td>
+                    <td style={tableCellStyle}>
+                      {entry.user}
+                      <span style={trendStyle[entry.trend]}>
+                        {entry.trend === 'up' && '▲'}
+                        {entry.trend === 'down' && '▼'}
+                      </span>
+                    </td>
+                    <td style={tableCellStyle2}>{entry.points}</td>
+                    <td style={tableCellStyle}>{entry.correctTypes}</td>
+                    <td style={tableCellStyle}>{entry.correctResults}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {tableData.map((entry, index) => (
-                    <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
-                      <td style={tableCellStyle}>{entry.place}</td>
-                      <td style={tableCellStyle}>
-                        {entry.user}
-                        <span style={trendStyle[entry.trend]}>
-                          {entry.trend === 'up' && '▲'}
-                          {entry.trend === 'down' && '▼'}
-                        </span>
-                      </td>
-                      <td style={tableCellStyle2}>{entry.points}</td>
-                      <td style={tableCellStyle}>{entry.correctTypes}</td>
-                      <td style={tableCellStyle}>{entry.correctResults}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Col>
-        </Row>
-      </Container>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

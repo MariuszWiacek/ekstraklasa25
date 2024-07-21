@@ -202,25 +202,28 @@ const Bets = () => {
   };
 
   return (
-    <div>
+    <div style={{textAlign: 'center'}}>
+      <p>Wybrany użytkownik : </p><select
+    style={{ margin: '1px', backgroundColor: 'red', fontWeight: 'bold', fontFamily: 'Rubik' }}
+    value={selectedUser}
+    onChange={handleUserChange}
+  >
+    <option value="">Użytkownik</option>
+    {Object.keys(usersData).map((user, index) => (
+      <option key={index} value={user}>{user}</option>
+    ))}
+  </select>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <h1 style={{ color: "red" }}> </h1>
-          <p>Do kolejnego meczu pozostało: {timeRemaining}</p>
-          <p style={{ color: "red" }}>Typer eXtraBet Polska liga już wkrótce! <hr></hr>Trwa faza testowa</p>
+          
+          <h1 style={{ color: "red" }}> </h1><hr></hr>
+          
+          <p>Do kolejnego meczu pozostało: {timeRemaining}</p><hr></hr>
+        
         </div>
       )}
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
-        <select
-          style={{ margin: '1px', backgroundColor: 'red', fontWeight: 'bold', fontFamily: 'Rubik' }}
-          value={selectedUser}
-          onChange={handleUserChange}
-        >
-          <option value="">Użytkownik</option>
-          {Object.keys(usersData).map((user, index) => (
-            <option key={index} value={user}>{user}</option>
-          ))}
-        </select>
+        
         <Pagination
           currentPage={currentKolejkaIndex}
           totalPages={kolejki.length}
@@ -310,10 +313,11 @@ const Bets = () => {
             Prześlij
           </button>
         </div>
-      </div>
+      
       {isDataSubmitted && Object.keys(submittedData).map((user) => (
         <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
       ))}
+    </div>
     </div>
   );
 };

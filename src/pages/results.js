@@ -5,7 +5,7 @@ import '../styles/results.css';
 
 const Results = () => {
   const [games, setGames] = useState([]);
-  const [resultsInput, setResultsInput] = useState([]);
+  const [resultsInput, setResultsInput] = useState({});
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
 
@@ -25,21 +25,31 @@ const Results = () => {
     const resultsRef = ref(getDatabase(), 'results');
     onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
-      setResultsInput(data || []);
+      console.log('Results from database:', data);
+
+      // Filter out results for invalid game IDs
+      const validResults = gameData.reduce((acc, game) => {
+        if (data && data[game.id]) {
+          acc[game.id] = data[game.id];
+        }
+        return acc;
+      }, {});
+
+      setResultsInput(validResults);
       setSubmittedResults(!!data);
     });
-  }, []);
+  }, [gameData]);
 
-  const getCorrectTyp = (gameIndex) => {
-    return Object.keys(submittedData).filter((user) => submittedData[user][gameIndex] && submittedData[user][gameIndex].score === resultsInput[gameIndex]);
+  const getCorrectTyp = (gameId) => {
+    return Object.keys(submittedData).filter((user) => submittedData[user][gameId] && submittedData[user][gameId].score === resultsInput[gameId]);
   };
 
-  const getBetPercentages = (gameIndex) => {
+  const getBetPercentages = (gameId) => {
     const betCounts = { home: 0, draw: 0, away: 0 };
     let totalBets = 0;
 
     Object.values(submittedData).forEach((userBets) => {
-      const bet = userBets[gameIndex]?.bet;
+      const bet = userBets[gameId]?.bet;
       if (bet) {
         totalBets++;
         if (bet === '1') betCounts.home++;
@@ -57,17 +67,18 @@ const Results = () => {
     };
   };
 
-  const getParticipationFraction = (gameIndex) => {
+  const getParticipationFraction = (gameId) => {
     const totalUsers = Object.keys(submittedData).length;
-    const usersWhoBet = Object.values(submittedData).filter(userBets => userBets[gameIndex] !== undefined).length;
+    const usersWhoBet = Object.values(submittedData).filter(userBets => userBets[gameId] !== undefined).length;
     return `${usersWhoBet}/${totalUsers}`;
   };
 
   return (
-    <div className="text-left bg-gray-800 text-gray-200 p-4 rounded-lg shadow-lg">
+    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px' }}>
       {submittedResults && (
         <div className="text-center text-red-500 mb-5 table-container">
-          <hr className="my-5" />
+          <h2>Wyniki</h2>
+          <hr />
           <table className="table-auto w-full">
             <thead>
               <tr>
@@ -79,11 +90,11 @@ const Results = () => {
               </tr>
             </thead>
             <tbody>
-              {games.map((game, index) => {
-                const betPercentages = getBetPercentages(index);
+              {games.map((game) => {
+                const gameId = game.id; // Use game ID directly
+                const betPercentages = getBetPercentages(gameId);
                 return (
-                  <React.Fragment key={index}>
-                    
+                  <React.Fragment key={gameId}>
                     <tr className="mb-2">
                       <td className="border p-2">{game.date}</td>
                       <td className="border p-2">
@@ -97,10 +108,10 @@ const Results = () => {
                           <span style={{ color: 'red' }}>{betPercentages.away}%</span>
                         </div>
                       </td>
-                      <td className="border p-2">{resultsInput[index]}</td>
-                      <td className="border p-2">{getCorrectTyp(index).join(', ')}</td>
-                      <td className={`border p-2 ${getParticipationFraction(index) === '14/14' ? 'text-yellow-500 font-bold' : ''}`}>
-                        {getParticipationFraction(index)}
+                      <td className="border p-2">{resultsInput[gameId]}</td>
+                      <td className="border p-2">{getCorrectTyp(gameId).join(', ')}</td>
+                      <td className={`border p-2 ${getParticipationFraction(gameId) === '14/14' ? 'text-yellow-500 font-bold' : ''}`}>
+                        {getParticipationFraction(gameId)}
                       </td>
                     </tr>
                     <tr>
