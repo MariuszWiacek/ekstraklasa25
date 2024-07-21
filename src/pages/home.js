@@ -12,7 +12,7 @@ const Home = () => {
                 <Row>
                     <Col md={6} className="slide-in">
                         <h2 style={welcomeMessageStyle}>
-                            Witaj w typerze LIGI POLSKIEJ
+                            Typer LIGI POLSKIEJ sezonu 2024/25
                         </h2>
                         <hr />
                         <a
