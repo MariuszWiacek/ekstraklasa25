@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
-import '../styles/animations.css'
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
@@ -17,6 +16,14 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
+
+const linkContainerStyle = {
+  textAlign: 'left',
+  backgroundColor: '#212529ab',
+  padding: '20px',
+  borderRadius: '10px',
+  marginBottom: '20px',
+};
 
 const calculatePoints = (bets, results) => {
   let points = 0;
@@ -133,52 +140,50 @@ const Table = () => {
     fontWeight: 'bold'
   };
 
-  return ( 
-    <Container fluid style={linkContainerStyle}>
-      <Row>
-        <Col md={12}>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#212529', color: 'white' }}>
-                  <th style={tableHeaderStyle}>Miejsce</th>
-                  <th style={tableHeaderStyle}>Użytkownik</th>
-                  <th style={tableHeaderStyle}>Pkt</th>
-                  <th style={tableHeaderStyle}>☑️ <br />typ</th>
-                  <th style={tableHeaderStyle}>✅☑️ <br />typ+wynik</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((entry, index) => (
-                  <tr key={index} className="fade-in slide-in" style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
-                    <td style={tableCellStyle}>{entry.place}</td>
-                    <td style={tableCellStyle}>
-                      {entry.user}
-                      <span className={`trend-${entry.trend}`}>
-                        {entry.trend === 'up' && '▲'}
-                        {entry.trend === 'down' && '▼'}
-                      </span>
-                    </td>
-                    <td style={tableCellStyle2}>{entry.points}</td>
-                    <td style={tableCellStyle}>{entry.correctTypes}</td>
-                    <td style={tableCellStyle}>{entry.correctResults}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Col>
-      </Row>
-    </Container>
-  );
-};
+  const trendStyle = {
+    up: { color: 'green' },
+    down: { color: 'red' },
+    same: { display: 'none' }
+  };
 
-const linkContainerStyle = {
-  textAlign: 'left',
-  backgroundColor: '#212529ab',
-  padding: '20px',
-  borderRadius: '10px',
-  marginBottom: '20px',
+  return ( 
+      <Container fluid style={linkContainerStyle}>
+        <Row>
+          <Col md={12}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                <thead>
+                  <tr style={{ backgroundColor: '#212529', color: 'white' }}>
+                    <th style={tableHeaderStyle}>Miejsce</th>
+                    <th style={tableHeaderStyle}>Użytkownik</th>
+                    <th style={tableHeaderStyle}>Pkt</th>
+                    <th style={tableHeaderStyle}>☑️ <br></br>typ</th>
+                    <th style={tableHeaderStyle}>✅☑️ <br></br>typ+wynik</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableData.map((entry, index) => (
+                    <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
+                      <td style={tableCellStyle}>{entry.place}</td>
+                      <td style={tableCellStyle}>
+                        {entry.user}
+                        <span style={trendStyle[entry.trend]}>
+                          {entry.trend === 'up' && '▲'}
+                          {entry.trend === 'down' && '▼'}
+                        </span>
+                      </td>
+                      <td style={tableCellStyle2}>{entry.points}</td>
+                      <td style={tableCellStyle}>{entry.correctTypes}</td>
+                      <td style={tableCellStyle}>{entry.correctResults}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+  );
 };
 
 export default Table;

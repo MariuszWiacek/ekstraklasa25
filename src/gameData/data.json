@@ -1,11 +1,13 @@
-[
+
+
+[ 
   {
     "id": 1,
     "home": "Jagiellonia Białystok",
     "away": "Puszcza Niepołomice",
     "score": "",
     "bet": "",
-    "result": "[RELACJA]",
+    "result": "",
     "type": "",
     "kickoff": "18:00",
     "venue": "",
@@ -18,7 +20,7 @@
     "away": "Lechia Gdańsk",
     "score": "",
     "bet": "",
-    "result": "[RELACJA]",
+    "result": "",
     "type": "",
     "kickoff": "20:30",
     "venue": "",

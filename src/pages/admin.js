@@ -17,7 +17,8 @@ const Admin = () => {
     setGames(gameData);
 
     // Initialize the current kolejka based on games
-    const currentKolejka = Math.floor((gameData.findIndex(game => game.id === 1) / 9)) + 1;
+    const gameIndex = gameData.findIndex(game => game.id === 1);
+    const currentKolejka = gameIndex !== -1 ? Math.floor(gameData[gameIndex].id / 9) + 1 : 1;
     setSelectedKolejka(currentKolejka);
   }, []);
 
@@ -97,8 +98,10 @@ const Admin = () => {
   // Calculate games for the selected kolejka
   const getGamesForKolejka = (kolejkaNumber) => {
     return games.filter(game => {
-      const gameIndex = games.indexOf(game);
-      return Math.floor(gameIndex / 9) + 1 === kolejkaNumber;
+      // Calculate the index of the game
+      const gameIndex = games.findIndex(g => g.id === game.id);
+      // Correctly determine the kolejka based on 9 games per kolejka
+      return gameIndex !== -1 && Math.floor((gameIndex) / 9) + 1 === kolejkaNumber;
     });
   };
 
@@ -146,7 +149,7 @@ const Admin = () => {
           onChange={(e) => setSelectedKolejka(Number(e.target.value))}
           className="p-2 text-center border border-gray-300 rounded-md"
         >
-          {[1, 2, 3, 4].map(num => (
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map(num => (
             <option key={num} value={num}>Kolejka {num}</option>
           ))}
         </select>

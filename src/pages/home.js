@@ -11,9 +11,9 @@ const Home = () => {
             <Container fluid style={linkContainerStyle}>
                 <Row>
                     <Col md={6} className="slide-in">
-                        <h6 style={welcomeMessageStyle}>
+                        <h2 style={welcomeMessageStyle}>
                             Witaj w typerze LIGI POLSKIEJ
-                        </h6>
+                        </h2>
                         <hr />
                         <a
                             href="/bets"
@@ -25,37 +25,7 @@ const Home = () => {
                         </a>
                         <p>
                             Masz pytanie lub problem? Skontaktuj się na WhatsApp
-                            <br />
-                            <a
-                                href="https://wa.me/447448952003"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ color: '#00ff0d', textDecoration: 'none' }}
-                            >
-                                <FontAwesomeIcon icon={faWhatsapp} size="2x" style={{ color: '#00ff0d', marginLeft: '5px' }} />
-                            </a>
-                        </p>
-                        <a
-                            href="https://www.flashscore.pl/tabela/ABkrguJ9/EcpQtcVi/#/EcpQtcVi/live"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={linkStyle}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
-                        >
-                            Euro 2024 - <span style={{ color: '#ff6347' }}>Tabela na żywo</span>
-                        </a>
-                        <br />
-                        <a
-                            href="https://wyniki.onet.pl/euro2024"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={linkStyle}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = linkHoverStyle.color)}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = linkStyle.color)}
-                        >
-                            Euro 2024 - <span style={{ color: '#ff6347' }}>wiadomości, wyniki, tabele</span>
-                        </a>
+                            </p>
                     </Col>
                     <Col md={6} className="text-center slide-in">
                         <img src={logo} alt="Logo" style={logoStyle} />
