@@ -203,7 +203,7 @@ const Bets = () => {
 
   const getTeamLogo = (teamName) => {
     const team = teamsData[teamName];
-    return team ? team.logo : 'images/herby/Korona.png'; // Default logo if not found
+    return team ? team.logo : ''; // Default logo if not found
   };
 
   return (
