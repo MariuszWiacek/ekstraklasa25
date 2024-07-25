@@ -4,12 +4,12 @@ import 'firebase/compat/auth';
 import 'firebase/compat/database';
 import usersData from '../gameData/users.json';
 import gameData from '../gameData/data.json';
+import teamsData from '../gameData/teams.json'; // Import the teams data
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import ExpandableCard from '../components/expandableCard';
 import Pagination from '../components/Pagination'; // Custom component for pagination
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
@@ -201,29 +201,31 @@ const Bets = () => {
     );
   };
 
+  const getTeamLogo = (teamName) => {
+    const team = teamsData[teamName];
+    return team ? team.logo : '/path/to/default-logo.png'; // Default logo if not found
+  };
+
   return (
-    <div style={{textAlign: 'center'}}>
-      <p>Wybrany użytkownik : </p><select
-    style={{ margin: '1px', backgroundColor: 'red', fontWeight: 'bold', fontFamily: 'Rubik' }}
-    value={selectedUser}
-    onChange={handleUserChange}
-  >
-    <option value="">Użytkownik</option>
-    {Object.keys(usersData).map((user, index) => (
-      <option key={index} value={user}>{user}</option>
-    ))}
-  </select>
+    <div style={{ textAlign: 'center' }}>
+      <p>Wybrany użytkownik : </p>
+      <select
+        style={{ margin: '1px', backgroundColor: 'red', fontWeight: 'bold', fontFamily: 'Rubik' }}
+        value={selectedUser}
+        onChange={handleUserChange}
+      >
+        <option value="">Użytkownik</option>
+        {Object.keys(usersData).map((user, index) => (
+          <option key={index} value={user}>{user}</option>
+        ))}
+      </select>
       {timeRemaining && (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          
           <h1 style={{ color: "red" }}> </h1><hr></hr>
-          
           <p>Do kolejnego meczu pozostało: {timeRemaining}</p><hr></hr>
-        
         </div>
       )}
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
-        
         <Pagination
           currentPage={currentKolejkaIndex}
           totalPages={kolejki.length}
@@ -261,8 +263,22 @@ const Bets = () => {
               >
                 <td>{game.date}</td>
                 <td>{game.kickoff}</td>
-                <td>{game.home}</td>
-                <td>{game.away}</td>
+                <td style={{ display: 'flex', alignItems: 'center' }}>
+                  <img
+                    src={getTeamLogo(game.home)}
+                    
+                    style={{ width: '50px', height: 'auto', marginRight: '10px' }}
+                  />
+                  {game.home}
+                </td>
+                <td style={{ display: 'flex', alignItems: 'center' }}>
+                  <img
+                    src={getTeamLogo(game.away)}
+                 
+                    style={{ width: '50px', height: 'auto', marginRight: '10px' }}
+                  />
+                  {game.away}
+                </td>
                 <td>{results[game.id]}</td>
                 <td>
                   <select value={game.bet} disabled>
@@ -313,11 +329,10 @@ const Bets = () => {
             Prześlij
           </button>
         </div>
-      
-      {isDataSubmitted && Object.keys(submittedData).map((user) => (
-        <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
-      ))}
-    </div>
+        {isDataSubmitted && Object.keys(submittedData).map((user) => (
+          <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
+        ))}
+      </div>
     </div>
   );
 };

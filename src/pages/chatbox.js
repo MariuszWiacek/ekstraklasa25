@@ -3,6 +3,7 @@ import { getDatabase, ref, push, onValue } from 'firebase/database';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
+
 import '../styles/guestbook.css';
 
 const firebaseConfig = {
