@@ -203,7 +203,7 @@ const Bets = () => {
 
   const getTeamLogo = (teamName) => {
     const team = teamsData[teamName];
-    return team ? team.logo : 'images/herby/Craxa.png'; // Default logo if not found
+    return team ? team.logo : 'images/herby/Korona.png'; // Default logo if not found
   };
 
   return (
@@ -267,7 +267,7 @@ const Bets = () => {
                   <img
                     src={getTeamLogo(game.home)}
                     
-                    style={{ width: '50px', height: 'auto', marginRight: '10px' }}
+                    style={{ width: '20px', height: 'auto', marginRight: '10px' }}
                   />
                   {game.home}
                 </td>
@@ -275,7 +275,7 @@ const Bets = () => {
                   <img
                     src={getTeamLogo(game.away)}
                  
-                    style={{ width: '50px', height: 'auto', marginRight: '10px' }}
+                    style={{ width: '20px', height: 'auto', marginRight: '10px' }}
                   />
                   {game.away}
                 </td>

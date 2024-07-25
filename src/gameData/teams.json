@@ -62,14 +62,14 @@
     },
     "Widzew Łódź": {
      
-      "logo": "/images/herby/RTS.png"
+      "logo": "images/herby/RTS.png"
     },
     "Śląsk Wrocław": {
       
-      "logo": "/images/herby/Slask.png"
+      "logo": "images/herby/Slask.png"
     },
     "Lechia Gdańsk": {
-      "logo": "/images/herby/Lechia.png"
+      "logo": "images/herby/Lechia.png"
     }
   }
   
