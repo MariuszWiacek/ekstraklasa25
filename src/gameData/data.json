@@ -119,60 +119,8 @@
     "disabled": false
   },
   
-    {
+   {
       "id": 10,
-      "home": "Zagłębie",
-      "away": "Pogoń",
-      "score": "",
-      "bet": "",
-      "result": "",
-      "type": "",
-      "kickoff": "14:45",
-      "venue": "",
-      "date": "2024-07-28",
-      "disabled": false
-    },
-    {
-      "id": 11,
-      "home": "Korona",
-      "away": "Legia",
-      "score": "",
-      "bet": "",
-      "result": "",
-      "type": "",
-      "kickoff": "20:15",
-      "venue": "",
-      "date": "2024-07-28",
-      "disabled": false
-    },
-    {
-      "id": 12,
-      "home": "Lechia",
-      "away": "Motor",
-      "score": "",
-      "bet": "",
-      "result": "",
-      "type": "",
-      "kickoff": "20:30",
-      "venue": "",
-      "date": "2024-07-27",
-      "disabled": false
-    },
-    {
-      "id": 13,
-      "home": "Piast",
-      "away": "Śląsk",
-      "score": "",
-      "bet": "",
-      "result": "",
-      "type": "",
-      "kickoff": "17:30",
-      "venue": "",
-      "date": "2024-07-28",
-      "disabled": false
-    },
-    {
-      "id": 14,
       "home": "Puszcza",
       "away": "Górnik",
       "score": "",
@@ -184,8 +132,21 @@
       "date": "2024-07-26",
       "disabled": false
     },
-    {
-      "id": 15,
+{
+      "id": 11,
+      "home": "Lechia",
+      "away": "Motor",
+      "score": "",
+      "bet": "",
+      "result": "",
+      "type": "",
+      "kickoff": "20:30",
+      "venue": "",
+      "date": "2024-07-27",
+      "disabled": false
+    },
+{
+      "id": 12,
       "home": "Radomiak",
       "away": "Jagiellonia",
       "score": "",
@@ -197,21 +158,8 @@
       "date": "2024-07-27",
       "disabled": false
     },
-    {
-      "id": 16,
-      "home": "Raków",
-      "away": "Cracovia",
-      "score": "",
-      "bet": "",
-      "result": "",
-      "type": "",
-      "kickoff": "19:00",
-      "venue": "",
-      "date": "2024-07-29",
-      "disabled": false
-    },
-    {
-      "id": 17,
+{
+      "id": 13,
       "home": "Stal",
       "away": "GKS Katowice",
       "score": "",
@@ -223,8 +171,8 @@
       "date": "2024-07-27",
       "disabled": false
     },
-    {
-      "id": 18,
+{
+      "id": 14,
       "home": "Widzew",
       "away": "Lech",
       "score": "",
@@ -235,8 +183,59 @@
       "venue": "",
       "date": "2024-07-27",
       "disabled": false
-    }
-,  
+    },
+{
+      "id": 15,
+      "home": "Zagłębie",
+      "away": "Pogoń",
+      "score": "",
+      "bet": "",
+      "result": "",
+      "type": "",
+      "kickoff": "14:45",
+      "venue": "",
+      "date": "2024-07-28",
+      "disabled": false
+    },
+{
+      "id": 16,
+      "home": "Korona",
+      "away": "Legia",
+      "score": "",
+      "bet": "",
+      "result": "",
+      "type": "",
+      "kickoff": "20:15",
+      "venue": "",
+      "date": "2024-07-28",
+      "disabled": false
+    },
+{
+      "id": 17,
+      "home": "Piast",
+      "away": "Śląsk",
+      "score": "",
+      "bet": "",
+      "result": "",
+      "type": "",
+      "kickoff": "17:30",
+      "venue": "",
+      "date": "2024-07-28",
+      "disabled": false
+    },
+{
+      "id": 18,
+      "home": "Raków",
+      "away": "Cracovia",
+      "score": "",
+      "bet": "",
+      "result": "",
+      "type": "",
+      "kickoff": "19:00",
+      "venue": "",
+      "date": "2024-07-29",
+      "disabled": false
+    } ,  
 
     {
       "id": 19,
