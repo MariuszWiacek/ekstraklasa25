@@ -243,6 +243,7 @@ const Bets = () => {
 >
   <thead>
     <tr>
+    <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
       <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gospodarz</th>
       <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
       <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gość</th>
@@ -263,9 +264,14 @@ const Bets = () => {
           }}
         >
           <td colSpan="12" className="date"
-          style={{ textAlign: 'left', color:'gold', fontSize: '10px',  paddingLeft: '10%' }}>
-            {game.date} &nbsp;&nbsp; {game.kickoff}
-          </td>
+    style={{ textAlign: 'left', color: 'gold', fontSize: '10px', paddingLeft: '10%' }}>
+    
+    &nbsp;&nbsp;&nbsp;
+    {game.date}
+    &nbsp;&nbsp;&nbsp;
+    {game.kickoff}
+</td>
+
         </tr>
         <tr
           style={{
@@ -274,7 +280,7 @@ const Bets = () => {
             pointerEvents: game.disabled ? 'none' : 'auto',
             backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
           }}
-        >
+        ><p style={{ color: 'grey' }}>{game.id}.</p>
           <td style={{ textAlign: 'center', paddingRight: '10px', fontSize: '20px' }}>
             <img
               src={getTeamLogo(game.home)}
