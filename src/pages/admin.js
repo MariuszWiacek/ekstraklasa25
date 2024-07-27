@@ -15,19 +15,15 @@ const Admin = () => {
 
   useEffect(() => {
     setGames(gameData);
-
-    // Initialize the current kolejka based on games
-    const totalGames = gameData.length;
-    const gamesPerKolejka = 9;
-    const currentKolejka = Math.ceil(totalGames / gamesPerKolejka);
-    setSelectedKolejka(currentKolejka);
-  }, []);
+    updateNextKolejka(); // Ensure we set the initial kolejka correctly
+  }, [gameData]);
 
   useEffect(() => {
     const submittedDataRef = ref(getDatabase(), 'submittedData');
     onValue(submittedDataRef, (snapshot) => {
       const data = snapshot.val();
       setSubmittedData(data || {});
+      updateNextKolejka(); // Update kolejka when submitted data changes
     });
   }, []);
 
@@ -37,6 +33,7 @@ const Admin = () => {
       const data = snapshot.val();
       setResultsInput(data || {});
       setSubmittedResults(!!data);
+      updateNextKolejka(); // Update kolejka when results change
     });
   }, []);
 
@@ -62,6 +59,28 @@ const Admin = () => {
     });
     setNonBettors(nonBettorsData);
   }, [submittedData, games]);
+
+  const updateNextKolejka = () => {
+    const gamesPerKolejka = 9;
+    const totalKolejki = Math.ceil(games.length / gamesPerKolejka);
+
+    // Determine which games have results
+    const kolejkaWithResults = new Set(Object.keys(resultsInput).map(id => {
+      const game = games.find(game => game.id === Number(id));
+      return Math.ceil((games.indexOf(game) + 1) / gamesPerKolejka);
+    }));
+
+    // Find the earliest kolejka without results
+    for (let i = 1; i <= totalKolejki; i++) {
+      if (!kolejkaWithResults.has(i)) {
+        setSelectedKolejka(i);
+        return;
+      }
+    }
+
+    // If all kolejki have results, set to the highest kolejka
+    setSelectedKolejka(totalKolejki);
+  };
 
   const handleResultChange = (gameId, result) => {
     setResultsInput(prevResults => ({
@@ -148,8 +167,8 @@ const Admin = () => {
           onChange={(e) => setSelectedKolejka(Number(e.target.value))}
           className="p-2 text-center border border-gray-300 rounded-md"
         >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map(num => (
-            <option key={num} value={num}>Kolejka {num}</option>
+          {[...Array(Math.ceil(games.length / 9))].map((_, index) => (
+            <option key={index + 1} value={index + 1}>Kolejka {index + 1}</option>
           ))}
         </select>
       </div>

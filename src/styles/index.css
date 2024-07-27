@@ -245,11 +245,21 @@ code {
   animation: slide-background 3s linear infinite, fade-in 1.5s;
 }
 
+.logo {
+  width: 20px;
+  height: auto;
+  margin-right: 10px;
+}
 
 
 
 
 @media (max-width: 768px) {
+  .logo {
+    width: 13px !important; /* Adjust the size for mobile */
+    margin-right: 5px; /* Adjust the margin for mobile */
+  }
+
   .card {
     width: 100% !important; 
   }

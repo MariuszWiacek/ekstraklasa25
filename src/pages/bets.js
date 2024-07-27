@@ -277,7 +277,7 @@ const Bets = () => {
           <td style={{ textAlign: 'center', paddingRight: '10px', fontSize: '20px' }}>
             <img
               src={getTeamLogo(game.home)}
-              style={{ width: '20px', height: 'auto', marginRight: '10px' }}
+              className="logo"
             />
             {game.home}
           </td>
@@ -285,7 +285,7 @@ const Bets = () => {
           <td style={{ textAlign: 'left', paddingLeft: '10px', fontSize: '20px' }}>
             <img
               src={getTeamLogo(game.away)}
-              style={{ width: '20px', height: 'auto', marginRight: '10px' }}
+              className="logo"
             />
             {game.away}
           </td>
