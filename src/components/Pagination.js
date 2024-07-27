@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, label }) => {
   const handlePrev = () => {
     if (currentPage > 0) {
       onPageChange(currentPage - 1);
@@ -23,7 +23,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           fontSize: '10px',
           fontWeight: 'bold',
           backgroundColor: '#ffffff00',
-          color: 'white',
+          color: 'gold',
           border: 'none',
           borderRadius: '5px',
           cursor: 'pointer',
@@ -31,10 +31,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           transition: 'background-color 0.3s',
         }}
       >
-        &lt;&lt; 
+        &lt;&lt;
       </button>
-      <span style={{ margin: '0 10px', fontSize: '16px', fontWeight: 'bold'}}>
-        Kolejka {currentPage + 1} / {totalPages}
+      <span style={{ margin: '0 10px', fontSize: '16px', fontWeight: 'bold' }}>
+        {label} {currentPage + 1} / {totalPages}
       </span>
       <button
         onClick={handleNext}
@@ -44,7 +44,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           fontSize: '10px',
           fontWeight: 'bold',
           backgroundColor: '#ffffff00',
-          color: 'white',
+          color: 'gold',
           border: 'none',
           borderRadius: '5px',
           cursor: 'pointer',
@@ -52,7 +52,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           transition: 'background-color 0.3s',
         }}
       >
-         &gt;&gt;
+        &gt;&gt;
       </button>
     </div>
   );

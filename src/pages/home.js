@@ -1,13 +1,14 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { Container, Row, Col } from 'react-bootstrap';
 import '../styles/animations.css'; // Import the CSS file for animations
 import logo from '../images/ekstra.png';
+import TeamLogos from '../components/teamLogos'; // Adjust the path according to your folder structure
 
 const Home = () => {
     return (
+        
         <div className="fade-in">
+            <TeamLogos />
             <Container fluid style={linkContainerStyle}>
                 <Row>
                     <Col md={6} className="slide-in">
@@ -25,13 +26,14 @@ const Home = () => {
                         </a>
                         <p>
                             Masz pytanie lub problem? Skontaktuj się na WhatsApp
-                            </p>
+                        </p>
                     </Col>
                     <Col md={6} className="text-center slide-in">
                         <img src={logo} alt="Logo" style={logoStyle} />
                     </Col>
                 </Row>
             </Container>
+            
         </div>
     );
 };

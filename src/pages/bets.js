@@ -230,85 +230,99 @@ const Bets = () => {
           currentPage={currentKolejkaIndex}
           totalPages={kolejki.length}
           onPageChange={(page) => setCurrentKolejkaIndex(page)}
+          label="Kolejka"
         />
-        <table
+        
+      <table
+  style={{
+    width: '100%',
+    border: '0.5px solid #444',
+    borderCollapse: 'collapse',
+    marginTop: '5%',
+  }}
+>
+  <thead>
+    <tr>
+      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gospodarz</th>
+      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
+      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gość</th>
+      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Wynik</th>
+      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>1X2</th>
+      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Typ</th>
+    </tr>
+  </thead>
+  <tbody>
+    {kolejki[currentKolejkaIndex].games.map((game, index) => (
+      <React.Fragment key={index}>
+        <tr
           style={{
-            width: '100%',
-            border: '0px solid #444',
-            borderCollapse: 'collapse',
-            marginTop: '5%',
+            borderBottom: '0.5px solid #444',
+            opacity: game.disabled ? '0.5' : '1',
+            pointerEvents: game.disabled ? 'none' : 'auto',
+            backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
           }}
         >
-          <thead>
-            <tr>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Data</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Godzina</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Gospodarz</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Gość</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Wynik</th>
-              <th style={{ borderBottom: '0.5px solid #444' }}></th>
-              <th style={{ borderBottom: '0.5px solid #444' }}>Typ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {kolejki[currentKolejkaIndex].games.map((game, index) => (
-              <tr
-                key={index}
-                style={{
-                  borderBottom: '0.5px solid #444',
-                  opacity: game.disabled ? '0.5' : '1',
-                  pointerEvents: game.disabled ? 'none' : 'auto',
-                  backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
-                }}
-              >
-                <td>{game.date}</td>
-                <td>{game.kickoff}</td>
-                <td style={{ display: 'flex', alignItems: 'center' }}>
-                  <img
-                    src={getTeamLogo(game.home)}
-                    
-                    style={{ width: '20px', height: 'auto', marginRight: '10px' }}
-                  />
-                  {game.home}
-                </td>
-                <td style={{ display: 'flex', alignItems: 'center' }}>
-                  <img
-                    src={getTeamLogo(game.away)}
-                 
-                    style={{ width: '20px', height: 'auto', marginRight: '10px' }}
-                  />
-                  {game.away}
-                </td>
-                <td>{results[game.id]}</td>
-                <td>
-                  <select value={game.bet} disabled>
-                    <option value="1">1</option>
-                    <option value="X">X</option>
-                    <option value="2">2</option>
-                  </select>
-                </td>
-                <td>
-                  <input
-                    style={{
-                      width: '50px',
-                      backgroundColor: game.score ? (isReadOnly(selectedUser, game.id) ? 'transparent' : 'white') : 'white',
-                      cursor: isReadOnly(selectedUser, game.id) ? 'not-allowed' : 'text',
-                      color: 'red',
-                    }}
-                    type="text"
-                    placeholder={isReadOnly(selectedUser, game.id) ? "✔️" : "x:x"}
-                    value={game.score}
-                    onChange={(e) => handleScoreChange(game.id, e.target.value)}
-                    maxLength="3"
-                    readOnly={isReadOnly(selectedUser, game.id)}
-                    title={isReadOnly(selectedUser, game.id) ? "✔️" : ""}
-                    disabled={gameStarted(game.date, game.kickoff)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <td colSpan="12" style={{ textAlign: 'left', color:'gold', fontSize: '10px', padding: '10px 0', paddingLeft: '10%' }}>
+            {game.date} &nbsp;&nbsp; {game.kickoff}
+          </td>
+        </tr>
+        <tr
+          style={{
+            borderBottom: '0.5px solid #444',
+            opacity: game.disabled ? '0.5' : '1',
+            pointerEvents: game.disabled ? 'none' : 'auto',
+            backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
+          }}
+        >
+          <td style={{ textAlign: 'center', paddingRight: '10px', fontSize: '20px' }}>
+            <img
+              src={getTeamLogo(game.home)}
+              style={{ width: '20px', height: 'auto', marginRight: '10px' }}
+            />
+            {game.home}
+          </td>
+          <td style={{ textAlign: 'center', fontSize: '20px' }}>-</td>
+          <td style={{ textAlign: 'left', paddingLeft: '10px', fontSize: '20px' }}>
+            <img
+              src={getTeamLogo(game.away)}
+              style={{ width: '20px', height: 'auto', marginRight: '10px' }}
+            />
+            {game.away}
+          </td>
+          <td style={{ textAlign: 'center', fontSize: '20px' }}>{results[game.id]}</td>
+          <td style={{ textAlign: 'center' }}>
+            <select value={game.bet} disabled>
+              <option value="1">1</option>
+              <option value="X">X</option>
+              <option value="2">2</option>
+            </select>
+          </td>
+          <td>
+            <input
+              style={{
+                width: '50px',
+                backgroundColor: game.score ? (isReadOnly(selectedUser, game.id) ? 'transparent' : 'white') : 'white',
+                cursor: isReadOnly(selectedUser, game.id) ? 'not-allowed' : 'text',
+                color: 'red',
+              }}
+              type="text"
+              placeholder={isReadOnly(selectedUser, game.id) ? "✔️" : "x:x"}
+              value={game.score}
+              onChange={(e) => handleScoreChange(game.id, e.target.value)}
+              maxLength="3"
+              readOnly={isReadOnly(selectedUser, game.id)}
+              title={isReadOnly(selectedUser, game.id) ? "✔️" : ""}
+              disabled={gameStarted(game.date, game.kickoff)}
+            />
+          </td>
+        </tr>
+      </React.Fragment>
+    ))}
+  </tbody>
+</table>
+
+
+
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <button
             style={{

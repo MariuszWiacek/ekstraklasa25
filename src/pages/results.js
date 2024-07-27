@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import gameData from '../gameData/data.json';
 import '../styles/results.css';
+import Pagination from '../components/Pagination'; // Import your Pagination component
 
 const Results = () => {
   const [games, setGames] = useState([]);
   const [resultsInput, setResultsInput] = useState({});
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0); // Start at page 0
+  const [itemsPerPage] = useState(9); // Number of items per page
 
   useEffect(() => {
     setGames(gameData);
@@ -73,6 +78,11 @@ const Results = () => {
     return `${usersWhoBet}/${totalUsers}`;
   };
 
+  // Calculate paginated games
+  const indexOfLastGame = (currentPage + 1) * itemsPerPage;
+  const indexOfFirstGame = indexOfLastGame - itemsPerPage;
+  const currentGames = games.slice(indexOfFirstGame, indexOfLastGame);
+
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px' }}>
       {submittedResults && (
@@ -90,7 +100,7 @@ const Results = () => {
               </tr>
             </thead>
             <tbody>
-              {games.map((game) => {
+              {currentGames.map((game) => {
                 const gameId = game.id; // Use game ID directly
                 const betPercentages = getBetPercentages(gameId);
                 return (
@@ -122,6 +132,12 @@ const Results = () => {
               })}
             </tbody>
           </table>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(games.length / itemsPerPage)}
+            onPageChange={(page) => setCurrentPage(page)}
+            label="Strona"
+          />
         </div>
       )}
     </div>
