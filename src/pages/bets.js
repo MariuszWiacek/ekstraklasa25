@@ -256,19 +256,20 @@ const Bets = () => {
       <React.Fragment key={index}>
         <tr
           style={{
-            borderBottom: '0.5px solid #444',
+            
             opacity: game.disabled ? '0.5' : '1',
             pointerEvents: game.disabled ? 'none' : 'auto',
             backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
           }}
         >
-          <td colSpan="12" style={{ textAlign: 'left', color:'gold', fontSize: '10px', padding: '10px 0', paddingLeft: '10%' }}>
+          <td colSpan="12" className="date"
+          style={{ textAlign: 'left', color:'gold', fontSize: '10px',  paddingLeft: '10%' }}>
             {game.date} &nbsp;&nbsp; {game.kickoff}
           </td>
         </tr>
         <tr
           style={{
-            borderBottom: '0.5px solid #444',
+            borderBottom: '1px solid #444',
             opacity: game.disabled ? '0.5' : '1',
             pointerEvents: game.disabled ? 'none' : 'auto',
             backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',

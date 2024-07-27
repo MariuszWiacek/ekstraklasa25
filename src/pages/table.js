@@ -129,7 +129,7 @@ const Table = () => {
   // Styles for table header and cell
   const tableHeaderStyle = {
     padding: '10px',
-    border: '1px solid #dddddd',
+    border: '1px solid #444',
     backgroundColor: '#212529',
     color: 'white',
     textAlign: 'center',
@@ -137,13 +137,13 @@ const Table = () => {
 
   const tableCellStyle = {
     padding: '10px',
-    border: '1px solid #dddddd',
+    border: '1px solid #444',
     textAlign: 'center',
   };
 
   const tableCellStyle2 = {
     padding: '10px',
-    border: '1px solid #dddddd',
+    border: '1px solid #444',
     textAlign: 'center',
     color: 'aliceblue',
     fontWeight: 'bold'
