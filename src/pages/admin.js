@@ -15,7 +15,7 @@ const Admin = () => {
 
   useEffect(() => {
     setGames(gameData);
-    updateNextKolejka(); // Ensure we set the initial kolejka correctly
+    updateCurrentKolejka(); // Ensure we set the initial kolejka correctly
   }, [gameData]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const Admin = () => {
     onValue(submittedDataRef, (snapshot) => {
       const data = snapshot.val();
       setSubmittedData(data || {});
-      updateNextKolejka(); // Update kolejka when submitted data changes
+      updateCurrentKolejka(); // Update kolejka when submitted data changes
     });
   }, []);
 
@@ -33,7 +33,7 @@ const Admin = () => {
       const data = snapshot.val();
       setResultsInput(data || {});
       setSubmittedResults(!!data);
-      updateNextKolejka(); // Update kolejka when results change
+      updateCurrentKolejka(); // Update kolejka when results change
     });
   }, []);
 
@@ -60,26 +60,11 @@ const Admin = () => {
     setNonBettors(nonBettorsData);
   }, [submittedData, games]);
 
-  const updateNextKolejka = () => {
-    const gamesPerKolejka = 9;
-    const totalKolejki = Math.ceil(games.length / gamesPerKolejka);
-
-    // Determine which games have results
-    const kolejkaWithResults = new Set(Object.keys(resultsInput).map(id => {
-      const game = games.find(game => game.id === Number(id));
-      return Math.ceil((games.indexOf(game) + 1) / gamesPerKolejka);
-    }));
-
-    // Find the earliest kolejka without results
-    for (let i = 1; i <= totalKolejki; i++) {
-      if (!kolejkaWithResults.has(i)) {
-        setSelectedKolejka(i);
-        return;
-      }
-    }
-
-    // If all kolejki have results, set to the highest kolejka
-    setSelectedKolejka(totalKolejki);
+  const updateCurrentKolejka = () => {
+    const now = new Date();
+    const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
+    const currentKolejka = Math.floor(nextGameIndex / 9) + 1;
+    setSelectedKolejka(currentKolejka);
   };
 
   const handleResultChange = (gameId, result) => {
@@ -115,7 +100,6 @@ const Admin = () => {
     }
   };
 
-  // Calculate games for the selected kolejka
   const getGamesForKolejka = (kolejkaNumber) => {
     const gamesPerKolejka = 9;
     const startIndex = (kolejkaNumber - 1) * gamesPerKolejka;
@@ -123,7 +107,6 @@ const Admin = () => {
     return games.slice(startIndex, endIndex);
   };
 
-  // If not authenticated, show password form
   if (!authenticated) {
     return (
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
@@ -155,7 +138,6 @@ const Admin = () => {
     );
   }
 
-  // If authenticated, show admin panel
   return (
     <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
       <h2 className="text-xl font-bold mb-4">Wprowadź wyniki:</h2>

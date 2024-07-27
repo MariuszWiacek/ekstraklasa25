@@ -99,6 +99,7 @@ p2 {
 td {
   color: rgb(254, 254, 254) ;
   font-family: "Rubik";
+ 
 }
 
 th {
@@ -251,6 +252,10 @@ code {
   margin-right: 10px;
 }
 
+.td-mobile {
+  font-size: 15px !important;
+}
+
 
 
 
@@ -276,6 +281,10 @@ code {
 
   td {
     font-size: 15px !important;
+  }
+
+  .td-mobile {
+    font-size: 10px !important;
   }
 
   .date {
