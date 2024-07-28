@@ -22,6 +22,7 @@ const Footer = () => {
   return (
     <>
       <div className="site-footer">
+        <hr></hr>
         <footer style={footerStyle}>
           
               <div className="col-md-12">
