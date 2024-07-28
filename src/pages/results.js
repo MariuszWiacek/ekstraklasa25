@@ -136,7 +136,7 @@ const Results = () => {
   const currentGames = games.slice(indexOfFirstGame, indexOfLastGame);
 
   return (
-    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px' }}>
+    <div className="fade-in" style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px' }}>
       {submittedResults && (
         <div className="text-center text-red-500 mb-5 table-container">
           <h2>Wyniki</h2>

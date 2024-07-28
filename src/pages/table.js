@@ -159,7 +159,7 @@ const Table = () => {
     <Container fluid style={linkContainerStyle}>
       <Row>
         <Col md={12}><h2 style={{textAlign: 'center'}}>Tabela</h2><hr></hr>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="fade-in" style={{ overflowX: 'auto' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
               <thead>
                 <tr style={{ backgroundColor: '#212529', color: 'white' }}>

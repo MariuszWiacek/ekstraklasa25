@@ -139,7 +139,7 @@ const Admin = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
+    <div className="fade-in" style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
       <h2 className="text-xl font-bold mb-4">Wprowadź wyniki:</h2>
       <div className="mb-4">
         <label htmlFor="kolejka" className="mr-4">Wybierz kolejkę:</label>

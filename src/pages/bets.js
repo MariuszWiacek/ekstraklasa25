@@ -207,7 +207,7 @@ const Bets = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div className="fade-in" style={{ textAlign: 'center' }}>
       <p>Wybrany użytkownik : </p>
       <select
         style={{ margin: '1px', backgroundColor: 'red', fontWeight: 'bold', fontFamily: 'Rubik' }}
