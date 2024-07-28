@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import gameData from '../gameData/data.json';
-import teamsData from '../gameData/teams.json'; // Import teams data
+import teamsData from '../gameData/teams.json'; 
 import '../styles/results.css';
-import Pagination from '../components/Pagination'; // Import your Pagination component
+import Pagination from '../components/Pagination'; 
 
 const groupGamesIntoKolejki = (games) => {
   const kolejki = [];
@@ -194,11 +194,19 @@ const Results = () => {
                     <tr>
                       <td colSpan="5"><hr className="border-t border-gray-100 my-0" /></td>
                     </tr>
+                 
                   </React.Fragment>
+                  
                 );
               })}
             </tbody>
           </table>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(games.length / itemsPerPage)}
+            onPageChange={(page) => setCurrentPage(page)}
+            label="Kolejka"
+          />
         </div>
       )}
     </div>

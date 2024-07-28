@@ -327,8 +327,12 @@ const Bets = () => {
     ))}
   </tbody>
 </table>
-
-
+<Pagination
+          currentPage={currentKolejkaIndex}
+          totalPages={kolejki.length}
+          onPageChange={(page) => setCurrentKolejkaIndex(page)}
+          label="Kolejka"
+        />
 
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <button
