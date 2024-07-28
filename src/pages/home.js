@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     return (
         
-        <div className="fade-in">
+        <div className="fade-in"><hr></hr>
             <h1 style={welcomeMessageStyle}>Typer LIGI POLSKIEJ Sezon 2024/25</h1><hr></hr>
             <TeamLogos />
             <Container fluid style={linkContainerStyle}>
