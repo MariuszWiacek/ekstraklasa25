@@ -22,17 +22,43 @@ const Results = () => {
   const [submittedResults, setSubmittedResults] = useState(false);
   const [submittedData, setSubmittedData] = useState({});
   
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(0); // Start at page 0
   const [itemsPerPage] = useState(9); // Number of items per page
+  const totalPages = Math.ceil(gameData.length / itemsPerPage);
 
+  const [currentPage, setCurrentPage] = useState(0); // Start at page 0 by default
   const [kolejki, setKolejki] = useState(groupGamesIntoKolejki(gameData));
   const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
 
   useEffect(() => {
     setGames(gameData);
-  }, []);
+
+    // Determine the closest upcoming game or the last entered score
+    const now = new Date();
+    let closestGameIndex = -1;
+    let lastEnteredScoreIndex = -1;
+
+    // Find the closest game to the current date
+    closestGameIndex = gameData.findIndex(game => {
+      const gameDate = new Date(`${game.date}T${game.kickoff}:00+02:00`);
+      return gameDate > now;
+    });
+
+    // Find the last entered score if any
+    const gameIds = gameData.map(game => game.id);
+    for (let i = gameIds.length - 1; i >= 0; i--) {
+      if (resultsInput[gameIds[i]]) {
+        lastEnteredScoreIndex = i;
+        break;
+      }
+    }
+
+    // Determine the starting page based on the closest game or last entered score
+    const startIndex = lastEnteredScoreIndex !== -1 ? lastEnteredScoreIndex : closestGameIndex;
+    const startPage = startIndex !== -1 ? Math.floor(startIndex / itemsPerPage) : 0;
+    setCurrentPage(startPage);
+
+  }, [resultsInput]); // Re-run when resultsInput changes
 
   useEffect(() => {
     const submittedDataRef = ref(getDatabase(), 'submittedData');
@@ -124,13 +150,11 @@ const Results = () => {
     return `${usersWhoBet}/${totalUsers}`;
   };
 
-  // Fetch team logo from teamsData
   const getTeamLogo = (teamName) => {
     const team = teamsData[teamName];
     return team ? team.logo : ''; // Default logo if not found
   };
 
-  // Calculate paginated games
   const indexOfLastGame = (currentPage + 1) * itemsPerPage;
   const indexOfFirstGame = indexOfLastGame - itemsPerPage;
   const currentGames = games.slice(indexOfFirstGame, indexOfLastGame);
@@ -143,7 +167,7 @@ const Results = () => {
           <hr />
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(games.length / itemsPerPage)}
+            totalPages={totalPages}
             onPageChange={(page) => setCurrentPage(page)}
             label="Kolejka"
           />
@@ -159,15 +183,12 @@ const Results = () => {
             </thead>
             <tbody>
               {currentGames.map((game) => {
-                const gameId = game.id; // Use game ID directly
+                const gameId = game.id;
                 const betPercentages = getBetPercentages(gameId);
                 return (
                   <React.Fragment key={gameId}>
                     <tr className="mb-2 ">
-                    <td className="border p-2 td-mobile">
-  {game.date} {game.kickoff}
-</td>
-
+                      <td className="border p-2 td-mobile">{game.date} {game.kickoff}</td>
                       <td className="border p-2">
                         <div className="flex items-center justify-center gap-2 td-mobile">
                           <img src={getTeamLogo(game.home)} alt={`${game.home} logo`} className="logo" />
@@ -194,16 +215,14 @@ const Results = () => {
                     <tr>
                       <td colSpan="5"><hr className="border-t border-gray-100 my-0" /></td>
                     </tr>
-                 
                   </React.Fragment>
-                  
                 );
               })}
             </tbody>
           </table>
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(games.length / itemsPerPage)}
+            totalPages={totalPages}
             onPageChange={(page) => setCurrentPage(page)}
             label="Kolejka"
           />

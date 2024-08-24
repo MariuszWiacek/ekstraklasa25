@@ -44,7 +44,6 @@ const Bets = () => {
   const [submittedData, setSubmittedData] = useState({});
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [results, setResults] = useState({});
-  const [timeRemaining, setTimeRemaining] = useState('');
   const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0);
 
   useEffect(() => {
@@ -80,29 +79,6 @@ const Bets = () => {
     const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
     const kolejkaIndex = Math.floor(nextGameIndex / 9);
     setCurrentKolejkaIndex(kolejkaIndex);
-  }, []);
-
-  const updateTimeRemaining = () => {
-    const now = new Date();
-    const nextGame = gameData.find(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
-
-    if (nextGame) {
-      const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+02:00`);
-      const diff = kickoffTimeCEST - now;
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      setTimeRemaining(`${hours}h :${minutes}min :${seconds}s`);
-    }
-  };
-
-  useEffect(() => {
-    updateTimeRemaining();
-  }, [kolejki]);
-
-  useEffect(() => {
-    const interval = setInterval(updateTimeRemaining, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   const isReadOnly = (selectedUser, index) => {
@@ -218,13 +194,8 @@ const Bets = () => {
         {Object.keys(usersData).map((user, index) => (
           <option key={index} value={user}>{user}</option>
         ))}
-      </select>
-      {timeRemaining && (
-        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <h1 style={{ color: "red" }}> </h1><hr></hr>
-          <p>Do kolejnego meczu pozostało: {timeRemaining}</p><hr></hr>
-        </div>
-      )}
+      </select><hr style={{color: "white"}}></hr>
+     
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <Pagination
           currentPage={currentKolejkaIndex}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-
+import Timer from './components/CountdownTimer';
 import Home from './pages/home';
 import Navbar from './components/navbar';
 import Table from './pages/table';
@@ -17,6 +17,7 @@ import pitch from './images/pitc.jpeg'; // Ensure this is the correct path to yo
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     const handleImageLoad = () => {
@@ -29,10 +30,25 @@ function App() {
     img.src = pitch;
     img.onload = handleImageLoad;
 
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+
     return () => {
       img.onload = null; // Cleanup in case the component unmounts
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const containerStyle = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    paddingTop: '5%',
+    marginTop: isMobile ? '15%' : '5%'
+  };
 
   return (
     <Router>
@@ -40,9 +56,10 @@ function App() {
         {isLoading ? (
           <Loading onLoaded={() => setIsLoading(false)} key="loading" />
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Navbar />
-            <div className="container" style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '15%', paddingTop: '5%' }}>
+            <div className="container" style={containerStyle}>
+              <Timer /><hr style={{color: "white"}}></hr>
               <Routes>
                 <Route path="/" element={<Home />} /> 
                 <Route path="/rules" element={<Rules />} />
