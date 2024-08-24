@@ -1,12 +1,15 @@
-
 import React, { useState } from 'react';
 import '../styles/card.css'; // Import your CSS file with styles
 import Pagination from './Pagination';
 
 const ExpandableCard = ({ user, bets, results }) => {
-  const [expanded, setExpanded] = useState(false); // Start as closed by default
-  const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 9;
+  const totalBets = Object.keys(bets).length;
+  const totalPages = Math.ceil(totalBets / itemsPerPage);
+
+  // Set initial page to the last page
+  const [currentPage, setCurrentPage] = useState(totalPages - 1);
+  const [expanded, setExpanded] = useState(false); // Start as closed by default
 
   const getTypeFromResult = (result) => {
     if (!result) return null;
@@ -20,7 +23,7 @@ const ExpandableCard = ({ user, bets, results }) => {
   };
 
   const paginatedBets = Object.keys(bets).slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-  
+
   return (
     <div className="paper-card">
       <h4 className="header-style" onClick={() => setExpanded(!expanded)}>
@@ -51,7 +54,7 @@ const ExpandableCard = ({ user, bets, results }) => {
           ))}
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(Object.keys(bets).length / itemsPerPage)}
+            totalPages={totalPages}
             onPageChange={(page) => {
               handlePageChange(page);
             }}
@@ -64,4 +67,3 @@ const ExpandableCard = ({ user, bets, results }) => {
 };
 
 export default ExpandableCard;
-
