@@ -18,7 +18,8 @@ const firebaseConfig = {
 };
 
 const Chatbox = ({ isOpen, toggleChatbox }) => {
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
+  const [username, setUsername] = useState('');
+
   const [message, setMessage] = useState('');
   const [guestbookEntries, setGuestbookEntries] = useState([]);
   const chatContainerRef = useRef(null);
@@ -53,6 +54,24 @@ const Chatbox = ({ isOpen, toggleChatbox }) => {
       }
     });
   }, [db]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedUser = localStorage.getItem('selectedUser');
+      setUsername(storedUser || '');
+    };
+  
+    // Set username initially based on what's in localStorage
+    handleStorageChange();
+  
+    // Add an event listener to detect changes to localStorage
+    window.addEventListener('storage', handleStorageChange);
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -157,6 +176,7 @@ const Chatbox = ({ isOpen, toggleChatbox }) => {
           className="username-input"
           placeholder="uzytkownik"
           value={username}
+          readOnly
           onChange={(e) => setUsername(e.target.value)}
           required
           style={{ marginBottom: '10px', width: '100%', padding: '8px' }}
