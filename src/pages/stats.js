@@ -183,7 +183,7 @@ const Stats = () => {
           <hr />
           {hallOfFame.length > 0 && (
             <div style={hallOfFameStyle}>
-              <h3>🏆</h3><hr />
+              <h3>🏆 Rekordy ligi 🏆</h3><hr />
               {hallOfFame.map((stat, index) => (
                 <p key={index} style={{color: '#34495e', fontWeight: 'bold' }}>
                   {stat.title}:<br /> 
