@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
+import Stats from './stats';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
@@ -187,8 +188,10 @@ const Table = () => {
                   </tr>
                 ))}
               </tbody>
+              
             </table>
-          </div>
+          </div><hr></hr>
+          <Stats />
         </Col>
       </Row>
     </Container>

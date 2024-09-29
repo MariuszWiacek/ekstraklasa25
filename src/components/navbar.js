@@ -142,6 +142,11 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link to="/stats" className="nav-link" onClick={closeMenu}>
+                  Stats
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to="/rules" className="nav-link" onClick={closeMenu}>
                   Regulamin
                 </Link>

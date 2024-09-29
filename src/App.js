@@ -10,10 +10,11 @@ import Footer from './components/footer';
 import Guestbook from './pages/chatbox';
 import Results from './pages/results';
 import Bets from './pages/bets';
+import Stats from './pages/stats';
 import Rules from './pages/rules';
 import Loading from './components/loading'; // Import the Loading component
-
 import pitch from './images/pitc.jpeg'; // Ensure this is the correct path to your image
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -68,6 +69,7 @@ function App() {
                 <Route path="/results" element={<Results />} />
                 <Route path="/guestbook" element={<Guestbook />} />
                 <Route path="/bets" element={<Bets />} />
+                <Route path="/stats" element={<Stats />} />
               </Routes>
             </div>
             <Footer />
