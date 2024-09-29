@@ -33,6 +33,15 @@ const hallOfFameStyle = {
   textAlign: 'center',
 };
 
+const averagePointsStyle = {
+    color: 'aliceblue',
+  backgroundColor: '#0090cdf1',
+  padding: '20px',
+  borderRadius: '10px',
+  marginBottom: '20px',
+  textAlign: 'center',
+};
+
 // Function to calculate points for a single kolejka (8 games)
 const calculatePoints = (bets, results) => {
   let points = 0;
@@ -41,20 +50,17 @@ const calculatePoints = (bets, results) => {
   let correctTypesWithResults = 0;
 
   bets.forEach((bet) => {
-    const result = results[bet.id]; // Ensure we're using the correct game ID
+    const result = results[bet.id];
     if (result) {
       const [homeScore, awayScore] = result.split(':').map(Number);
       const betScore = bet.score.split(':').map(Number);
 
-      // Check for exact score match
       if (betScore[0] === homeScore && betScore[1] === awayScore) {
-        points += 3; // 3 points for correct result
+        points += 3;
         correctResults++;
-        correctTypesWithResults++; // Count as correct type with result
-      } 
-      // Check for correct type based on the score
-      else if (bet.bet === (homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2')) {
-        points += 1; // 1 point for correct type
+        correctTypesWithResults++;
+      } else if (bet.bet === (homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2')) {
+        points += 1;
         correctTypes++;
       }
     }
@@ -64,9 +70,10 @@ const calculatePoints = (bets, results) => {
 };
 
 const Stats = () => {
-  const [results, setResults] = useState({}); // Hold game results
-  const [submittedData, setSubmittedData] = useState({}); // User bets
-  const [hallOfFame, setHallOfFame] = useState([]); // State for Hall of Fame data
+  const [results, setResults] = useState({});
+  const [submittedData, setSubmittedData] = useState({});
+  const [hallOfFame, setHallOfFame] = useState([]);
+  const [averagePoints, setAveragePoints] = useState([]);
 
   useEffect(() => {
     const resultsRef = ref(database, 'results');
@@ -86,12 +93,12 @@ const Stats = () => {
     const updatedTableData = Object.keys(submittedData).map((user) => {
       const bets = Object.entries(submittedData[user]).map(([id, bet]) => ({
         ...bet,
-        id // Use the game ID for correct mapping
+        id
       }));
 
       const kolejkaPoints = {};
       bets.forEach((bet) => {
-        const kolejkaId = Math.floor((bet.id - 1) / 8); // Determine the kolejka based on the game ID
+        const kolejkaId = Math.floor((bet.id - 1) / 8);
         if (!kolejkaPoints[kolejkaId]) {
           kolejkaPoints[kolejkaId] = [];
         }
@@ -99,7 +106,9 @@ const Stats = () => {
       });
 
       let maxPoints = 0;
-      let bestKolejkaId = null; // To store the best kolejka ID for the user
+      let bestKolejkaId = null;
+      let totalPoints = 0;
+      let totalKolejkas = 0;
       let mostCorrectTypes = 0;
       let mostCorrectResults = 0;
       let mostCorrectTypesWithResults = 0;
@@ -108,45 +117,46 @@ const Stats = () => {
         const kolejekBets = kolejkaPoints[kolejkaId];
         const { points, correctTypes, correctResults, correctTypesWithResults } = calculatePoints(kolejekBets, results);
         
-        // Update max points
+        totalPoints += points;
+        totalKolejkas++;
+
         if (points > maxPoints) {
           maxPoints = points; 
-          bestKolejkaId = kolejkaId; // Save the best kolejka ID
+          bestKolejkaId = kolejkaId;
         }
 
-        // Update most correct types, results, and types with results
         mostCorrectTypes = Math.max(mostCorrectTypes, correctTypes);
         mostCorrectResults = Math.max(mostCorrectResults, correctResults);
         mostCorrectTypesWithResults = Math.max(mostCorrectTypesWithResults, correctTypesWithResults);
       }
 
+      const averagePoints = totalKolejkas > 0 ? (totalPoints / totalKolejkas).toFixed(2) : 0;
+
       return { 
         user, 
         points: maxPoints, 
         bestKolejkaId,
+        averagePoints,
         mostCorrectTypes,
         mostCorrectResults,
-        mostCorrectTypesWithResults
+        mostCorrectTypesWithResults,
       }; 
     });
 
-    // Sorting table data by points in descending order
     updatedTableData.sort((a, b) => b.points - a.points);
 
-    // Create the Hall of Fame with usernames and their corresponding stats
     const hallOfFameData = [
       {
         title: "Najwięcej pkt w jednej kolejce",
         value: `${updatedTableData[0]?.points || 0}`, 
         user: updatedTableData[0]?.user || "Brak",
-        bestKolejkaId: parseInt(updatedTableData[0]?.bestKolejkaId) || 0, // Best kolejka ID
+        bestKolejkaId: parseInt(updatedTableData[0]?.bestKolejkaId) || 0,
       },
       {
         title: "Najwięcej typów ☑️ * w jednej kolejce ",
         value: `${Math.max(...updatedTableData.map(entry => entry.mostCorrectTypes), 0)}`,
         user: updatedTableData.find(entry => entry.mostCorrectTypes === Math.max(...updatedTableData.map(entry => entry.mostCorrectTypes)))?.user || "Brak",
       },
-    
       {
         title: "Najwięcej typ+wynik ✅☑️ w jednej kolejce",
         value: `${Math.max(...updatedTableData.map(entry => entry.mostCorrectTypesWithResults), 0)}`,
@@ -154,7 +164,15 @@ const Stats = () => {
       },
     ];
 
+    // Add average points per user to a new array
+    const averagePointsData = updatedTableData.map(entry => ({
+     
+      value: entry.averagePoints,
+      user: entry.user,
+    }));
+
     setHallOfFame(hallOfFameData);
+    setAveragePoints(averagePointsData.sort((a, b) => b.value - a.value)); // Sort by value in descending order
   }, [submittedData, results]);
 
   return (
@@ -163,23 +181,31 @@ const Stats = () => {
         <Col md={12}>
           <h2 style={{ textAlign: 'center' }}>Statystyki</h2>
           <hr />
-
-          
           {hallOfFame.length > 0 && (
             <div style={hallOfFameStyle}>
-              <h3>🏆</h3><hr></hr>
+              <h3>🏆</h3><hr />
               {hallOfFame.map((stat, index) => (
                 <p key={index} style={{color: '#34495e', fontWeight: 'bold' }}>
-                  {stat.title}:<br></br> <h2 style={{ fontSize: '40px', color: 'aliceblue' }}>{stat.user} - {stat.value}</h2>
-                  <hr></hr>
-                 </p>
-                
-                
-                
+                  {stat.title}:<br /> 
+                  <h2 style={{ fontSize: '40px', color: 'aliceblue' }}>{stat.user} - {stat.value}</h2>
+                  <hr />
+                </p>
               ))}
               <p style={{color: '#34495e'}}> * Typy uwzględnione łącznie z tymi z typ+wynik </p>
             </div>
-            
+          )}
+          
+          {/* New section for average points */}
+          {averagePoints.length > 0 && (
+            <div style={averagePointsStyle}>
+              <h3>📊 Średnia pkt/kolejkę </h3><hr />
+              {averagePoints.map((stat, index) => (
+                <p key={index} style={{ color: 'black', fontWeight: 'bold' }}>
+                  <h2 style={{ fontSize: '40px', color: '#155724' }}>{stat.user} - {stat.value}</h2>
+                  <hr />
+                </p>
+              ))}
+            </div>
           )}
         </Col>
       </Row>
