@@ -45,7 +45,7 @@ const averagePointsStyle = {
   textAlign: 'center',
 };
 
-// Function to calculate points for a single kolejka (8 games)
+
 const calculatePoints = (bets, results) => {
   let points = 0;
   let correctTypes = 0;
@@ -162,7 +162,7 @@ const Stats = () => {
         title: "Najwięcej pkt w jednej kolejce",
         value: maxPoints,
         users: updatedTableData.filter(entry => entry.points === maxPoints).map(entry => entry.user),
-        bestKolejkaIds: updatedTableData.filter(entry => entry.points === maxPoints).map(entry => entry.bestKolejkaId),
+        
       },
       {
         title: "Najwięcej typów ☑️ * w jednej kolejce",
