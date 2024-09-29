@@ -206,9 +206,11 @@ const Stats = () => {
                 <h2 style={{ fontSize: '40px', color: 'aliceblue' }}>Brak danych</h2>
               )}
               <hr />
+              
             </div>
+            
           ))}
-
+<p style={{color: 'red'}}> * Typy uwzględnione łącznie z tymi z typ+wynik </p>
           {/* Section for average points */}
           {averagePoints.length > 0 && (
             <div style={averagePointsStyle}>
@@ -219,6 +221,7 @@ const Stats = () => {
                   <hr />
                 </p>
               ))}
+              
             </div>
           )}
         </Col>
