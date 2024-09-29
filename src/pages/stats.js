@@ -3,6 +3,7 @@ import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
   authDomain: "polskibet-71ef6.firebaseapp.com",
@@ -14,9 +15,11 @@ const firebaseConfig = {
   measurementId: "G-VRP9QW7LRN"
 };
 
+// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
+// Styles for the various sections
 const linkContainerStyle = {
   textAlign: 'left',
   backgroundColor: '#212529ab',
@@ -34,7 +37,7 @@ const hallOfFameStyle = {
 };
 
 const averagePointsStyle = {
-    color: 'aliceblue',
+  color: 'aliceblue',
   backgroundColor: '#0090cdf1',
   padding: '20px',
   borderRadius: '10px',
@@ -55,11 +58,14 @@ const calculatePoints = (bets, results) => {
       const [homeScore, awayScore] = result.split(':').map(Number);
       const betScore = bet.score.split(':').map(Number);
 
+      // Check for correct score
       if (betScore[0] === homeScore && betScore[1] === awayScore) {
         points += 3;
         correctResults++;
+        correctTypes++; // Count as correct type as well
         correctTypesWithResults++;
       } else if (bet.bet === (homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2')) {
+        // Check for correct type
         points += 1;
         correctTypes++;
       }
@@ -93,12 +99,12 @@ const Stats = () => {
     const updatedTableData = Object.keys(submittedData).map((user) => {
       const bets = Object.entries(submittedData[user]).map(([id, bet]) => ({
         ...bet,
-        id
+        id,
       }));
 
       const kolejkaPoints = {};
       bets.forEach((bet) => {
-        const kolejkaId = Math.floor((bet.id - 1) / 8);
+        const kolejkaId = Math.floor((bet.id - 1) / 9); // Assuming 9 matches per kolejka
         if (!kolejkaPoints[kolejkaId]) {
           kolejkaPoints[kolejkaId] = [];
         }
@@ -114,14 +120,16 @@ const Stats = () => {
       let mostCorrectTypesWithResults = 0;
 
       for (const kolejkaId in kolejkaPoints) {
+        console.log(`Processing kolejkaId: ${kolejkaId} for user: ${user}`);
+
         const kolejekBets = kolejkaPoints[kolejkaId];
         const { points, correctTypes, correctResults, correctTypesWithResults } = calculatePoints(kolejekBets, results);
-        
+
         totalPoints += points;
         totalKolejkas++;
 
         if (points > maxPoints) {
-          maxPoints = points; 
+          maxPoints = points;
           bestKolejkaId = kolejkaId;
         }
 
@@ -132,47 +140,49 @@ const Stats = () => {
 
       const averagePoints = totalKolejkas > 0 ? (totalPoints / totalKolejkas).toFixed(2) : 0;
 
-      return { 
-        user, 
-        points: maxPoints, 
+      return {
+        user,
+        points: maxPoints,
         bestKolejkaId,
         averagePoints,
         mostCorrectTypes,
         mostCorrectResults,
         mostCorrectTypesWithResults,
-      }; 
+      };
     });
 
     updatedTableData.sort((a, b) => b.points - a.points);
 
+    const maxPoints = Math.max(...updatedTableData.map(entry => entry.points));
+    const maxCorrectTypes = Math.max(...updatedTableData.map(entry => entry.mostCorrectTypes));
+    const maxCorrectTypesWithResults = Math.max(...updatedTableData.map(entry => entry.mostCorrectTypesWithResults));
+
     const hallOfFameData = [
       {
         title: "Najwięcej pkt w jednej kolejce",
-        value: `${updatedTableData[0]?.points || 0}`, 
-        user: updatedTableData[0]?.user || "Brak",
-        bestKolejkaId: parseInt(updatedTableData[0]?.bestKolejkaId) || 0,
+        value: maxPoints,
+        users: updatedTableData.filter(entry => entry.points === maxPoints).map(entry => entry.user),
+        bestKolejkaIds: updatedTableData.filter(entry => entry.points === maxPoints).map(entry => entry.bestKolejkaId),
       },
       {
-        title: "Najwięcej typów ☑️ * w jednej kolejce ",
-        value: `${Math.max(...updatedTableData.map(entry => entry.mostCorrectTypes), 0)}`,
-        user: updatedTableData.find(entry => entry.mostCorrectTypes === Math.max(...updatedTableData.map(entry => entry.mostCorrectTypes)))?.user || "Brak",
+        title: "Najwięcej typów ☑️ * w jednej kolejce",
+        value: maxCorrectTypes,
+        users: updatedTableData.filter(entry => entry.mostCorrectTypes === maxCorrectTypes).map(entry => entry.user),
       },
       {
         title: "Najwięcej typ+wynik ✅☑️ w jednej kolejce",
-        value: `${Math.max(...updatedTableData.map(entry => entry.mostCorrectTypesWithResults), 0)}`,
-        user: updatedTableData.find(entry => entry.mostCorrectTypesWithResults === Math.max(...updatedTableData.map(entry => entry.mostCorrectTypesWithResults)))?.user || "Brak",
+        value: maxCorrectTypesWithResults,
+        users: updatedTableData.filter(entry => entry.mostCorrectTypesWithResults === maxCorrectTypesWithResults).map(entry => entry.user),
       },
     ];
 
-    // Add average points per user to a new array
     const averagePointsData = updatedTableData.map(entry => ({
-     
       value: entry.averagePoints,
       user: entry.user,
     }));
 
     setHallOfFame(hallOfFameData);
-    setAveragePoints(averagePointsData.sort((a, b) => b.value - a.value)); // Sort by value in descending order
+    setAveragePoints(averagePointsData.sort((a, b) => b.value - a.value));
   }, [submittedData, results]);
 
   return (
@@ -181,21 +191,25 @@ const Stats = () => {
         <Col md={12}>
           <h2 style={{ textAlign: 'center' }}>Statystyki</h2>
           <hr />
-          {hallOfFame.length > 0 && (
-            <div style={hallOfFameStyle}>
-              <h3>🏆 Rekordy ligi 🏆</h3><hr />
-              {hallOfFame.map((stat, index) => (
-                <p key={index} style={{color: '#34495e', fontWeight: 'bold' }}>
-                  {stat.title}:<br /> 
-                  <h2 style={{ fontSize: '40px', color: 'aliceblue' }}>{stat.user} - {stat.value}</h2>
-                  <hr />
-                </p>
-              ))}
-              <p style={{color: '#34495e'}}> * Typy uwzględnione łącznie z tymi z typ+wynik </p>
+          <h3 style={{ textAlign: 'center' }}>🏆 Rekordy ligi 🏆</h3><hr />
+          {hallOfFame.map((stat, index) => (
+            <div key={index} style={hallOfFameStyle}>
+              <h4>{stat.title}:</h4><hr />
+              {stat.users && stat.users.length > 0 ? (
+                stat.users.map((user, idx) => (
+                  <h2 key={idx} style={{ fontSize: '40px', color: 'aliceblue' }}>
+                    {user} - {stat.value}
+                    {stat.bestKolejkaIds && stat.bestKolejkaIds[idx] !== undefined && ` (kolejka ${stat.bestKolejkaIds[idx]})`}
+                  </h2>
+                ))
+              ) : (
+                <h2 style={{ fontSize: '40px', color: 'aliceblue' }}>Brak danych</h2>
+              )}
+              <hr />
             </div>
-          )}
-          
-          {/* New section for average points */}
+          ))}
+
+          {/* Section for average points */}
           {averagePoints.length > 0 && (
             <div style={averagePointsStyle}>
               <h3>📊 Średnia pkt/kolejkę </h3><hr />
