@@ -45,7 +45,7 @@ const CountdownTimer = () => {
           
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '32px', color: '#FFF1A3', fontWeight: 'bold' }}>{timeRemaining.hours}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>h</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>godz.</div>
           </div>
           
           <div style={{ textAlign: 'center' }}>
