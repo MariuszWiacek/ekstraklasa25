@@ -10,6 +10,9 @@ import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import ExpandableCard from '../components/expandableCard';
 import Pagination from '../components/Pagination'; // Custom component for pagination
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
@@ -38,6 +41,8 @@ const groupGamesIntoKolejki = (games) => {
   return kolejki;
 };
 
+
+
 const Bets = () => {
   const [kolejki, setKolejki] = useState(groupGamesIntoKolejki(gameData));
   const [selectedUser, setSelectedUser] = useState('');
@@ -45,6 +50,7 @@ const Bets = () => {
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [results, setResults] = useState({});
   const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0);
+  const [isEditable, setIsEditable] = useState(false);
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
@@ -185,8 +191,9 @@ const Bets = () => {
   return (
     <div className="fade-in" style={{ textAlign: 'center' }}>
       <p>Wybrany użytkownik : </p>
+      <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px', fontSize: '14px', color: 'yellow' }} />
       <select
-        style={{ margin: '1px', backgroundColor: 'red', fontWeight: 'bold', fontFamily: 'Rubik' }}
+        style={{ margin: '1px', backgroundColor: 'pink', fontWeight: 'bold', fontFamily: 'Rubik' }}
         value={selectedUser}
         onChange={handleUserChange}
       >
@@ -194,8 +201,7 @@ const Bets = () => {
         {Object.keys(usersData).map((user, index) => (
           <option key={index} value={user}>{user}</option>
         ))}
-      </select><hr style={{color: "white"}}></hr>
-     
+      </select> <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px', fontSize: '14px', color: 'yellow' }} />
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <Pagination
           currentPage={currentKolejkaIndex}
