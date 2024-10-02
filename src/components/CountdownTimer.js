@@ -55,7 +55,7 @@ const CountdownTimer = () => {
           
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '32px', color: '#FFDE21', fontWeight: 'bold' }}>{timeRemaining.seconds}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '800' }}>s</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '800' }}>sek</div>
           </div>
         </div>
       </div>
