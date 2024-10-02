@@ -50,12 +50,12 @@ const CountdownTimer = () => {
           
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '32px', color: '#FFE862', fontWeight: 'bold' }}>{timeRemaining.minutes}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>min</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>min.</div>
           </div>
           
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '32px', color: '#FFDE21', fontWeight: 'bold' }}>{timeRemaining.seconds}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '800' }}>sek</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '800' }}>sek.</div>
           </div>
         </div>
       </div>
