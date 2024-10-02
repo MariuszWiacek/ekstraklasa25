@@ -11,8 +11,8 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     return (
         
-        <div className="fade-in"><hr></hr>
-            <h1 style={welcomeMessageStyle}>Typer LIGI POLSKIEJ Sezon 2024/25</h1><hr></hr>
+        <div className="fade-in">
+            <h1 style={welcomeMessageStyle}>Typer LIGI POLSKIEJ - Jesień 2024</h1>
             <TeamLogos />
             <Container fluid style={linkContainerStyle}>
                 <Row>
@@ -20,7 +20,7 @@ const Home = () => {
             <div className="section">
                 
                 <p>
-                    Nieoficjalny typer LIGI POLSKIEJ sezonu 2024/25.<br></br>
+                    Typer LIGI POLSKIEJ sezonu 2024/25.<br></br>
                     To idealne miejsce dla pasjonatów piłki nożnej, którzy chcą sprawdzić swoje umiejętności przewidywania wyników meczów.
                 </p>
             </div><hr></hr>
@@ -64,10 +64,10 @@ const Home = () => {
 
 const welcomeMessageStyle = {
     fontWeight: 'bold',
-    marginBottom: '8px',
+    marginBottom: '5%',
     textAlign: 'center',
-    fontFamily: 'monospace',
-    fontSize: '18px', // Adjust to your needs
+    fontFamily: 'Rubik',
+    fontSize: '300%',
 };
 
 const linkContainerStyle = {

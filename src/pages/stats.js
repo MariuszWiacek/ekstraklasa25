@@ -19,32 +19,47 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-// Styles for the various sections
 const linkContainerStyle = {
+  fontFamily: 'Rubik',
   textAlign: 'left',
-  backgroundColor: '#212529ab',
   padding: '20px',
   borderRadius: '10px',
   marginBottom: '20px',
 };
 
-const hallOfFameStyle = {
+
+const cardStyle = {
   backgroundColor: '#ffea007d',
   padding: '20px',
   borderRadius: '10px',
   marginBottom: '20px',
   textAlign: 'center',
+  transition: 'transform 0.3s, box-shadow 0.3s',
+  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+  cursor: 'pointer', 
+};
+
+const cardHoverStyle = {
+  transform: 'scale(1.05)', // Slightly enlarge the card
+  boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.3)', // Darker shadow
 };
 
 const averagePointsStyle = {
+  fontFamily: 'Rubik',
   color: 'aliceblue',
   backgroundColor: '#0090cdf1',
   padding: '20px',
   borderRadius: '10px',
   marginBottom: '20px',
   textAlign: 'center',
+  transition: 'transform 0.3s, box-shadow 0.3s',
+  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
 };
 
+const averagePointsHoverStyle = {
+  transform: 'scale(1.05)',
+  boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.3)',
+};
 
 const calculatePoints = (bets, results) => {
   let points = 0;
@@ -58,14 +73,12 @@ const calculatePoints = (bets, results) => {
       const [homeScore, awayScore] = result.split(':').map(Number);
       const betScore = bet.score.split(':').map(Number);
 
-      // Check for correct score
       if (betScore[0] === homeScore && betScore[1] === awayScore) {
         points += 3;
         correctResults++;
-        correctTypes++; // Count as correct type as well
+        correctTypes++;
         correctTypesWithResults++;
       } else if (bet.bet === (homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2')) {
-        // Check for correct type
         points += 1;
         correctTypes++;
       }
@@ -80,6 +93,7 @@ const Stats = () => {
   const [submittedData, setSubmittedData] = useState({});
   const [hallOfFame, setHallOfFame] = useState([]);
   const [averagePoints, setAveragePoints] = useState([]);
+  const [hoveredCardIndex, setHoveredCardIndex] = useState(null);
 
   useEffect(() => {
     const resultsRef = ref(database, 'results');
@@ -120,8 +134,6 @@ const Stats = () => {
       let mostCorrectTypesWithResults = 0;
 
       for (const kolejkaId in kolejkaPoints) {
-        console.log(`Processing kolejkaId: ${kolejkaId} for user: ${user}`);
-
         const kolejekBets = kolejkaPoints[kolejkaId];
         const { points, correctTypes, correctResults, correctTypesWithResults } = calculatePoints(kolejekBets, results);
 
@@ -162,7 +174,6 @@ const Stats = () => {
         title: "Najwięcej pkt w jednej kolejce",
         value: maxPoints,
         users: updatedTableData.filter(entry => entry.points === maxPoints).map(entry => entry.user),
-        
       },
       {
         title: "Najwięcej typów ☑️ * w jednej kolejce",
@@ -191,29 +202,40 @@ const Stats = () => {
         <Col md={12}>
           <h2 style={{ textAlign: 'center' }}>Statystyki</h2>
           <hr />
-          <h3 style={{ textAlign: 'center' }}>🏆 Rekordy ligi 🏆</h3><hr />
+          <h3 style={{ textAlign: 'center', fontFamily: 'Rubik' }}>🏆 Rekordy ligi 🏆</h3><hr />
           {hallOfFame.map((stat, index) => (
-            <div key={index} style={hallOfFameStyle}>
+            <div
+              key={index}
+              style={{
+                ...cardStyle,
+                ...(hoveredCardIndex === index ? cardHoverStyle : {})
+              }}
+              onMouseEnter={() => setHoveredCardIndex(index)}
+              onMouseLeave={() => setHoveredCardIndex(null)}
+            >
               <h4>{stat.title}:</h4><hr />
               {stat.users && stat.users.length > 0 ? (
                 stat.users.map((user, idx) => (
                   <h2 key={idx} style={{ fontSize: '40px', color: 'aliceblue' }}>
                     {user} - {stat.value}
-                    {stat.bestKolejkaIds && stat.bestKolejkaIds[idx] !== undefined && ` (kolejka ${stat.bestKolejkaIds[idx]})`}
                   </h2>
                 ))
               ) : (
                 <h2 style={{ fontSize: '40px', color: 'aliceblue' }}>Brak danych</h2>
               )}
               <hr />
-              
             </div>
-            
           ))}
-<p style={{color: 'red'}}> * Typy uwzględnione łącznie z tymi z typ+wynik </p>
-          {/* Section for average points */}
+          <p style={{ color: 'red', fontFamily: 'Rubik' }}> * Typy uwzględnione łącznie z tymi z typ+wynik </p>
           {averagePoints.length > 0 && (
-            <div style={averagePointsStyle}>
+            <div
+              style={{
+                ...averagePointsStyle,
+                ...(hoveredCardIndex === 'average' ? averagePointsHoverStyle : {})
+              }}
+              onMouseEnter={() => setHoveredCardIndex('average')}
+              onMouseLeave={() => setHoveredCardIndex(null)}
+            >
               <h3>📊 Średnia pkt/kolejkę </h3><hr />
               {averagePoints.map((stat, index) => (
                 <p key={index} style={{ color: 'black', fontWeight: 'bold' }}>
@@ -221,7 +243,6 @@ const Stats = () => {
                   <hr />
                 </p>
               ))}
-              
             </div>
           )}
         </Col>

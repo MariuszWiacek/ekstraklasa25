@@ -31,7 +31,7 @@ const CountdownTimer = () => {
 
   return (
     timeRemaining && (
-      <div style={{ textAlign: 'center', marginBottom: '0px' }}>
+      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px'}}>
         <p style={{color: "gold", fontSize: '14px', marginBottom: '10px'}}>Do kolejnego meczu pozostało:</p>
         <FontAwesomeIcon icon={faClock} style={{fontSize: '115%', color: '#FFF5BA', marginRight: '8px' }} />
        
