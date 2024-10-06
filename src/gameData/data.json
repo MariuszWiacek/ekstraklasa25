@@ -1460,135 +1460,9 @@
 
       
       {
-        "id": 108,
-        "home": "Piast Gliwice",
-        "away": "Lechia Gdańsk",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "18:00",
-        "venue": "",
-        "date": "2024-10-25",
-        "disabled": false
-      },
-      {
-        "id": 109,
-        "home": "Pogoń Szczecin",
-        "away": "Puszcza Niepołomice",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "20:30",
-        "venue": "",
-        "date": "2024-10-25",
-        "disabled": false
-      },
-      {
-        "id": 110,
-        "home": "Cracovia",
-        "away": "Motor Lublin",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "14:45",
-        "venue": "",
-        "date": "2024-10-26",
-        "disabled": false
-      },
-      {
-        "id": 111,
-        "home": "Śląsk Wrocław",
-        "away": "Raków Częstochowa",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "17:30",
-        "venue": "",
-        "date": "2024-10-26",
-        "disabled": false
-      },
-      {
-        "id": 112,
-        "home": "Lech Poznań",
-        "away": "Radomiak Radom",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "20:15",
-        "venue": "",
-        "date": "2024-10-26",
-        "disabled": false
-      },
-      {
-        "id": 113,
-        "home": "Stal Mielec",
-        "away": "Zagłębie Lubin",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "12:15",
-        "venue": "",
-        "date": "2024-10-27",
-        "disabled": false
-      },
-      {
-        "id": 114,
-        "home": "Jagiellonia Białystok",
-        "away": "Korona Kielce",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "14:45",
-        "venue": "",
-        "date": "2024-10-27",
-        "disabled": false
-      },
-      {
-        "id": 115,
-        "home": "Widzew Łódź",
-        "away": "Górnik Zabrze",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "17:30",
-        "venue": "",
-        "date": "2024-10-27",
-        "disabled": false
-      },
-      {
-        "id": 116,
-        "home": "Legia Warszawa",
-        "away": "GKS Katowice",
-        "score": "",
-        "bet": "",
-        "result": "",
-        "type": "",
-        "kickoff": "20:15",
-        "venue": "",
-        "date": "2024-10-27",
-        "disabled": false
-      }
-      ,
-      
-
-
-
-
-
-
-
-      {
         "id": 117,
-        "home": "Raków Częstochowa",
-        "away": "Stal Mielec",
+        "home": "Raków",
+        "away": "Stal",
         "score": "",
         "bet": "",
         "result": "",
@@ -1600,8 +1474,8 @@
       },
       {
         "id": 118,
-        "home": "Motor Lublin",
-        "away": "Pogoń Szczecin",
+        "home": "Motor",
+        "away": "Pogoń",
         "score": "",
         "bet": "",
         "result": "",
@@ -1613,8 +1487,8 @@
       },
       {
         "id": 119,
-        "home": "Puszcza Niepołomice",
-        "away": "Lech Poznań",
+        "home": "Puszcza",
+        "away": "Lech",
         "score": "",
         "bet": "",
         "result": "",
@@ -1626,8 +1500,8 @@
       },
       {
         "id": 120,
-        "home": "Radomiak Radom",
-        "away": "Piast Gliwice",
+        "home": "Radomiak",
+        "away": "Piast",
         "score": "",
         "bet": "",
         "result": "",
@@ -1639,8 +1513,8 @@
       },
       {
         "id": 121,
-        "home": "Górnik Zabrze",
-        "away": "Jagiellonia Białystok",
+        "home": "Górnik",
+        "away": "Jagiellonia",
         "score": "",
         "bet": "",
         "result": "",
@@ -1652,7 +1526,7 @@
       },
       {
         "id": 122,
-        "home": "Lechia Gdańsk",
+        "home": "Lechia",
         "away": "Cracovia",
         "score": "",
         "bet": "",
@@ -1665,8 +1539,8 @@
       },
       {
         "id": 123,
-        "home": "Legia Warszawa",
-        "away": "Widzew Łódź",
+        "home": "Legia",
+        "away": "Widzew",
         "score": "",
         "bet": "",
         "result": "",
@@ -1678,8 +1552,8 @@
       },
       {
         "id": 124,
-        "home": "GKS Katowice",
-        "away": "Korona Kielce",
+        "home": "GKS",
+        "away": "Korona",
         "score": "",
         "bet": "",
         "result": "",
@@ -1691,8 +1565,8 @@
       },
       {
         "id": 125,
-        "home": "Zagłębie Lubin",
-        "away": "Śląsk Wrocław",
+        "home": "Zagłębie",
+        "away": "Śląsk",
         "score": "",
         "bet": "",
         "result": "",
