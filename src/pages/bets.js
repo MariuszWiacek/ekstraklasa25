@@ -295,9 +295,9 @@ const Bets = () => {
               onChange={(e) => handleScoreChange(game.id, e.target.value)}
               maxLength="3"
    
-readOnly={isReadOnly(selectedUser,gameId)}
-title={isReadOnly(selectedUser,gameId) ? "✓": "" }
-disabled={gameStarted(game.date, game.kickoff)}
+readOnly={isReadOnly(selectedUser, game.id)}
+              title={isReadOnly(selectedUser, game.id) ? "✔️" : ""}
+              disabled={gameStarted(game.date, game.kickoff)}
               
             />
           </td>
