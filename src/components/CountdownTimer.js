@@ -11,7 +11,7 @@ const CountdownTimer = () => {
     const nextGame = gameData.find(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
 
     if (nextGame) {
-      const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+02:00`);
+      const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+01:00`);
       const diff = kickoffTimeCEST - now;
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // Days
