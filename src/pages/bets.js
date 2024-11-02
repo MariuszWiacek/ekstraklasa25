@@ -82,7 +82,7 @@ const Bets = () => {
     });
 
     const now = new Date();
-    const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
+    const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+01:00`) > now);
     const kolejkaIndex = Math.floor(nextGameIndex / 9);
     setCurrentKolejkaIndex(kolejkaIndex);
   }, []);
@@ -94,7 +94,7 @@ const Bets = () => {
   const gameStarted = (gameDate, gameKickoff) => {
     const currentDateTime = new Date();
     const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+01:00`);
-    return currentDateTime >= gameDateTimeCEST;
+    return currentDateTime >= gameDateTimeCET;
   };
 
   const handleUserChange = (e) => {
