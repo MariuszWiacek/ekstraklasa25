@@ -93,7 +93,7 @@ const Bets = () => {
 
   const gameStarted = (gameDate, gameKickoff) => {
     const currentDateTime = new Date();
-    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+02:00`);
+    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+01:00`);
     return currentDateTime >= gameDateTimeCEST;
   };
 
