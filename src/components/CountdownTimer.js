@@ -2,24 +2,32 @@ import React, { useState, useEffect } from 'react';
 import gameData from '../gameData/data.json'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { DateTime } from 'luxon';
 
 const CountdownTimer = () => {
-  const [timeRemaining, setTimeRemaining] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   const updateTimeRemaining = () => {
-    const now = new Date();
-    const nextGame = gameData.find(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
+    // Set the current time in Poland's timezone
+    const now = DateTime.now().setZone("Europe/Warsaw");
+
+    // Find the next game based on Warsaw time
+    const nextGame = gameData.find(game => {
+      const gameDateTime = DateTime.fromISO(`${game.date}T${game.kickoff}:00`, { zone: "Europe/Warsaw" });
+      return gameDateTime > now;
+    });
 
     if (nextGame) {
-      const kickoffTimeCEST = new Date(`${nextGame.date}T${nextGame.kickoff}:00+01:00`);
-      const diff = kickoffTimeCEST - now;
+      // Calculate the difference to the next game's kickoff time
+      const gameDateTime = DateTime.fromISO(`${nextGame.date}T${nextGame.kickoff}:00`, { zone: "Europe/Warsaw" });
+      const diff = gameDateTime.diff(now, ["days", "hours", "minutes", "seconds"]).toObject();
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // Days
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Hours remaining after removing days
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); // Minutes
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000); // Seconds
-
-      setTimeRemaining({ days, hours, minutes, seconds });
+      setTimeRemaining({
+        days: Math.floor(diff.days),
+        hours: Math.floor(diff.hours),
+        minutes: Math.floor(diff.minutes),
+        seconds: Math.floor(diff.seconds),
+      });
     }
   };
 
@@ -35,10 +43,8 @@ const CountdownTimer = () => {
         <p style={{color: "gold", fontSize: '14px', marginBottom: '10px'}}>Do kolejnego meczu pozostało:</p>
         <FontAwesomeIcon icon={faClock} style={{fontSize: '115%', color: '#FFF5BA', marginRight: '8px' }} />
        
-       
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10%' }}>
           <div style={{ textAlign: 'center' }}>
-            
             <div style={{ fontSize: '32px', color: '#FFF5BA', fontWeight: 'bold' }}>{timeRemaining.days}</div>
             <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>dni</div>
           </div>
@@ -64,3 +70,4 @@ const CountdownTimer = () => {
 };
 
 export default CountdownTimer;
+

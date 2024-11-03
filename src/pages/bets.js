@@ -12,6 +12,7 @@ import ExpandableCard from '../components/expandableCard';
 import Pagination from '../components/Pagination'; // Custom component for pagination
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { DateTime } from 'luxon';
 
 
 const firebaseConfig = {
@@ -82,7 +83,7 @@ const Bets = () => {
     });
 
     const now = new Date();
-    const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+01:00`) > now);
+    const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
     const kolejkaIndex = Math.floor(nextGameIndex / 9);
     setCurrentKolejkaIndex(kolejkaIndex);
   }, []);
@@ -92,9 +93,10 @@ const Bets = () => {
   };
 
   const gameStarted = (gameDate, gameKickoff) => {
-    const currentDateTime = new Date();
-    const gameDateTimeCEST = new Date(`${gameDate}T${gameKickoff}:00+01:00`);
-    return currentDateTime >= gameDateTimeCET;
+    const currentDateTime = DateTime.now().setZone('Europe/Warsaw');
+    const gameDateTime = DateTime.fromISO(`${gameDate}T${gameKickoff}:00`, { zone: 'Europe/Warsaw' });
+  
+    return currentDateTime >= gameDateTime;
   };
 
   const handleUserChange = (e) => {
@@ -294,8 +296,9 @@ const Bets = () => {
               value={game.score}
               onChange={(e) => handleScoreChange(game.id, e.target.value)}
               maxLength="3"
-   
-
+              readOnly={isReadOnly(selectedUser, game.id)}
+              title={isReadOnly(selectedUser, game.id) ? "✔️" : ""}
+              disabled={gameStarted(game.date, game.kickoff)}
               
             />
           </td>
