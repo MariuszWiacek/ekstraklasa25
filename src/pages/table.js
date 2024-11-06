@@ -4,6 +4,7 @@ import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
 import Stats from './stats';
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
   authDomain: "polskibet-71ef6.firebaseapp.com",
@@ -18,6 +19,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
+// Styles and configurations
 const linkContainerStyle = {
   textAlign: 'left',
   backgroundColor: '#212529ab',
@@ -26,30 +28,40 @@ const linkContainerStyle = {
   marginBottom: '20px',
 };
 
-const calculatePoints = (bets, results) => {
-  let points = 0;
-  let correctTypes = 0;
-  let correctResults = 0;
-
-  console.log("Calculating points for bets:", bets);
-  console.log("Against results:", results);
-
-  bets.forEach((bet) => {
-    const result = results[bet.id]; // Ensure we're using the correct game ID
-    if (result) {
-      // Calculate points
-      if (bet.score === result) {
-        points += 3;
-        correctResults++;
-      } else if (bet.bet === (result.split(':')[0] === result.split(':')[1] ? 'X' : result.split(':')[0] > result.split(':')[1] ? '1' : '2')) {
-        points += 1;
-        correctTypes++;
-      }
-    }
-  });
-
-  return { points, correctTypes, correctResults };
+const tableHeaderStyle = {
+  padding: '10px',
+  border: '1px solid #444',
+  backgroundColor: '#212529',
+  color: 'white',
+  textAlign: 'center',
 };
+
+const tableCellStyle = {
+  padding: '10px',
+  border: '1px solid #444',
+  textAlign: 'center',
+};
+
+const tableCellStyle2 = {
+  padding: '10px',
+  border: '1px solid #444',
+  textAlign: 'center',
+  color: 'aliceblue',
+  fontWeight: 'bold'
+};
+
+const trendStyle = {
+  up: { color: 'green' },
+  down: { color: 'red' },
+  same: { display: 'none' }
+};
+
+// Prize information
+const prizes = [ 
+  { place: '🥇 1 miejsce', reward: 400 },
+  { place: '🥈 2 miejsce', reward: 100 },
+  { place: '🥉 3 miejsce', reward: 50 }
+];
 
 const Table = () => {
   const [tableData, setTableData] = useState([]);
@@ -60,16 +72,12 @@ const Table = () => {
   useEffect(() => {
     const resultsRef = ref(database, 'results');
     onValue(resultsRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("Results data:", data); // Debugging log
-      setResults(data || {});
+      setResults(snapshot.val() || {});
     });
 
     const submittedDataRef = ref(database, 'submittedData');
     onValue(submittedDataRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("Submitted data:", data); // Debugging log
-      setSubmittedData(data || {});
+      setSubmittedData(snapshot.val() || {});
     });
   }, []);
 
@@ -77,89 +85,60 @@ const Table = () => {
     const updatedTableData = Object.keys(submittedData).map((user) => {
       const bets = Object.entries(submittedData[user]).map(([id, bet]) => ({
         ...bet,
-        id // Use the key as the ID for correct mapping
+        id
       }));
       const { points, correctTypes, correctResults } = calculatePoints(bets, results);
       return { user, points, correctTypes, correctResults };
     });
 
-    // Sorting table data by points in descending order, and by correctResults if points are tied
     updatedTableData.sort((a, b) => {
-      if (b.points !== a.points) {
-        return b.points - a.points;
-      } else {
-        return b.correctResults - a.correctResults;
-      }
+      if (b.points !== a.points) return b.points - a.points;
+      return b.correctResults - a.correctResults;
     });
 
-    // Assigning places (1st, 2nd, 3rd, etc.)
     updatedTableData.forEach((entry, index) => {
-      entry.place = getPlace(index + 1); // index + 1 to start from 1
-
-      // Determine if the place has improved or decreased
+      entry.place = getPlace(index + 1);
       const previousEntry = previousTableData.current.find(e => e.user === entry.user);
-      if (previousEntry) {
-        entry.trend = previousEntry.place > entry.place ? 'up' : previousEntry.place < entry.place ? 'down' : 'same';
-      } else {
-        entry.trend = 'same';
-      }
+      entry.trend = previousEntry
+        ? previousEntry.place > entry.place ? 'up' : previousEntry.place < entry.place ? 'down' : 'same'
+        : 'same';
     });
 
-    // Update the previous table data
     previousTableData.current = updatedTableData;
-
     setTableData(updatedTableData);
   }, [submittedData, results]);
 
-  // Function to get ordinal suffix for places (1st, 2nd, 3rd, etc.)
   const getPlace = (place) => {
-    const j = place % 10,
-      k = place % 100;
-    if (j === 1 && k !== 11) {
-      return place + '';
-    }
-    if (j === 2 && k !== 12) {
-      return place + '';
-    }
-    if (j === 3 && k !== 13) {
-      return place + '';
-    }
-    return place + '';
+    const j = place % 10, k = place % 100;
+    if (j === 1 && k !== 11) return `${place}`;
+    if (j === 2 && k !== 12) return `${place}`;
+    if (j === 3 && k !== 13) return `${place}`;
+    return `${place}`;
   };
 
-  // Styles for table header and cell
-  const tableHeaderStyle = {
-    padding: '10px',
-    border: '1px solid #444',
-    backgroundColor: '#212529',
-    color: 'white',
-    textAlign: 'center',
-  };
+  const calculatePoints = (bets, results) => {
+    let points = 0, correctTypes = 0, correctResults = 0;
 
-  const tableCellStyle = {
-    padding: '10px',
-    border: '1px solid #444',
-    textAlign: 'center',
-  };
+    bets.forEach((bet) => {
+      const result = results[bet.id];
+      if (result) {
+        if (bet.score === result) {
+          points += 3;
+          correctResults++;
+        } else if (bet.bet === (result.split(':')[0] === result.split(':')[1] ? 'X' : result.split(':')[0] > result.split(':')[1] ? '1' : '2')) {
+          points += 1;
+          correctTypes++;
+        }
+      }
+    });
 
-  const tableCellStyle2 = {
-    padding: '10px',
-    border: '1px solid #444',
-    textAlign: 'center',
-    color: 'aliceblue',
-    fontWeight: 'bold'
-  };
-
-  const trendStyle = {
-    up: { color: 'green' },
-    down: { color: 'red' },
-    same: { display: 'none' }
+    return { points, correctTypes, correctResults };
   };
 
   return (
     <Container fluid style={linkContainerStyle}>
       <Row>
-        <Col md={12}><h2 style={{textAlign: 'center'}}>Tabela</h2><hr></hr>
+        <Col md={12}><h2 style={{ textAlign: 'center' }}>Tabela</h2><hr />
           <div className="fade-in" style={{ overflowX: 'auto' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
               <thead>
@@ -167,8 +146,8 @@ const Table = () => {
                   <th style={tableHeaderStyle}>Miejsce</th>
                   <th style={tableHeaderStyle}>Użytkownik</th>
                   <th style={tableHeaderStyle}>Pkt</th>
-                  <th style={tableHeaderStyle}>☑️ <br></br>typ</th>
-                  <th style={tableHeaderStyle}>✅☑️ <br></br>typ+wynik</th>
+                  <th style={tableHeaderStyle}>☑️ <br />typ</th>
+                  <th style={tableHeaderStyle}>✅☑️ <br />typ+wynik</th>
                 </tr>
               </thead>
               <tbody>
@@ -188,9 +167,20 @@ const Table = () => {
                   </tr>
                 ))}
               </tbody>
-              
             </table>
-          </div><hr></hr>
+          </div>
+          <hr />
+
+          
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <h2>💰 Nagrody 💰</h2><hr></hr>
+            {prizes.map((prize, index) => (
+              <p key={index} style={{ fontSize: '1.2em', color: '#ffd700' }}>
+                 {prize.place} - {prize.reward} ⛃
+              </p>
+            ))}
+          </div>
+          <hr></hr>
           <Stats />
         </Col>
       </Row>

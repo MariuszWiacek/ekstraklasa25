@@ -118,7 +118,7 @@ const Stats = () => {
 
       const kolejkaPoints = {};
       bets.forEach((bet) => {
-        const kolejkaId = Math.floor((bet.id - 1) / 9); // Assuming 9 matches per kolejka
+        const kolejkaId = Math.floor((bet.id - 1) / 9); 
         if (!kolejkaPoints[kolejkaId]) {
           kolejkaPoints[kolejkaId] = [];
         }
