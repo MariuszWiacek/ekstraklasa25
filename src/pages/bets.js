@@ -4,16 +4,15 @@ import 'firebase/compat/auth';
 import 'firebase/compat/database';
 import usersData from '../gameData/users.json';
 import gameData from '../gameData/data.json';
-import teamsData from '../gameData/teams.json'; // Import the teams data
+import teamsData from '../gameData/teams.json';
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import ExpandableCard from '../components/expandableCard';
-import Pagination from '../components/Pagination'; // Custom component for pagination
+import Pagination from '../components/Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEUAgb7dUt7ZO8S5-B4P3p1fHMJ_LqdPc",
@@ -42,8 +41,6 @@ const groupGamesIntoKolejki = (games) => {
   return kolejki;
 };
 
-
-
 const Bets = () => {
   const [kolejki, setKolejki] = useState(groupGamesIntoKolejki(gameData));
   const [selectedUser, setSelectedUser] = useState('');
@@ -52,6 +49,23 @@ const Bets = () => {
   const [results, setResults] = useState({});
   const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0);
   const [isEditable, setIsEditable] = useState(false);
+  const [areInputsEditable, setAreInputsEditable] = useState(true); 
+  const [password, setPassword] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleLogin = () => {
+    if (password === 'maniek123') {
+      setIsAdmin(true);  // If correct password, show admin buttons
+    } else {
+      alert('Incorrect password!');
+    }
+  };
+
+  
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
@@ -95,7 +109,6 @@ const Bets = () => {
   const gameStarted = (gameDate, gameKickoff) => {
     const currentDateTime = DateTime.now().setZone('Europe/Warsaw');
     const gameDateTime = DateTime.fromISO(`${gameDate}T${gameKickoff}:00`, { zone: 'Europe/Warsaw' });
-  
     return currentDateTime >= gameDateTime;
   };
 
@@ -190,6 +203,9 @@ const Bets = () => {
     return team ? team.logo : ''; // Default logo if not found
   };
 
+  const toggleEditableOff = () => setAreInputsEditable(false);
+  const toggleEditableOn = () => setAreInputsEditable(true);
+
   return (
     <div className="fade-in" style={{ textAlign: 'center' }}>
       <p>Wybrany użytkownik : </p>
@@ -203,7 +219,9 @@ const Bets = () => {
         {Object.keys(usersData).map((user, index) => (
           <option key={index} value={user}>{user}</option>
         ))}
-      </select> <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px', fontSize: '14px', color: 'yellow' }} />
+      </select>
+      <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px', fontSize: '14px', color: 'yellow' }} />
+
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <Pagination
           currentPage={currentKolejkaIndex}
@@ -212,15 +230,8 @@ const Bets = () => {
           label="Kolejka"
         />
         
-      <table
-  style={{
-    width: '100%',
-    border: '0.5px solid #444',
-    borderCollapse: 'collapse',
-    marginTop: '5%',
-  }}
->
-  <thead>
+        <table style={{ width: '100%', border: '0.5px solid #444', borderCollapse: 'collapse', marginTop: '5%' }}>
+        <thead>
     <tr>
     <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
       <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gospodarz</th>
@@ -282,61 +293,66 @@ const Bets = () => {
               <option value="X">X</option>
               <option value="2">2</option>
             </select>
-          </td>
-          <td>
-            <input
-              style={{
-                width: '50px',
-                backgroundColor: game.score ? (isReadOnly(selectedUser, game.id) ? 'transparent' : 'white') : 'white',
-                cursor: isReadOnly(selectedUser, game.id) ? 'not-allowed' : 'text',
-                color: 'red',
-              }}
-              type="text"
-              placeholder={isReadOnly(selectedUser, game.id) ? "✔️" : "x:x"}
-              value={game.score}
-              onChange={(e) => handleScoreChange(game.id, e.target.value)}
-              maxLength="3"
-              readOnly={isReadOnly(selectedUser, game.id)}
-              title={isReadOnly(selectedUser, game.id) ? "✔️" : ""}
-              disabled={gameStarted(game.date, game.kickoff)}
-              
-            />
-          </td>
-        </tr>
-      </React.Fragment>
-    ))}
-  </tbody>
-</table>
-<Pagination
-          currentPage={currentKolejkaIndex}
-          totalPages={kolejki.length}
-          onPageChange={(page) => setCurrentKolejkaIndex(page)}
-          label="Kolejka"
-        />
+                  </td>
+                  <td>
+                    <input
+                      style={{ width: '50px', backgroundColor: game.score ? (isReadOnly(selectedUser, game.id) ? 'transparent' : 'white') : 'white', cursor: isReadOnly(selectedUser, game.id) ? 'not-allowed' : 'text', color: 'red' }}
+                      type="text"
+                      placeholder={isReadOnly(selectedUser, game.id) ? "✔️" : "x:x"}
+                      value={game.score}
+                      onChange={(e) => handleScoreChange(game.id, e.target.value)}
+                      maxLength="3"
+                      readOnly={areInputsEditable && isReadOnly(selectedUser, game.id)}
+                      title={areInputsEditable && isReadOnly(selectedUser, game.id) ? "✔️" : ""}
+                      disabled={areInputsEditable && gameStarted(game.date, game.kickoff)}
+                    />
+                  </td>
+                </tr>
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
 
+        
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <button
-            style={{
-              backgroundColor: '#DC3545',
-              color: 'white',
-              padding: '10px 20px',
-              border: 'none',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              display: 'inline-block',
-              margin: '10px',
-              fontSize: '14px',
-              width: '60%',
-              transition: 'background-color 0.3s',
-            }}
+            style={{ backgroundColor: '#DC3545', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '10px', cursor: 'pointer', display: 'inline-block', margin: '10px', fontSize: '14px', width: '60%', transition: 'background-color 0.3s' }}
             onClick={handleSubmit}
           >
             Prześlij
           </button>
+          {isDataSubmitted && Object.keys(submittedData).map((user) => (
+          <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />))}
         </div>
-        {isDataSubmitted && Object.keys(submittedData).map((user) => (
-          <ExpandableCard key={user} user={user} bets={submittedData[user]} results={results} />
-        ))}
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+  <button
+    style={{
+      backgroundColor: '#28a745', 
+      color: 'white', 
+      padding: '10px 20px', 
+      border: 'none', 
+      borderRadius: '5px', 
+      marginRight: '10px', 
+      cursor: 'pointer'
+    }}
+    onClick={toggleEditableOff}
+  >
+    
+  </button>
+  <button
+    style={{
+      backgroundColor: '#007bff', 
+      color: 'white', 
+      padding: '10px 20px', 
+      border: 'none', 
+      borderRadius: '5px', 
+      cursor: 'pointer'
+    }}
+    onClick={toggleEditableOn}
+  >
+   
+  </button>
+</div>
       </div>
     </div>
   );
