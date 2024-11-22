@@ -10,6 +10,8 @@ const Admin = () => {
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0); 
+  const [submittedData, setSubmittedData] = useState({});
+  const [nonBettors, setNonBettors] = useState({});
   const gamesPerPage = 9; // Number of games per page
 
   const getTeamLogo = (teamName) => {
@@ -28,6 +30,32 @@ const Admin = () => {
       setResultsInput(data || {});
     });
   }, []);
+
+  useEffect(() => {
+    const submittedDataRef = ref(getDatabase(), 'submittedData');
+    onValue(submittedDataRef, (snapshot) => {
+      const data = snapshot.val();
+      setSubmittedData(data || {});
+    });
+  }, []);
+
+  useEffect(() => {
+    const nonBettorsData = {};
+    const allUsers = Object.keys(submittedData);
+
+    allUsers.forEach((user) => {
+      games.forEach((game) => {
+        if (!submittedData[user][game.id]) {
+          if (!nonBettorsData[game.id]) {
+            nonBettorsData[game.id] = [];
+          }
+          nonBettorsData[game.id].push(user);
+        }
+      });
+    });
+
+    setNonBettors(nonBettorsData);
+  }, [submittedData, games]);
 
   const handlePasswordSubmit = () => {
     if (password === 'maniek123') {
@@ -137,7 +165,6 @@ const Admin = () => {
             <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
             <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
             <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
-           
             <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Wynik</th>
           </tr>
         </thead>
@@ -145,7 +172,7 @@ const Admin = () => {
           {getPagedGames(currentKolejkaIndex).map((game, index) => (
             <React.Fragment key={index}>
               <tr>
-              <td colSpan="12" className="date" style={{ textAlign: 'left', color: 'gold', fontSize: '10px', paddingLeft: '10%' }}>
+                <td colSpan="12" className="date" style={{ textAlign: 'left', color: 'gold', fontSize: '10px', paddingLeft: '10%' }}>
                   {game.date} - {game.kickoff}
                 </td>
               </tr>
@@ -174,23 +201,35 @@ const Admin = () => {
                   />
                 </td>
               </tr>
+              {/* Display Non-Bettors for this Game */}
+              {nonBettors[game.id]?.length === Object.keys(submittedData).length ? (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', color: 'green' }}>
+                    <strong>Wszyscy</strong>
+                  </td>
+                </tr>
+              ) : nonBettors[game.id]?.length > 0 ? (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', color: 'red' }}>
+                    <strong>Nie obstawił: {nonBettors[game.id].join(', ')}</strong>
+                  </td>
+                </tr>
+              ) : null}
             </React.Fragment>
           ))}
         </tbody>
       </table>
-
-      {/* Submit button for results */}
       <button
         onClick={handleSubmitResults}
         style={{
-          backgroundColor: 'red',
+          backgroundColor: 'green',
           color: 'white',
           fontWeight: 'bold',
           padding: '10px 20px',
           borderRadius: '4px',
           border: 'none',
           cursor: 'pointer',
-          marginTop: '20px',
+          marginTop: '10px',
         }}
       >
         Zatwierdź wyniki
