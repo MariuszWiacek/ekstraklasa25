@@ -204,14 +204,14 @@ const Admin = () => {
               {/* Display Non-Bettors for this Game */}
               {nonBettors[game.id]?.length === Object.keys(submittedData).length ? (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: 'center', color: 'green' }}>
-                    <strong>Wszyscy</strong>
+                  <td colSpan="4" style={{ textAlign: 'center', color: 'orange' }}>
+                    <strong>Nie obstawili: Wszyscy</strong>
                   </td>
                 </tr>
               ) : nonBettors[game.id]?.length > 0 ? (
                 <tr>
                   <td colSpan="4" style={{ textAlign: 'center', color: 'red' }}>
-                    <strong>Nie obstawił: {nonBettors[game.id].join(', ')}</strong>
+                    <strong>Nie obstawili: {nonBettors[game.id].join(', ')}</strong>
                   </td>
                 </tr>
               ) : null}
