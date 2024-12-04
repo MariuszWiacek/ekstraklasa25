@@ -2054,7 +2054,7 @@
 ,
 
 {
-  "id": 159,
+  "id": 154,
   "home": "Radomiak",
   "away": "GKS",
   "score": "",
@@ -2067,7 +2067,7 @@
   "disabled": false
 },
 {
-  "id": 154,
+  "id": 155,
   "home": "Górnik",
   "away": "Lech",
   "score": "",
@@ -2093,7 +2093,7 @@
   "disabled": false
 },
 {
-  "id": 161,
+  "id": 157,
   "home": "Widzew",
   "away": "Stal",
   "score": "",
@@ -2106,7 +2106,7 @@
   "disabled": false
 },
 {
-  "id": 160,
+  "id": 158,
   "home": "Raków",
   "away": "Motor",
   "score": "",
@@ -2119,7 +2119,7 @@
   "disabled": false
 },
 {
-  "id": 157,
+  "id": 159,
   "home": "Piast",
   "away": "Cracovia",
   "score": "",
@@ -2132,7 +2132,7 @@
   "disabled": false
 },
 {
-  "id": 158,
+  "id": 160,
   "home": "Puszcza",
   "away": "Jagiellonia",
   "score": "",
@@ -2145,7 +2145,7 @@
   "disabled": false
 },
 {
-  "id": 162,
+  "id": 161,
   "home": "Zagłębie",
   "away": "Legia",
   "score": "",
@@ -2158,7 +2158,7 @@
   "disabled": false
 },
 {
-  "id": 155,
+  "id": 162,
   "home": "Korona",
   "away": "Pogoń",
   "score": "",
