@@ -4,14 +4,14 @@ import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyCGVW31sTa6Giafh0-JTsnJ9ghybYEsJvE",
+  authDomain: "wiosna25-66ab3.firebaseapp.com",
+  databaseURL: "https://wiosna25-66ab3-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "wiosna25-66ab3",
+  storageBucket: "wiosna25-66ab3.firebasestorage.app",
+  messagingSenderId: "29219460780",
+  appId: "1:29219460780:web:de984a281514ab6cdc7109",
+  measurementId: "G-8Z3CMMQKE8"
 };
 
 
