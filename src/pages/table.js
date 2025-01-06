@@ -3,6 +3,7 @@ import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
 import Stats from './stats';
+import { calculatePoints } from '../components/calculatePoints'; // Import the calculatePoints function
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGVW31sTa6Giafh0-JTsnJ9ghybYEsJvE",
@@ -14,7 +15,6 @@ const firebaseConfig = {
   appId: "1:29219460780:web:de984a281514ab6cdc7109",
   measurementId: "G-8Z3CMMQKE8"
 };
-
 
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
@@ -116,25 +116,6 @@ const Table = () => {
     return `${place}`;
   };
 
-  const calculatePoints = (bets, results) => {
-    let points = 0, correctTypes = 0, correctResults = 0;
-
-    bets.forEach((bet) => {
-      const result = results[bet.id];
-      if (result) {
-        if (bet.score === result) {
-          points += 3;
-          correctResults++;
-        } else if (bet.bet === (result.split(':')[0] === result.split(':')[1] ? 'X' : result.split(':')[0] > result.split(':')[1] ? '1' : '2')) {
-          points += 1;
-          correctTypes++;
-        }
-      }
-    });
-
-    return { points, correctTypes, correctResults };
-  };
-
   return (
     <Container fluid style={linkContainerStyle}>
       <Row>
@@ -170,8 +151,6 @@ const Table = () => {
             </table>
           </div>
           <hr />
-
-          
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
             <h2>💰 Nagrody 💰</h2><hr></hr>
             {prizes.map((prize, index) => (

@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-
-import xtraBetVideo from '../images/eXTRABET.mp4'; // Replace with your video URL
+import xtraBetVideo from '../images/Untitled.mp4';
 
 function Loading({ onLoaded }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
-    // Use a timer to trigger onLoaded after 3 seconds
     const timer = setTimeout(() => {
       if (videoLoaded) {
         onLoaded();
       }
-    }, 3000); // 3 seconds
+    }, 3000);
 
-    // Cleanup timer if the component unmounts
     return () => clearTimeout(timer);
   }, [videoLoaded, onLoaded]);
 
   const handleVideoLoaded = () => {
-    setVideoLoaded(true); // Set videoLoaded to true when the video starts playing
+    setVideoLoaded(true);
   };
 
   return (
@@ -27,28 +24,30 @@ function Loading({ onLoaded }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1 }} // Adjust transition duration as needed
+      transition={{ duration: 1 }}
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
-        background: '#000', // Fallback color
+        backgroundImage: `url(${require('../images/flares2.png')})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 9999,
-        overflow: 'hidden', // Ensure video covers the screen
+        overflow: 'hidden',
       }}
     >
       <div
         style={{
           position: 'relative',
-          width: '80%', // Adjust width as needed
-          maxWidth: '600px', // Max width for larger screens
+          width: '80%',
+          maxWidth: '600px',
           height: 'auto',
-          paddingTop: '56.25%', // Aspect ratio 16:9
+          paddingTop: '56.25%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -60,7 +59,7 @@ function Loading({ onLoaded }) {
           autoPlay
           muted
           playsInline
-          onLoadedData={handleVideoLoaded} // Handle video load
+          onLoadedData={handleVideoLoaded}
           style={{
             position: 'absolute',
             top: 0,
@@ -68,6 +67,8 @@ function Loading({ onLoaded }) {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
+            opacity: 3.5,
+            mixBlendMode: 'screen',
           }}
         />
       </div>

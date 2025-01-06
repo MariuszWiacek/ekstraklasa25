@@ -25,7 +25,6 @@ const firebaseConfig = {
   measurementId: "G-8Z3CMMQKE8"
 };
 
-
 initializeApp(firebaseConfig);
 
 const auth = getAuth();
@@ -33,12 +32,14 @@ const database = getDatabase();
 
 const groupGamesIntoKolejki = (games) => {
   const kolejki = [];
-  for (let i = 0; i < games.length; i += 9) {
-    kolejki.push({
-      id: Math.floor(i / 9) + 1,
-      games: games.slice(i, i + 9)
-    });
-  }
+  games.forEach((game, index) => {
+    const currentKolejkaId = Math.floor(index / 9) + 1; // Calculate the Kolejka ID (every 9 games)
+    game.kolejkaId = currentKolejkaId;  // Add kolejekId to each game
+    if (!kolejki[currentKolejkaId - 1]) {
+      kolejki[currentKolejkaId - 1] = { id: currentKolejkaId, games: [] };
+    }
+    kolejki[currentKolejkaId - 1].games.push(game);
+  });
   return kolejki;
 };
 
@@ -49,24 +50,10 @@ const Bets = () => {
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [results, setResults] = useState({});
   const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0);
-  const [isEditable, setIsEditable] = useState(false);
   const [areInputsEditable, setAreInputsEditable] = useState(true); 
   const [password, setPassword] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleLogin = () => {
-    if (password === 'maniek123') {
-      setIsAdmin(true);  // If correct password, show admin buttons
-    } else {
-      alert('Incorrect password!');
-    }
-  };
-
-  
+  const [isEditable, setIsEditable] = useState(false);
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
@@ -161,7 +148,7 @@ const Bets = () => {
           away: game.away,
           score: game.score,
           bet: autoDetectBetType(game.score),
-          kolejkaId: currentKolejka.id,
+          kolejkaId: game.kolejkaId, // Store Kolejka ID with each bet
         };
       }
       return newBets;
@@ -204,6 +191,19 @@ const Bets = () => {
     return team ? team.logo : ''; // Default logo if not found
   };
 
+  const getBetsForKolejka = (kolejkaId) => {
+    return Object.keys(submittedData).reduce((acc, user) => {
+      const userBets = submittedData[user];
+      const betsForKolejka = Object.keys(userBets)
+        .filter((gameId) => userBets[gameId].kolejkaId === kolejkaId)
+        .map((gameId) => userBets[gameId]);
+      if (betsForKolejka.length) {
+        acc[user] = betsForKolejka;
+      }
+      return acc;
+    }, {});
+  };
+
   const toggleEditableOff = () => setAreInputsEditable(false);
   const toggleEditableOn = () => setAreInputsEditable(true);
 
@@ -221,7 +221,6 @@ const Bets = () => {
           <option key={index} value={user}>{user}</option>
         ))}
       </select>
-      <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px', fontSize: '14px', color: 'yellow' }} />
 
       <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '20px', textAlign: 'center', marginBottom: '10px', marginTop: '5%' }}>
         <Pagination
@@ -230,93 +229,103 @@ const Bets = () => {
           onPageChange={(page) => setCurrentKolejkaIndex(page)}
           label="Kolejka"
         />
-        
-        <table style={{ width: '100%', border: '0.5px solid #444', borderCollapse: 'collapse', marginTop: '5%' }}>
-        <thead>
-    <tr>
-    <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
-      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gospodarz</th>
-      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
-      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gość</th>
-      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Wynik</th>
-      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>1X2</th>
-      <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Typ</th>
-    </tr>
-  </thead>
-  <tbody>
-    {kolejki[currentKolejkaIndex].games.map((game, index) => (
-      <React.Fragment key={index}>
-        <tr
-          style={{
-            
-            opacity: game.disabled ? '0.5' : '1',
-            pointerEvents: game.disabled ? 'none' : 'auto',
-            backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
-          }}
-        >
-          <td colSpan="12" className="date"
-    style={{ textAlign: 'left', color: 'gold', fontSize: '10px', paddingLeft: '10%' }}>
-    
-    &nbsp;&nbsp;&nbsp;
-    {game.date}
-    &nbsp;&nbsp;&nbsp;
-    {game.kickoff}
-</td>
 
-        </tr>
-        <tr
-          style={{
-            borderBottom: '1px solid #444',
-            opacity: game.disabled ? '0.5' : '1',
-            pointerEvents: game.disabled ? 'none' : 'auto',
-            backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
-          }}
-        ><p style={{ color: 'grey' }}>{game.id}.</p>
-          <td style={{ textAlign: 'center', paddingRight: '10px', fontSize: '20px' }}>
-            <img
-              src={getTeamLogo(game.home)}
-              className="logo"
-            />
-            {game.home}
-          </td>
-          <td style={{ textAlign: 'center', fontSize: '20px' }}>-</td>
-          <td style={{ textAlign: 'left', paddingLeft: '10px', fontSize: '20px' }}>
-            <img
-              src={getTeamLogo(game.away)}
-              className="logo"
-            />
-            {game.away}
-          </td>
-          <td style={{ textAlign: 'center', fontSize: '20px' }}>{results[game.id]}</td>
-          <td style={{ textAlign: 'center' }}>
-            <select value={game.bet} disabled>
-              <option value="1">1</option>
-              <option value="X">X</option>
-              <option value="2">2</option>
-            </select>
-                  </td>
-                  <td>
-                    <input
-                      style={{ width: '50px', backgroundColor: game.score ? (isReadOnly(selectedUser, game.id) ? 'transparent' : 'white') : 'white', cursor: isReadOnly(selectedUser, game.id) ? 'not-allowed' : 'text', color: 'red' }}
-                      type="text"
-                      placeholder={isReadOnly(selectedUser, game.id) ? "✔️" : "x:x"}
-                      value={game.score}
-                      onChange={(e) => handleScoreChange(game.id, e.target.value)}
-                      maxLength="3"
-                      readOnly={areInputsEditable && isReadOnly(selectedUser, game.id)}
-                      title={areInputsEditable && isReadOnly(selectedUser, game.id) ? "✔️" : ""}
-                      disabled={areInputsEditable && gameStarted(game.date, game.kickoff)}
-                    />
-                  </td>
-                </tr>
-              </React.Fragment>
-            ))}
+        <table style={{ width: '100%', border: '0.5px solid #444', borderCollapse: 'collapse', marginTop: '5%' }}>
+          <thead>
+            <tr>
+              <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
+              <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gospodarz</th>
+              <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}></th>
+              <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Gość</th>
+              <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Wynik</th>
+              <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>1X2</th>
+              <th style={{ borderBottom: '0.5px solid #444', textAlign: 'center' }}>Typ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Check if kolejki and the selected currentKolejkaIndex are valid */}
+            {kolejki && kolejki[currentKolejkaIndex] && kolejki[currentKolejkaIndex].games ? (
+              kolejki[currentKolejkaIndex].games.map((game, index) => (
+                <React.Fragment key={index}>
+                  <tr
+                    style={{
+                      opacity: game.disabled ? '0.5' : '1',
+                      pointerEvents: game.disabled ? 'none' : 'auto',
+                      backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
+                    }}
+                  >
+                    <td
+                      colSpan="12"
+                      className="date"
+                      style={{ textAlign: 'left', color: 'gold', fontSize: '10px', paddingLeft: '10%' }}
+                    >
+                      &nbsp;&nbsp;&nbsp;
+                      {game.date}
+                      &nbsp;&nbsp;&nbsp;
+                      {game.kickoff}
+                    </td>
+                  </tr>
+                  <tr
+                    style={{
+                      borderBottom: '1px solid #444',
+                      opacity: game.disabled ? '0.5' : '1',
+                      pointerEvents: game.disabled ? 'none' : 'auto',
+                      backgroundColor: gameStarted(game.date, game.kickoff) ? '#214029ab' : 'transparent',
+                    }}
+                  >
+                    <p style={{ color: 'grey' }}>{game.id}.</p>
+                    <td style={{ textAlign: 'center', paddingRight: '10px', fontSize: '20px' }}>
+                      <img src={getTeamLogo(game.home)} className="logo" />
+                      {game.home}
+                    </td>
+                    <td style={{ textAlign: 'center', fontSize: '20px' }}>-</td>
+                    <td style={{ textAlign: 'left', paddingLeft: '10px', fontSize: '20px' }}>
+                      <img src={getTeamLogo(game.away)} className="logo" />
+                      {game.away}
+                    </td>
+                    <td style={{ textAlign: 'center', fontSize: '20px' }}>{results[game.id]}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      <select value={game.bet} disabled>
+                        <option value="1">1</option>
+                        <option value="X">X</option>
+                        <option value="2">2</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        style={{
+                          width: '50px',
+                          backgroundColor: game.score
+                            ? isReadOnly(selectedUser, game.id)
+                              ? 'transparent'
+                              : 'white'
+                            : 'white',
+                          cursor: isReadOnly(selectedUser, game.id) ? 'not-allowed' : 'text',
+                          color: 'red',
+                        }}
+                        type="text"
+                        placeholder={isReadOnly(selectedUser, game.id) ? '✔️' : 'x:x'}
+                        value={game.score}
+                        onChange={(e) => handleScoreChange(game.id, e.target.value)}
+                        maxLength="3"
+                        readOnly={areInputsEditable && isReadOnly(selectedUser, game.id)}
+                        title={areInputsEditable && isReadOnly(selectedUser, game.id) ? '✔️' : ''}
+                        disabled={areInputsEditable && gameStarted(game.date, game.kickoff)}
+                      />
+                    </td>
+                  </tr>
+                </React.Fragment>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: 'center', padding:'5%' }}>
+                  Koniec rundy jesiennej. <br></br><br></br> Wracamy po przerwie zimowej. Dziękujemy za zaciekłą grę do końca.<br></br> Życzymy Wesołych Świąt oraz Szczęśliwego Nowego Roku!
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
-
-        
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <button
+        <button
             style={{ backgroundColor: '#DC3545', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '10px', cursor: 'pointer', display: 'inline-block', margin: '10px', fontSize: '14px', width: '60%', transition: 'background-color 0.3s' }}
             onClick={handleSubmit}
           >
@@ -355,8 +364,9 @@ const Bets = () => {
   </button>
 </div>
       </div>
-    </div>
+    
   );
 };
 
+  
 export default Bets;
