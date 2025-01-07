@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
@@ -64,16 +64,19 @@ const Stats = () => {
 
     // Process submitted data
     Object.keys(submittedData).forEach((user) => {
-      const bets = Object.entries(submittedData[user]);
+      const bets = Object.entries(submittedData[user] || {});
       const userStats = {
         user,
         chosenTeams: {},
-        kolejki: [],
-        mostChosenTeam: '',
+        mostChosenTeam: '',  // Track most chosen team for this user
         mostDisappointingTeam: '',
         mostSuccessfulTeam: '',
         maxPointsInOneKolejka: 0,
+        kolejki: [],
       };
+
+      const teamFailureCountUser = {}; // To track failures per team
+      const teamSuccessCountUser = {}; // To track successes per team
 
       // Track statistics for each bet
       bets.forEach(([id, bet]) => {
@@ -87,28 +90,23 @@ const Stats = () => {
         const [homeScore, awayScore] = result.split(':').map(Number);
         const actualOutcome = homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2';
 
-        // Update team stats
-        const updateTeamStats = (teamName, isSuccess) => {
-          if (!teamChosenCount[teamName]) teamChosenCount[teamName] = 0;
-          teamChosenCount[teamName]++;
-
-          if (isSuccess) {
-            if (!teamSuccessCount[teamName]) teamSuccessCount[teamName] = 0;
-            teamSuccessCount[teamName]++;
-          } else {
-            if (!teamFailureCount[teamName]) teamFailureCount[teamName] = 0;
-            teamFailureCount[teamName]++;
-          }
-        };
-
         // Track statistics for each user bet
         if (betOutcome === '1') {
-          updateTeamStats(homeTeam, actualOutcome === '1');
+          // Track teams betted on
+          userStats.chosenTeams[homeTeam] = (userStats.chosenTeams[homeTeam] || 0) + 1;
+          if (actualOutcome === '1') {
+            teamSuccessCountUser[homeTeam] = (teamSuccessCountUser[homeTeam] || 0) + 1;
+          } else {
+            teamFailureCountUser[homeTeam] = (teamFailureCountUser[homeTeam] || 0) + 1;
+          }
         } else if (betOutcome === '2') {
-          updateTeamStats(awayTeam, actualOutcome === '2');
-        } else if (betOutcome === 'X') {
-          updateTeamStats(homeTeam, actualOutcome === 'X');
-          updateTeamStats(awayTeam, actualOutcome === 'X');
+          // Track teams betted on
+          userStats.chosenTeams[awayTeam] = (userStats.chosenTeams[awayTeam] || 0) + 1;
+          if (actualOutcome === '2') {
+            teamSuccessCountUser[awayTeam] = (teamSuccessCountUser[awayTeam] || 0) + 1;
+          } else {
+            teamFailureCountUser[awayTeam] = (teamFailureCountUser[awayTeam] || 0) + 1;
+          }
         }
 
         // Collect data for user stats by Kolejka
@@ -125,26 +123,22 @@ const Stats = () => {
 
         // Update max points in one round
         userStats.maxPointsInOneKolejka = Math.max(userStats.maxPointsInOneKolejka, userKolejka.points);
-
-        // Track the most chosen team for each user
-        userStats.chosenTeams[homeTeam] = (userStats.chosenTeams[homeTeam] || 0) + 1;
-        userStats.chosenTeams[awayTeam] = (userStats.chosenTeams[awayTeam] || 0) + 1;
       });
 
-      // Find the most chosen, most disappointing, and most successful teams
+      // Find the most chosen team for the user
       const mostChosenTeam = Object.entries(userStats.chosenTeams)
-        .sort((a, b) => b[1] - a[1])[0][0]; // Get team with most selections
-      userStats.mostChosenTeam = mostChosenTeam;
+        .sort((a, b) => b[1] - a[1])[0]?.[0]; // Get team with most selections
+      userStats.mostChosenTeam = mostChosenTeam || '------';
 
-      // Find most disappointing team: the one most chosen but least successful
+      // Find the most disappointing team: the one most chosen but least successful
       const mostDisappointingTeam = Object.entries(userStats.chosenTeams)
-        .sort((a, b) => (teamFailureCount[b[0]] || 0) - (teamFailureCount[a[0]] || 0))[0][0]; // Most disappointing team
-      userStats.mostDisappointingTeam = mostDisappointingTeam;
+        .sort((a, b) => (teamFailureCountUser[b[0]] || 0) - (teamFailureCountUser[a[0]] || 0))[0]?.[0]; // Most disappointing team
+      userStats.mostDisappointingTeam = mostDisappointingTeam || '------';
 
       // Find the most successful team: the team with the highest success rate
       const mostSuccessfulTeam = Object.entries(userStats.chosenTeams)
-        .sort((a, b) => (teamSuccessCount[b[0]] || 0) - (teamSuccessCount[a[0]] || 0))[0][0]; // Most successful team
-      userStats.mostSuccessfulTeam = mostSuccessfulTeam;
+        .sort((a, b) => (teamSuccessCountUser[b[0]] || 0) - (teamSuccessCountUser[a[0]] || 0))[0]?.[0]; // Most successful team
+      userStats.mostSuccessfulTeam = mostSuccessfulTeam || '------';
 
       userStatsData.push(userStats);
 
@@ -196,64 +190,6 @@ const Stats = () => {
   return (
     <Container fluid>
       <Row>
-        {/* Hall of Fame Section */}
-        <Col md={12}>
-          <h2 style={{ textAlign: 'center' }}>Hall of Fame</h2>
-          <hr />
-          {hallOfFame.length > 0 ? (
-            hallOfFame.map((userStats, idx) => (
-              <div key={idx}>
-                <h3>{userStats.user}</h3>
-                <p><strong>⚽ Najczęściej Wybierana Drużyna:   </strong>  
-                  {userStats.mostChosenTeam} 
-                </p>
-                <p><strong>👎🏿 Najbardziej Zawodząca Drużyna:   </strong> 
-                  {userStats.mostDisappointingTeam || '------'} 
-                </p>
-                <p><strong> 👍 Najbardziej Punktująca Drużyna:    </strong> 
-                  {userStats.mostSuccessfulTeam || '------'} 
-                </p>
-                <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce:   </strong> 
-                  {userStats.maxPointsInOneKolejka}
-                </p>
-                <p><strong>🎖️ Trofea:   </strong> 
-                  {userStats.maxPointsInOneKolejka}
-                </p>
-                <div>
-                  <Line 
-                    data={getUserChartData(userStats.kolejki)} 
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          display: false,
-                        },
-                      },
-                      scales: {
-                        x: {
-                          ticks: {
-                            autoSkip: true,
-                            maxTicksLimit: 5,
-                          },
-                        },
-                        y: {
-                          beginAtZero: false,
-                          max: 27,
-                        },
-                      },
-                    }} 
-                    style={{ height: 'auto', width: '100%', backgroundColor: 'white', opacity: '0.8', color: 'red' }} 
-                  />
-                </div>
-                <hr />
-              </div>
-            ))
-          ) : (
-            <p>------</p>
-          )}
-        </Col>
-
         <Col md={12}>
           <h2 style={{ textAlign: 'center' }}>Statystyki Użytkowników</h2>
           <hr />
@@ -263,21 +199,10 @@ const Stats = () => {
               userStats.map((userStats, idx) => (
                 <div key={idx}>
                   <h3>{userStats.user}</h3>
-                  <p><strong>⚽ Najczęściej Wybierana Drużyna:   </strong>  
-                    {userStats.mostChosenTeam} 
-                  </p>
-                  <p><strong>👎🏿 Najbardziej Zawodząca Drużyna:   </strong> 
-                    {userStats.mostDisappointingTeam || '------'} 
-                  </p>
-                  <p><strong> 👍 Najbardziej Punktująca Drużyna:    </strong> 
-                    {userStats.mostSuccessfulTeam || '------'} 
-                  </p>
-                  <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce:   </strong> 
-                    {userStats.maxPointsInOneKolejka}
-                  </p>
-                  <p><strong>🎖️ Trofea:   </strong> 
-                    {userStats.maxPointsInOneKolejka}
-                  </p>
+                  <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeam}</p>
+                  <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeam}</p>
+                  <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeam}</p>
+                  <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce: </strong> {userStats.maxPointsInOneKolejka}</p>
                   <div>
                     <Line 
                       data={getUserChartData(userStats.kolejki)} 
