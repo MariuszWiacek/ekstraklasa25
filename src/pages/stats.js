@@ -16,7 +16,6 @@ const firebaseConfig = {
   appId: "1:29219460780:web:de984a281514ab6cdc7109",
   measurementId: "G-8Z3CMMQKE8"
 };
-
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
@@ -92,29 +91,21 @@ const Stats = () => {
 
         // Track statistics for each user bet
         if (betOutcome === '1') {
-          // Track teams betted on
           userStats.chosenTeams[homeTeam] = (userStats.chosenTeams[homeTeam] || 0) + 1;
           if (actualOutcome === '1') {
             teamSuccessCountUser[homeTeam] = (teamSuccessCountUser[homeTeam] || 0) + 1;
-          } else {
-            teamFailureCountUser[homeTeam] = (teamFailureCountUser[homeTeam] || 0) + 1;
           }
         } else if (betOutcome === '2') {
-          // Track teams betted on
           userStats.chosenTeams[awayTeam] = (userStats.chosenTeams[awayTeam] || 0) + 1;
           if (actualOutcome === '2') {
             teamSuccessCountUser[awayTeam] = (teamSuccessCountUser[awayTeam] || 0) + 1;
-          } else {
-            teamFailureCountUser[awayTeam] = (teamFailureCountUser[awayTeam] || 0) + 1;
           }
         }
 
         // Collect data for user stats by Kolejka
         const kolejkaId = Math.floor((id - 1) / 9); // assuming each kolejka has 9 games
         if (!userStats.kolejki[kolejkaId]) {
-          userStats.kolejki[kolejkaId] = {
-            points: 0,
-          };
+          userStats.kolejki[kolejkaId] = { points: 0 };
         }
 
         const userKolejka = userStats.kolejki[kolejkaId];
@@ -198,7 +189,7 @@ const Stats = () => {
             {userStats.length > 0 ? (
               userStats.map((userStats, idx) => (
                 <div key={idx}>
-                  <h3>{userStats.user}</h3>
+                  <h3>{userStats.user}</h3><hr></hr>
                   <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeam}</p>
                   <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeam}</p>
                   <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeam}</p>
