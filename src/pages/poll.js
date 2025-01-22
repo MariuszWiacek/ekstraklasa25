@@ -176,14 +176,17 @@ const pollContainerStyle = {
 };
 
 const pollContentStyle = {
-  backgroundColor: "white",
-  borderRadius: "10px",
-  padding: "20px",
-  width: "90%",
-  maxWidth: "500px",
-  textAlign: "center",
-  position: "relative",
-};
+    backgroundColor: "white",
+    borderRadius: "10px",
+    padding: "20px",
+    width: "90%",
+    maxWidth: "500px",
+    textAlign: "center",
+    position: "relative",
+    maxHeight: "80%", // Limit the height to allow for scrolling
+    overflowY: "auto", // Enable vertical scrolling
+  };
+  
 
 const votersStyle = {
     fontSize: "12px",
