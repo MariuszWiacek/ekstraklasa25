@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -19,8 +19,6 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 const Poll = ({ onClose }) => {
-  const [username, setUsername] = useState("");
-  const [selectedOption, setSelectedOption] = useState("");
   const [votes, setVotes] = useState(null);
 
   // Load votes from Firebase on component mount
@@ -29,57 +27,9 @@ const Poll = ({ onClose }) => {
     onValue(votesRef, (snapshot) => {
       if (snapshot.exists()) {
         setVotes(snapshot.val());
-      } else {
-        const initialVotes = {
-          option1: { count: 0, voters: [] },
-          option2: { count: 0, voters: [] },
-          oldRules: { count: 0, voters: [] },
-        };
-        setVotes(initialVotes);
-        set(ref(database, "votes"), initialVotes);
       }
     });
   }, []);
-
-  // Load last chosen user from local storage
-  useEffect(() => {
-    try {
-      const users = JSON.parse(localStorage.getItem("users.json"));
-      if (users && users.length > 0) {
-        const lastUser = users[users.length - 1];
-        setUsername(lastUser.username || "");
-      }
-    } catch (error) {
-      console.error("Error loading users from local storage:", error);
-    }
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (username && selectedOption) {
-      const updatedVotes = { ...votes };
-
-      if (selectedOption === "Option 1") {
-        updatedVotes.option1.count += 1;
-        updatedVotes.option1.voters = [...(updatedVotes.option1.voters || []), username];
-      } else if (selectedOption === "Option 2") {
-        updatedVotes.option2.count += 1;
-        updatedVotes.option2.voters = [...(updatedVotes.option2.voters || []), username];
-      } else if (selectedOption === "Old Rules") {
-        updatedVotes.oldRules.count += 1;
-        updatedVotes.oldRules.voters = [...(updatedVotes.oldRules.voters || []), username];
-      }
-
-      update(ref(database, "votes"), updatedVotes);
-
-      setUsername("");
-      setSelectedOption("");
-      alert("Dziękujemy za Twój głos!");
-    } else {
-      alert("Wypełnij wszystkie pola!");
-    }
-  };
 
   if (!votes) {
     return <div style={{ color: "white" }}>Ładowanie ankiety...</div>;
@@ -93,43 +43,57 @@ const Poll = ({ onClose }) => {
   const option2Percentage = totalVotes ? (votes.option2.count / totalVotes) * 100 : 0;
   const oldRulesPercentage = totalVotes ? (votes.oldRules.count / totalVotes) * 100 : 0;
 
+  // Determine the winner and runners-up
+  const options = [
+    { name: "Bonus 10 zł", count: votes.option1.count, percentage: option1Percentage },
+    { name: "Bonus 50 zł", count: votes.option2.count, percentage: option2Percentage },
+    { name: "Stare zasady", count: votes.oldRules.count, percentage: oldRulesPercentage },
+  ];
+
+  options.sort((a, b) => b.count - a.count); // Sort by vote count in descending order
+
+  const [winner, secondPlace, thirdPlace] = options;
+
   return (
     <div style={pollContainerStyle}>
       <div style={pollContentStyle}>
         <button onClick={onClose} style={closeButtonStyle}>
           X
-        </button><br></br>
-        <h3>Uwaga!</h3>
+        </button>
+        <h3>Ankieta została zakończona</h3>
         <p style={{ color: "black" }}>
-          Zastanawiamy się nad wprowadzeniem jednego z dwóch bonusów, aby urozmaicić grę do konca i żeby dać szansę tym, którym
-          idzie trochę gorzej.
-        <br></br>
-        Robimy małą ankietę do 24.1
+          Dziękujemy za wzięcie udziału. 
+          <hr></hr>
+          <p style={{ color: "black", marginTop: "20px", fontWeight: "bold" }}>
+        Zrzutka w tej rundzie wynosi 60zl, podział nagród będzie wyglądał następująco:
+        <hr></hr>
+            <b>1 miejsce:</b>  450 zł
+          <hr></hr>
+            <b>2 miejsce:</b> 150 zł
+          <hr></hr>
+            <b>3 miejsce:</b> 100 zł
+            <hr></hr>
+           + Bonus - nagroda za każdą wygraną kolejkę to 10 zł. W przypadku więcej niż jednego wygranego, nagroda kumuluje na następną kolejkę itd.
+        </p><hr></hr>Wyniki ankiety :
         </p>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Wpisz swoją nazwę użytkownika"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={inputStyle}
-          />
-          <div>
+        <div>
+          <div
+            style={{
+              ...optionContainerStyle,
+              backgroundColor: winner.name === "Bonus 10 zł" ? "lightgreen" : "white",
+            }}
+          >
             <label style={optionLabelStyle}>
-              <hr></hr><input
-                type="radio"
-                value="Option 1"
-                checked={selectedOption === "Option 1"}
-                onChange={(e) => setSelectedOption(e.target.value)}
-              /><br></br>
-              1. Bonus 10 zł - za każdą wygraną kolejkę – jeśli kolejkę wygra więcej osób, pula przechodzi na następną rundę.
+              <b>1. Bonus 10 zł - za każdą wygraną kolejkę</b>
             </label>
-            <p style={voteCountStyle}>Głosy: {votes.option1.count}</p>
+            <p style={voteCountStyle}>
+              Głosy: {votes.option1.count} ({option1Percentage.toFixed(2)}%)
+            </p>
             <div style={progressBarContainerStyle}>
               <div
                 style={{
                   ...progressBarStyle,
-                  width: `${option1Percentage}%`, // Set width dynamically
+                  width: `${option1Percentage}%`,
                 }}
               ></div>
             </div>
@@ -139,22 +103,23 @@ const Poll = ({ onClose }) => {
               ))}
             </div>
           </div>
-          <div>
+          <div
+            style={{
+              ...optionContainerStyle,
+              backgroundColor: winner.name === "Bonus 50 zł" ? "lightgreen" : "white",
+            }}
+          >
             <label style={optionLabelStyle}>
-              <hr></hr> <input
-                type="radio"
-                value="Option 2"
-                checked={selectedOption === "Option 2"}
-                onChange={(e) => setSelectedOption(e.target.value)}
-              /><br></br>
-              2. Bonus 50 zł dla najlepszego typera miesiąca (4 kolejki).
+              <b>2. Bonus 50 zł dla najlepszego typera miesiąca</b>
             </label>
-            <p style={voteCountStyle}>Głosy: {votes.option2.count}</p>
+            <p style={voteCountStyle}>
+              Głosy: {votes.option2.count} ({option2Percentage.toFixed(2)}%)
+            </p>
             <div style={progressBarContainerStyle}>
               <div
                 style={{
                   ...progressBarStyle,
-                  width: `${option2Percentage}%`, // Set width dynamically
+                  width: `${option2Percentage}%`,
                 }}
               ></div>
             </div>
@@ -164,35 +129,34 @@ const Poll = ({ onClose }) => {
               ))}
             </div>
           </div>
-          <div>
+          <div
+            style={{
+              ...optionContainerStyle,
+              backgroundColor: winner.name === "Stare zasady" ? "lightgreen" : "white",
+            }}
+          >
             <label style={optionLabelStyle}>
-              <hr></hr><input
-                type="radio"
-                value="Old Rules"
-                checked={selectedOption === "Old Rules"}
-                onChange={(e) => setSelectedOption(e.target.value)}
-              /><br></br>
-              Stare zasady - bez dodatkowych bonusów
+              <b>3. Stare zasady - bez dodatkowych bonusów</b>
             </label>
-            <p style={voteCountStyle}>Głosy: {votes.oldRules.count}</p>
+            <p style={voteCountStyle}>
+              Głosy: {votes.oldRules.count} ({oldRulesPercentage.toFixed(2)}%)
+            </p>
             <div style={progressBarContainerStyle}>
               <div
                 style={{
                   ...progressBarStyle,
-                  width: `${oldRulesPercentage}%`, // Set width dynamically
+                  width: `${oldRulesPercentage}%`,
                 }}
               ></div>
-               <div style={votersStyle}>
+            </div>
+            <div style={votersStyle}>
               {(votes.oldRules.voters || []).map((voter, index) => (
                 <span key={index}>{voter} </span>
               ))}
             </div>
-            </div>
           </div>
-          <button type="submit" style={submitButtonStyle}>
-            Wyślij
-          </button>
-        </form>
+        </div>
+        
       </div>
     </div>
   );
@@ -220,14 +184,8 @@ const pollContentStyle = {
   maxWidth: "500px",
   textAlign: "center",
   position: "relative",
-  maxHeight: "80%", // Limit the height to allow for scrolling
-  overflowY: "auto", // Enable vertical scrolling
-};
-
-const votersStyle = {
-  fontSize: "12px",
-  color: "gray",
-  marginBottom: "10px",
+  maxHeight: "80%",
+  overflowY: "auto",
 };
 
 const closeButtonStyle = {
@@ -243,12 +201,11 @@ const closeButtonStyle = {
   cursor: "pointer",
 };
 
-const inputStyle = {
+const optionContainerStyle = {
   margin: "10px 0",
   padding: "10px",
-  width: "100%",
-  border: "1px solid #ccc",
   borderRadius: "5px",
+  boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
 };
 
 const optionLabelStyle = {
@@ -276,14 +233,10 @@ const progressBarStyle = {
   borderRadius: "5px",
 };
 
-const submitButtonStyle = {
-  marginTop: "20px",
-  padding: "10px 20px",
-  backgroundColor: "red",
-  color: "white",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
+const votersStyle = {
+  fontSize: "12px",
+  color: "gray",
+  marginBottom: "10px",
 };
 
 export default Poll;
