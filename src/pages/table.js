@@ -3,6 +3,7 @@ import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
 import { calculatePoints } from '../components/calculatePoints';
+import Stats from './stats';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGVW31sTa6Giafh0-JTsnJ9ghybYEsJvE",
@@ -300,8 +301,10 @@ const Table = () => {
               ))}
           </div>
         </Col>
-      </Row>
+      </Row><hr style={{color: 'white'}}></hr>
+      <Stats />
     </Container>
+    
   );
 };
 

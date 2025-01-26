@@ -228,7 +228,7 @@ const Stats = () => {
                       }} 
                       style={{ height: 'auto', width: '100%', backgroundColor: 'white', opacity: '0.8', color: 'red' }} 
                     />
-                  </div><hr />
+                  </div><hr style={{color: 'white'}}></hr>
                 </div>
               ))
             ) : (
