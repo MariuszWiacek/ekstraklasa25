@@ -65,7 +65,7 @@ const Poll = ({ onClose }) => {
           Dziękujemy za wzięcie udziału. 
           <hr></hr>
           <p style={{ color: "black", marginTop: "20px", fontWeight: "bold" }}>
-        Zrzutka w tej rundzie wynosi 66 🥮, podział nagród będzie wyglądał następująco:
+        Zrzutka w tej rundzie wynosi 60 🥮, podział nagród będzie wyglądał następująco:
         <hr></hr>
             <b>1 miejsce:</b>  400 🥮
           <hr></hr>
