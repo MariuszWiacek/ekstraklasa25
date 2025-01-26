@@ -191,7 +191,7 @@ const Table = () => {
     <Container fluid style={linkContainerStyle}>
       <Row>
         <Col md={12}>
-          <h2 style={{ textAlign: 'center' }}>Tabela - Ogólna</h2>
+          <h3 style={{ textAlign: 'center' }}>Tabela</h3>
           <div className="fade-in" style={{ overflowX: 'auto', marginTop: '10px' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
               <thead>
@@ -290,14 +290,16 @@ const Table = () => {
             </div>
           ))}
 
-          <div style={earningsStyle}>
-            <h3>Aktualne bonusy:</h3>
-            {Object.entries(userEarnings)
-              .sort(([, earningsA], [, earningsB]) => earningsB - earningsA) // Sort by earnings in descending order
-              .map(([user, earningsAmount]) => (
-                <div key={user}>
-                  {user}: {earningsAmount} 🥮
-                </div>
+<div style={earningsStyle}>
+  <hr />
+  <h3>Aktualne bonusy:</h3>
+  {Object.entries(userEarnings)
+    .filter(([, earningsAmount]) => earningsAmount > 0) // Filter out users with 0 earnings
+    .sort(([, earningsA], [, earningsB]) => earningsB - earningsA) // Sort by earnings in descending order
+    .map(([user, earningsAmount]) => (
+      <div key={user}>
+        {user}: {earningsAmount} 🥮
+      </div>
               ))}
           </div>
         </Col>
