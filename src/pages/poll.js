@@ -45,8 +45,8 @@ const Poll = ({ onClose }) => {
 
   // Determine the winner and runners-up
   const options = [
-    { name: "Bonus 10 zł", count: votes.option1.count, percentage: option1Percentage },
-    { name: "Bonus 50 zł", count: votes.option2.count, percentage: option2Percentage },
+    { name: "Bonus 10 ⛃", count: votes.option1.count, percentage: option1Percentage },
+    { name: "Bonus 50 ⛃", count: votes.option2.count, percentage: option2Percentage },
     { name: "Stare zasady", count: votes.oldRules.count, percentage: oldRulesPercentage },
   ];
 
@@ -65,26 +65,26 @@ const Poll = ({ onClose }) => {
           Dziękujemy za wzięcie udziału. 
           <hr></hr>
           <p style={{ color: "black", marginTop: "20px", fontWeight: "bold" }}>
-        Zrzutka w tej rundzie wynosi 60zl, podział nagród będzie wyglądał następująco:
+        Zrzutka w tej rundzie wynosi 66 ⛃, podział nagród będzie wyglądał następująco:
         <hr></hr>
-            <b>1 miejsce:</b>  450 zł
+            <b>1 miejsce:</b>  400 ⛃
           <hr></hr>
-            <b>2 miejsce:</b> 150 zł
+            <b>2 miejsce:</b> 200 ⛃
           <hr></hr>
-            <b>3 miejsce:</b> 100 zł
+            <b>3 miejsce:</b> 100 ⛃
             <hr></hr>
-           + Bonus - nagroda za każdą wygraną kolejkę to 10 zł. W przypadku więcej niż jednego wygranego, nagroda kumuluje na następną kolejkę itd.
+           + Bonus - nagroda za każdą wygraną kolejkę to 10 ⛃. W przypadku więcej niż jednego wygranego, nagroda kumuluje na następną kolejkę itd.
         </p><hr></hr>Wyniki ankiety :
         </p>
         <div>
           <div
             style={{
               ...optionContainerStyle,
-              backgroundColor: winner.name === "Bonus 10 zł" ? "lightgreen" : "white",
+              backgroundColor: winner.name === "Bonus 10 ⛃" ? "lightgreen" : "white",
             }}
           >
             <label style={optionLabelStyle}>
-              <b>1. Bonus 10 zł - za każdą wygraną kolejkę</b>
+              <b>1. Bonus 10 ⛃ - za każdą wygraną kolejkę</b>
             </label>
             <p style={voteCountStyle}>
               Głosy: {votes.option1.count} ({option1Percentage.toFixed(2)}%)
@@ -106,11 +106,11 @@ const Poll = ({ onClose }) => {
           <div
             style={{
               ...optionContainerStyle,
-              backgroundColor: winner.name === "Bonus 50 zł" ? "lightgreen" : "white",
+              backgroundColor: winner.name === "Bonus 50 ⛃" ? "lightgreen" : "white",
             }}
           >
             <label style={optionLabelStyle}>
-              <b>2. Bonus 50 zł dla najlepszego typera miesiąca</b>
+              <b>2. Bonus 50 ⛃ dla najlepszego typera miesiąca</b>
             </label>
             <p style={voteCountStyle}>
               Głosy: {votes.option2.count} ({option2Percentage.toFixed(2)}%)
