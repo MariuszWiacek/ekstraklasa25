@@ -234,7 +234,7 @@ const Table = () => {
     {prizes[kolejkaID]?.winners.length === 1 ? (
       <>
         <b>Zwycięzca:</b> {prizes[kolejkaID].winners.join(', ')} (
-        <b>Nagroda:</b> {prizes[kolejkaID].prize} ⛃)
+        <b></b> {prizes[kolejkaID].prize} 🥮)
       </>
     ) : (
       <>
@@ -296,7 +296,7 @@ const Table = () => {
               .sort(([, earningsA], [, earningsB]) => earningsB - earningsA) // Sort by earnings in descending order
               .map(([user, earningsAmount]) => (
                 <div key={user}>
-                  {user}: {earningsAmount} ⛃
+                  {user}: {earningsAmount} 🥮
                 </div>
               ))}
           </div>
