@@ -319,7 +319,7 @@ const Bets = () => {
             ) : (
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center', padding:'5%' }}>
-                  Koniec rundy jesiennej. <br></br><br></br> Wracamy po przerwie zimowej. Dziękujemy za zaciekłą grę do końca.<br></br> Życzymy Wesołych Świąt oraz Szczęśliwego Nowego Roku!
+                  Koniec rundy. <br></br><br></br> Dziękujemy za zaciekłą grę do końca.<br></br> 
                 </td>
               </tr>
             )}

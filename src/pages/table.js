@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
-import Stats from './stats';
-import { calculatePoints } from '../components/calculatePoints'; // Import the calculatePoints function
+import { calculatePoints } from '../components/calculatePoints';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGVW31sTa6Giafh0-JTsnJ9ghybYEsJvE",
@@ -19,7 +18,6 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-// Styles and configurations
 const linkContainerStyle = {
   textAlign: 'left',
   backgroundColor: '#212529ab',
@@ -42,32 +40,39 @@ const tableCellStyle = {
   textAlign: 'center',
 };
 
-const tableCellStyle2 = {
-  padding: '10px',
-  border: '1px solid #444',
+const textToggleStyle = {
+  cursor: 'pointer',
+  color: '#ffd700',
+  textDecoration: 'underline',
+  margin: '10px 0',
+  fontSize: '1.1em',
   textAlign: 'center',
-  color: 'aliceblue',
-  fontWeight: 'bold'
 };
 
-const trendStyle = {
-  up: { color: 'green' },
-  down: { color: 'red' },
-  same: { display: 'none' }
+const prizeInfoStyle = {
+  color: '#0f0',
+  fontSize: '1em',
+  textAlign: 'center',
+  marginTop: '10px',
 };
 
-// Prize information
-const prizes = [ 
-  { place: '🥇 1 miejsce', reward: 400 },
-  { place: '🥈 2 miejsce', reward: 100 },
-  { place: '🥉 3 miejsce', reward: 50 }
-];
+const earningsStyle = {
+  color: '#f39c12',
+  fontSize: '1.1em',
+  textAlign: 'center',
+  marginTop: '30px',
+};
 
 const Table = () => {
-  const [tableData, setTableData] = useState([]);
   const [results, setResults] = useState({});
   const [submittedData, setSubmittedData] = useState({});
+  const [mainTableData, setMainTableData] = useState([]);
+  const [kolejkaTables, setKolejkaTables] = useState({});
+  const [visibleKolejka, setVisibleKolejka] = useState(null);
+  const [prizes, setPrizes] = useState({});
+  const [userEarnings, setUserEarnings] = useState({});
   const previousTableData = useRef([]);
+  const rolloverPrize = useRef(0);  // Use ref to track the rollover prize across renders
 
   useEffect(() => {
     const resultsRef = ref(database, 'results');
@@ -82,45 +87,111 @@ const Table = () => {
   }, []);
 
   useEffect(() => {
-    const updatedTableData = Object.keys(submittedData).map((user) => {
+    const kolejkaPoints = {};
+    const overallTableData = Object.keys(submittedData).map((user) => {
       const bets = Object.entries(submittedData[user]).map(([id, bet]) => ({
         ...bet,
-        id
+        id,
       }));
       const { points, correctTypes, correctResults } = calculatePoints(bets, results);
+
+      // Group by kolejka
+      bets.forEach((bet) => {
+        const gameNumber = parseInt(bet.id, 10);
+        const kolejkaID = Math.ceil(gameNumber / 9); // Determine kolejka
+        if (!kolejkaPoints[kolejkaID]) kolejkaPoints[kolejkaID] = {};
+        if (!kolejkaPoints[kolejkaID][user]) {
+          kolejkaPoints[kolejkaID][user] = { user, points: 0, correctTypes: 0, correctResults: 0 };
+        }
+
+        const { points, correctTypes, correctResults } = calculatePoints([bet], results);
+        kolejkaPoints[kolejkaID][user].points += points;
+        kolejkaPoints[kolejkaID][user].correctTypes += correctTypes;
+        kolejkaPoints[kolejkaID][user].correctResults += correctResults;
+      });
+
       return { user, points, correctTypes, correctResults };
     });
 
-    updatedTableData.sort((a, b) => {
+    // Sort overall table
+    overallTableData.sort((a, b) => {
       if (b.points !== a.points) return b.points - a.points;
       return b.correctResults - a.correctResults;
     });
 
-    updatedTableData.forEach((entry, index) => {
-      entry.place = getPlace(index + 1);
-      const previousEntry = previousTableData.current.find(e => e.user === entry.user);
+    // Assign place and trends for overall table
+    overallTableData.forEach((entry, index) => {
+      entry.place = index + 1;
+      const previousEntry = previousTableData.current.find((e) => e.user === entry.user);
       entry.trend = previousEntry
-        ? previousEntry.place > entry.place ? 'up' : previousEntry.place < entry.place ? 'down' : 'same'
+        ? previousEntry.place > entry.place
+          ? 'up'
+          : previousEntry.place < entry.place
+          ? 'down'
+          : 'same'
         : 'same';
     });
 
-    previousTableData.current = updatedTableData;
-    setTableData(updatedTableData);
+    previousTableData.current = overallTableData;
+    setMainTableData(overallTableData);
+
+    // Process kolejka tables and prizes
+    const sortedKolejkaTables = {};
+    const prizePool = {};
+    let earnings = {};
+
+    Object.keys(kolejkaPoints).forEach((kolejkaID) => {
+      const sortedKolejka = Object.values(kolejkaPoints[kolejkaID]).sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        return b.correctResults - a.correctResults;
+      });
+
+      // Assign place
+      sortedKolejka.forEach((entry, index) => {
+        entry.place = index + 1;
+      });
+
+      // Find winners
+      const maxPoints = sortedKolejka[0]?.points || 0;
+      const winners = sortedKolejka.filter((entry) => entry.points === maxPoints).map((entry) => entry.user);
+
+      // Handle prize allocation for remis (tie)
+      const currentPrize = 10 + rolloverPrize.current;  // Use the rollover value for prize calculation
+
+      if (winners.length === 1) {
+        prizePool[kolejkaID] = { winners, prize: currentPrize };
+        rolloverPrize.current = 0; // Reset rollover for next round
+      } else {
+        prizePool[kolejkaID] = { winners, prize: 0, rollover: true }; // No prize for remis
+        rolloverPrize.current += 10; // Increase the rollover prize by 10 zł for next round
+      }
+
+      // Update earnings for winners (no earnings for remis)
+      winners.forEach((winner) => {
+        if (!earnings[winner]) earnings[winner] = 0;
+        if (prizePool[kolejkaID].prize > 0) {
+          earnings[winner] += currentPrize;
+        }
+      });
+
+      sortedKolejkaTables[kolejkaID] = sortedKolejka;
+    });
+
+    setPrizes(prizePool);
+    setKolejkaTables(sortedKolejkaTables);
+    setUserEarnings(earnings);
   }, [submittedData, results]);
 
-  const getPlace = (place) => {
-    const j = place % 10, k = place % 100;
-    if (j === 1 && k !== 11) return `${place}`;
-    if (j === 2 && k !== 12) return `${place}`;
-    if (j === 3 && k !== 13) return `${place}`;
-    return `${place}`;
+  const toggleKolejkaVisibility = (kolejkaID) => {
+    setVisibleKolejka((prev) => (prev === kolejkaID ? null : kolejkaID));
   };
 
   return (
     <Container fluid style={linkContainerStyle}>
       <Row>
-        <Col md={12}><h2 style={{ textAlign: 'center' }}>Tabela</h2><hr />
-          <div className="fade-in" style={{ overflowX: 'auto' }}>
+        <Col md={12}>
+          <h2 style={{ textAlign: 'center' }}>Tabela - Ogólna</h2>
+          <div className="fade-in" style={{ overflowX: 'auto', marginTop: '10px' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
               <thead>
                 <tr style={{ backgroundColor: '#212529', color: 'white' }}>
@@ -132,17 +203,16 @@ const Table = () => {
                 </tr>
               </thead>
               <tbody>
-                {tableData.map((entry, index) => (
-                  <tr key={index} style={{ backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)' }}>
+                {mainTableData.map((entry, index) => (
+                  <tr
+                    key={index}
+                    style={{
+                      backgroundColor: index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)',
+                    }}
+                  >
                     <td style={tableCellStyle}>{entry.place}</td>
-                    <td style={tableCellStyle}>
-                      {entry.user}
-                      <span style={trendStyle[entry.trend]}>
-                        {entry.trend === 'up' && '▲'}
-                        {entry.trend === 'down' && '▼'}
-                      </span>
-                    </td>
-                    <td style={tableCellStyle2}>{entry.points}</td>
+                    <td style={tableCellStyle}>{entry.user}</td>
+                    <td style={tableCellStyle}>{entry.points}</td>
                     <td style={tableCellStyle}>{entry.correctTypes}</td>
                     <td style={tableCellStyle}>{entry.correctResults}</td>
                   </tr>
@@ -150,17 +220,85 @@ const Table = () => {
               </tbody>
             </table>
           </div>
+
           <hr />
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <h2>💰 Nagrody 💰</h2><hr></hr>
-            {prizes.map((prize, index) => (
-              <p key={index} style={{ fontSize: '1.2em', color: '#ffd700' }}>
-                 {prize.place} - {prize.reward} ⛃
-              </p>
-            ))}
+          
+          {Object.keys(kolejkaTables).map((kolejkaID) => (
+            <div key={kolejkaID}>
+
+<hr style={{color: 'white'}}></hr>
+<div style={prizeInfoStyle}>
+  <h3>
+    <b>Kolejka {kolejkaID}</b><br /></h3><p>
+    {prizes[kolejkaID]?.winners.length === 1 ? (
+      <>
+        <b>Zwycięzca:</b> {prizes[kolejkaID].winners.join(', ')} (
+        <b>Nagroda:</b> {prizes[kolejkaID].prize} zł)
+      </>
+    ) : (
+      <>
+        <b>Remis:</b> {prizes[kolejkaID].winners.join(', ')}. <br />Nagroda kumuluje się na następną kolejkę
+        
+      </>
+    )}
+  </p>
+</div>
+
+<div
+  style={textToggleStyle}
+  onClick={() => toggleKolejkaVisibility(kolejkaID)}
+>
+  {visibleKolejka === kolejkaID
+    ? `Ukryj Tabelę: Kolejka ${kolejkaID}`
+    : `Pokaż Tabelę: Kolejka ${kolejkaID}`}
+</div>
+<hr></hr>
+
+              {visibleKolejka === kolejkaID && (
+                <div className="fade-in" style={{ overflowX: 'auto', marginTop: '10px' }}>
+                  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                    <thead>
+                      <tr style={{ backgroundColor: '#212529', color: 'white' }}>
+                        <th style={tableHeaderStyle}>Miejsce</th>
+                        <th style={tableHeaderStyle}>Użytkownik</th>
+                        <th style={tableHeaderStyle}>Pkt</th>
+                        <th style={tableHeaderStyle}>☑️ <br />typ</th>
+                        <th style={tableHeaderStyle}>✅☑️ <br />typ+wynik</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {kolejkaTables[kolejkaID].map((entry, index) => (
+                        <tr
+                          key={index}
+                          style={{
+                            backgroundColor:
+                              index < 3 ? '#ffea007d' : 'rgba(0, 0, 0, 0.336)',
+                          }}
+                        >
+                          <td style={tableCellStyle}>{entry.place}</td>
+                          <td style={tableCellStyle}>{entry.user}</td>
+                          <td style={tableCellStyle}>{entry.points}</td>
+                          <td style={tableCellStyle}>{entry.correctTypes}</td>
+                          <td style={tableCellStyle}>{entry.correctResults}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          ))}
+
+          <div style={earningsStyle}>
+            <h3>Aktualne bonusy:</h3>
+            {Object.entries(userEarnings)
+              .sort(([, earningsA], [, earningsB]) => earningsB - earningsA) // Sort by earnings in descending order
+              .map(([user, earningsAmount]) => (
+                <div key={user}>
+                  {user}: {earningsAmount} zł
+                </div>
+              ))}
           </div>
-          <hr></hr>
-          <Stats />
         </Col>
       </Row>
     </Container>

@@ -3,15 +3,20 @@ import '../styles/card.css'; // Import your CSS file with styles
 import Pagination from './Pagination';
 
 const ExpandableCard = ({ user, bets, results }) => {
-  const itemsPerPage = 9;
-  const totalBets = Object.keys(bets).length;
-  const totalPages = Math.ceil(totalBets / itemsPerPage);
-
-  // Set initial page to the last page
-  const [currentPage, setCurrentPage] = useState(totalPages - 1);
+  const gamesPerKolejka = 9;
+  const [currentKolejka, setCurrentKolejka] = useState(0);
   const [expanded, setExpanded] = useState(false);
- 
-  
+
+  // Group bets into kolejkas based on their IDs
+  const groupedBets = Object.keys(bets).reduce((acc, key) => {
+    const betID = parseInt(key, 10); // Ensure ID is a number
+    const kolejkaIndex = Math.floor((betID - 1) / gamesPerKolejka); // Determine kolejka index (0-based)
+    if (!acc[kolejkaIndex]) acc[kolejkaIndex] = [];
+    acc[kolejkaIndex].push({ id: key, ...bets[key] });
+    return acc;
+  }, []);
+
+  const totalKolejkas = groupedBets.length;
 
   const getTypeFromResult = (result) => {
     if (!result) return null;
@@ -20,11 +25,9 @@ const ExpandableCard = ({ user, bets, results }) => {
     return homeScore > awayScore ? '1' : '2';
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleKolejkaChange = (page) => {
+    setCurrentKolejka(page);
   };
-
-  const paginatedBets = Object.keys(bets).slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   return (
     <div className="paper-card">
@@ -33,34 +36,35 @@ const ExpandableCard = ({ user, bets, results }) => {
       </h4>
       {expanded && (
         <div className="bet-container">
-          {paginatedBets.map((index) => (
-            <div key={index} className="game-style">
+          <h5>Kolejka {currentKolejka + 1}</h5>
+          {groupedBets[currentKolejka]?.map((bet) => (
+            <div key={bet.id} className="game-style">
               <div style={{ fontSize: '10px' }}>
-                <span style={{ color: 'black' }}>{bets[index].home}</span>
+                <span style={{ color: 'black' }}>{bet.home}</span>
                 {' vs. '}
-                <span style={{ color: 'black' }}>{bets[index].away}</span>
+                <span style={{ color: 'black' }}>{bet.away}</span>
                 {' | '}
-                <span style={{ color: 'blue' }}>Typ: [ {bets[index].bet} ]</span>
+                <span style={{ color: 'blue' }}>Typ: [ {bet.bet} ]</span>
                 {' | '}
-                <span style={{ color: 'black' }}>{bets[index].score}</span>
+                <span style={{ color: 'black' }}>{bet.score}</span>
                 <span className="results-style">Wynik: </span>
-                <span>{results[index]}</span>
-                {bets[index].score === results[index] && (
+                <span>{results[bet.id]}</span>
+                {bet.score === results[bet.id] && (
                   <span className="correct-score">✅</span>
                 )}
-                {getTypeFromResult(results[index]) === bets[index].bet && (
+                {getTypeFromResult(results[bet.id]) === bet.bet && (
                   <span className="correct-type">☑️</span>
                 )}
               </div>
             </div>
           ))}
           <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
+            currentPage={currentKolejka}
+            totalPages={totalKolejkas}
             onPageChange={(page) => {
-              handlePageChange(page);
+              handleKolejkaChange(page);
             }}
-            label="Strona"
+            label="Kolejka"
           />
         </div>
       )}
