@@ -14,7 +14,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, label }) => {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+    <div style={{ textAlign: 'center' }}>
       <button
         onClick={handlePrev}
         disabled={currentPage === 0}
@@ -33,7 +33,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, label }) => {
       >
         &lt;&lt;
       </button>
-      <span style={{ margin: '0 10px', fontSize: '16px', fontWeight: 'bold' }}>
+      <span style={{ margin: '0 0px', fontSize: '16px', fontWeight: 'bold' }}>
         {label} {currentPage + 1} / {totalPages}
       </span>
       <button

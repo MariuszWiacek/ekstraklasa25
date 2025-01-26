@@ -31,12 +31,22 @@ const ExpandableCard = ({ user, bets, results }) => {
 
   return (
     <div className="paper-card">
+      
       <h4 className="header-style" onClick={() => setExpanded(!expanded)}>
         {user} {expanded ? '-' : '+'}
       </h4>
+     
       {expanded && (
         <div className="bet-container">
-          <h5>Kolejka {currentKolejka + 1}</h5>
+          <Pagination
+            currentPage={currentKolejka}
+            totalPages={totalKolejkas}
+            onPageChange={(page) => {
+              handleKolejkaChange(page);
+            }}
+            label="Kolejka"
+          />
+          <hr></hr>
           {groupedBets[currentKolejka]?.map((bet) => (
             <div key={bet.id} className="game-style">
               <div style={{ fontSize: '10px' }}>
@@ -58,14 +68,7 @@ const ExpandableCard = ({ user, bets, results }) => {
               </div>
             </div>
           ))}
-          <Pagination
-            currentPage={currentKolejka}
-            totalPages={totalKolejkas}
-            onPageChange={(page) => {
-              handleKolejkaChange(page);
-            }}
-            label="Kolejka"
-          />
+          <hr></hr>
         </div>
       )}
     </div>
