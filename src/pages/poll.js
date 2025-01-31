@@ -60,12 +60,12 @@ const Poll = ({ onClose }) => {
         <button onClick={onClose} style={closeButtonStyle}>
           X
         </button>
-        <h3>Ankieta została zakończona</h3>
+        <h3>Zaczynamy grę ! </h3>
         <p style={{ color: "black" }}>
-          Dziękujemy za wzięcie udziału. 
+          Dziękujemy za wzięcie udziału w ankiecie. Oto wyniki : 
           <hr></hr>
           <p style={{ color: "black", marginTop: "20px", fontWeight: "bold" }}>
-        Zrzutka w tej rundzie wynosi 60 🥮, podział nagród będzie wyglądał następująco:
+        Zrzutka w tej rundzie wynosi 62 🥮, podział nagród będzie wyglądał następująco:
         <hr></hr>
             <b>1 miejsce:</b>  400 🥮
           <hr></hr>
