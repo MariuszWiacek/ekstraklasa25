@@ -50,12 +50,15 @@ const Stats = () => {
 
       bets.forEach(([id, bet]) => {
         const result = results[id];
-        if (!result || !bet.kolejkaId) return;
+        if (!result || !bet.kolejkaId || !bet.bet) return;
 
         const [homeScore, awayScore] = result.split(':').map(Number);
-        const actualOutcome = homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2';
+        const [betHomeScore, betAwayScore] = bet.bet.split(':').map(Number);
 
-        const { home, away, bet: betOutcome, kolejkaId } = bet;
+        const actualOutcome = homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2';
+        const betOutcome = betHomeScore === betAwayScore ? 'X' : betHomeScore > betAwayScore ? '1' : '2';
+
+        const { home, away, kolejkaId } = bet;
         let chosenTeam = null;
         let pointsEarned = 0;
 
@@ -65,16 +68,19 @@ const Stats = () => {
         if (chosenTeam) {
           teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
 
-          if (betOutcome === actualOutcome) {
-            pointsEarned = 3;
-          } else if (actualOutcome === 'X') {
-            pointsEarned = 1;
-            teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
-          } else {
+          if (betHomeScore === homeScore && betAwayScore === awayScore) {
+            pointsEarned = 3; // Exact score match
+          } else if (betOutcome === actualOutcome) {
+            pointsEarned = 1; // Correct outcome (1, X, 2) but wrong exact score
+          }
+
+          if (pointsEarned === 0) {
             teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
           }
 
-          teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
+          if (pointsEarned > 0) {
+            teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
+          }
 
           // Track points per kolejkaId
           kolejkaPoints[kolejkaId] = (kolejkaPoints[kolejkaId] || 0) + pointsEarned;
@@ -84,7 +90,7 @@ const Stats = () => {
 
       const mostChosenTeams = getTopTeams(teamChosenCount);
       const mostDisappointingTeams = getTopTeams(teamFailureCount);
-      const mostSuccessfulTeams = getTopTeams(teamPointCount);
+      const mostSuccessfulTeams = getTopTeams(teamPointCount, true); // Ensure no blank value
 
       userStatsData.push({
         user,
@@ -99,9 +105,10 @@ const Stats = () => {
   }, [submittedData, results]);
 
   // Function to get teams with max count
-  const getTopTeams = (teamData) => {
+  const getTopTeams = (teamData, allowEmpty = false) => {
     const maxCount = Math.max(...Object.values(teamData), 0);
-    return Object.keys(teamData).filter(team => teamData[team] === maxCount);
+    const teams = Object.keys(teamData).filter(team => teamData[team] === maxCount);
+    return allowEmpty && teams.length === 0 ? [] : teams;
   };
 
   return (
@@ -117,7 +124,7 @@ const Stats = () => {
                 <hr />
                 <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeams.join(', ') || '------'}</p>
                 <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeams.join(', ') || '------'}</p>
-                <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.join(', ') || '------'}</p>
+                <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.length > 0 ? userStats.mostSuccessfulTeams.join(', ') : ''}</p>
                 <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce: </strong> {userStats.maxPointsInOneKolejka}</p>
                 <hr />
               </div>
