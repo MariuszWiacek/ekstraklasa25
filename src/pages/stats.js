@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
+import { Line } from 'react-chartjs-2'; 
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
-// Konfiguracja Firebase
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCGVW31sTa6Giafh0-JTsnJ9ghybYEsJvE",
   authDomain: "wiosna25-66ab3.firebaseapp.com",
@@ -15,9 +17,12 @@ const firebaseConfig = {
   measurementId: "G-8Z3CMMQKE8"
 };
 
-// Inicjalizacja Firebase
+// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Stats = () => {
   const [results, setResults] = useState({});
@@ -25,13 +30,13 @@ const Stats = () => {
   const [userStats, setUserStats] = useState([]);
 
   useEffect(() => {
-    // Pobranie wyników meczów
+    // Fetch results
     const resultsRef = ref(database, 'results');
     onValue(resultsRef, (snapshot) => {
       setResults(snapshot.val() || {});
     });
 
-    // Pobranie danych użytkowników
+    // Fetch submitted data
     const submittedDataRef = ref(database, 'submittedData');
     onValue(submittedDataRef, (snapshot) => {
       setSubmittedData(snapshot.val() || {});
@@ -54,7 +59,7 @@ const Stats = () => {
         kolejki: [],
       };
 
-      // Przetwarzanie każdego zakładu
+      // Process each bet
       bets.forEach(([id, bet]) => {
         const result = results[id];
         if (!result || !bet.home || !bet.away || !bet.bet) return;
@@ -63,19 +68,19 @@ const Stats = () => {
         const [actualHomeScore, actualAwayScore] = result.split(':').map(Number);
         const actualOutcome = actualHomeScore === actualAwayScore ? 'X' : actualHomeScore > actualAwayScore ? '1' : '2';
 
-        // Obliczanie punktów
+        // Points Calculation
         let points = 0;
 
-        // Dokładny wynik - 3 punkty
+        // Exact Score Calculation: 3 points for exact match
         if (homeScore === actualHomeScore && awayScore === actualAwayScore) {
           points = 3;
         } 
-        // Poprawne wskazanie zwycięzcy/remisu - 1 punkt
+        // Correct Outcome Calculation: 1 point for correct win/loss/draw prediction
         else if (betOutcome === actualOutcome) {
           points = 1;
         }
 
-        // Przypisanie punktów do kolejki
+        // Track statistics for user
         const kolejkaId = Math.floor((id - 1) / 9);
         if (!userStats.kolejki[kolejkaId]) {
           userStats.kolejki[kolejkaId] = { points: 0 };
@@ -83,24 +88,24 @@ const Stats = () => {
         userStats.kolejki[kolejkaId].points += points;
         userStats.maxPointsInOneKolejka = Math.max(userStats.maxPointsInOneKolejka, userStats.kolejki[kolejkaId].points);
 
-        // Pomijanie remisów w analizie drużyn
+        // Ignore draws for chosen teams
         if (betOutcome !== 'X') {
           const chosenTeam = betOutcome === '1' ? homeTeam : awayTeam;
           userStats.chosenTeams[chosenTeam] = (userStats.chosenTeams[chosenTeam] || 0) + 1;
 
-          // Śledzenie sukcesów i porażek drużyn
+          // Track success and failure
           if (actualOutcome === betOutcome) {
-            userStats.successTeams[chosenTeam] = (userStats.successTeams[chosenTeam] || 0) + points;
+            userStats.successTeams[chosenTeam] = (userStats.successTeams[chosenTeam] || 0) + 1;
           } else {
             userStats.failureTeams[chosenTeam] = (userStats.failureTeams[chosenTeam] || 0) + 1;
           }
         }
       });
 
-      // Znalezienie tylko jednej najlepszej drużyny
+      // Find most chosen team
       const mostChosenTeams = findMostFrequent(userStats.chosenTeams);
       const mostFailureTeams = findMostFrequent(userStats.failureTeams);
-      const mostSuccessTeams = findTopScoringTeam(userStats.successTeams);
+      const mostSuccessTeams = findMostFrequent(userStats.successTeams);
 
       userStats.mostChosenTeams = mostChosenTeams.length ? mostChosenTeams : ['------'];
       userStats.mostFailureTeams = mostFailureTeams.length ? mostFailureTeams : ['------'];
@@ -112,20 +117,9 @@ const Stats = () => {
     setUserStats(userStatsData);
   }, [submittedData, results]);
 
-  // Funkcja wybierająca jedynie drużynę z największą liczbą punktów
-  const findTopScoringTeam = (teams) => {
-    if (Object.keys(teams).length === 0) return [];
-
-    let maxPoints = Math.max(...Object.values(teams));
-    
-    return Object.keys(teams).filter(team => teams[team] === maxPoints);
-  };
-
+  // Function to find the most frequent teams
   const findMostFrequent = (teams) => {
-    if (Object.keys(teams).length === 0) return [];
-
-    let maxCount = Math.max(...Object.values(teams));
-
+    const maxCount = Math.max(...Object.values(teams), 0);
     return Object.keys(teams).filter(team => teams[team] === maxCount);
   };
 
@@ -138,7 +132,12 @@ const Stats = () => {
           {userStats.length > 0 ? userStats.map((stats, idx) => (
             <div key={idx}>
               <h3>{stats.user}</h3>
+              <hr />
+              <p><strong>⚽ Najczęściej Wybierane Drużyny: </strong> {stats.mostChosenTeams.join(', ')}</p>
+              <p><strong>👎🏿 Najbardziej Zawodzące Drużyny: </strong> {stats.mostFailureTeams.join(', ')}</p>
               <p><strong>👍 Najbardziej Punktujące Drużyny: </strong> {stats.mostSuccessTeams.join(', ')}</p>
+              
+              
               <hr />
             </div>
           )) : <p>------</p>}
