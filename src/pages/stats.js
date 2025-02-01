@@ -57,12 +57,14 @@ const Stats = () => {
         const betOutcome = betHomeScore === betAwayScore ? 'X' : betHomeScore > betAwayScore ? '1' : '2';
 
         const { home, away } = bet;
-        let chosenTeam = null;
         let pointsEarned = 0;
 
-        // Assign chosen team unless the user bet a draw (X)
-        if (betOutcome === '1') chosenTeam = home;
-        else if (betOutcome === '2') chosenTeam = away;
+        // Ignore matches where user bet "X" (no team chosen)
+        if (betOutcome === 'X') return;
+
+        // Count how many times each team was picked
+        teamChosenCount[home] = (teamChosenCount[home] || 0) + (betOutcome === '1' ? 1 : 0);
+        teamChosenCount[away] = (teamChosenCount[away] || 0) + (betOutcome === '2' ? 1 : 0);
 
         // Calculate points based on the bet
         if (betHomeScore === homeScore && betAwayScore === awayScore) {
@@ -71,19 +73,16 @@ const Stats = () => {
           pointsEarned = 1; // Correct match type (1, X, 2)
         }
 
-        // Count the most chosen team (excluding draws)
-        if (chosenTeam) {
-          teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
-        }
-
         // Count most failing team (chosen but gave 0 points)
-        if (chosenTeam && pointsEarned === 0) {
-          teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
+        if (pointsEarned === 0) {
+          teamFailureCount[home] = (teamFailureCount[home] || 0) + (betOutcome === '1' ? 1 : 0);
+          teamFailureCount[away] = (teamFailureCount[away] || 0) + (betOutcome === '2' ? 1 : 0);
         }
 
         // Count most successful team (chosen and gave points)
-        if (chosenTeam && pointsEarned > 0) {
-          teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
+        if (pointsEarned > 0) {
+          teamPointCount[home] = (teamPointCount[home] || 0) + (betOutcome === '1' ? pointsEarned : 0);
+          teamPointCount[away] = (teamPointCount[away] || 0) + (betOutcome === '2' ? pointsEarned : 0);
         }
       });
 
