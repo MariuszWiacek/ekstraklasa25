@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
-import { Row, Col, Container } from 'react-bootstrap';
+import { calculatePoints } from '../components/calculatePoints';
 
-// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCGVW31sTa6Giafh0-JTsnJ9ghybYEsJvE",
   authDomain: "wiosna25-66ab3.firebaseapp.com",
@@ -21,7 +20,7 @@ const database = getDatabase(firebaseApp);
 const Stats = () => {
   const [results, setResults] = useState({});
   const [submittedData, setSubmittedData] = useState({});
-  const [userStats, setUserStats] = useState([]);
+  const [teamStats, setTeamStats] = useState({});
 
   useEffect(() => {
     const resultsRef = ref(database, 'results');
@@ -36,105 +35,54 @@ const Stats = () => {
   }, []);
 
   useEffect(() => {
-    if (!submittedData || !results) return;
-
-    const userStatsData = [];
+    const teamPoints = {};
 
     Object.keys(submittedData).forEach((user) => {
-      const bets = Object.entries(submittedData[user] || {});
-      const teamChosenCount = {};
-      const teamFailureCount = {};
-      const teamPointCount = {};
-      const kolejkaPoints = {};
-      let maxPointsInOneKolejka = 0;
+      const bets = Object.entries(submittedData[user]).map(([id, bet]) => ({
+        ...bet,
+        id,
+      }));
 
-      bets.forEach(([id, bet]) => {
-        const result = results[id];
-        if (!result || !bet.kolejkaId || !bet.bet) return;
+      bets.forEach((bet) => {
+        const game = results[bet.id];
+        if (game && game.score) {
+          const { points } = calculatePoints([bet], results);
 
-        const [homeScore, awayScore] = result.split(':').map(Number);
-        const [betHomeScore, betAwayScore] = bet.bet.split(':').map(Number);
+          // Count points for both home and away teams
+          if (!teamPoints[game.home]) teamPoints[game.home] = 0;
+          if (!teamPoints[game.away]) teamPoints[game.away] = 0;
 
-        const actualOutcome = homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2';
-        const betOutcome = betHomeScore === betAwayScore ? 'X' : betHomeScore > betAwayScore ? '1' : '2';
-
-        const { home, away, kolejkaId } = bet;
-        let chosenTeam = null;
-        let pointsEarned = 0;
-
-        if (betOutcome === '1') chosenTeam = home;
-        else if (betOutcome === '2') chosenTeam = away;
-
-        if (chosenTeam) {
-          teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
-
-          if (betHomeScore === homeScore && betAwayScore === awayScore) {
-            pointsEarned = 3; // Exact score match
-          } else if (betOutcome === actualOutcome) {
-            pointsEarned = 1; // Correct outcome (1, X, 2) but wrong exact score
-          }
-
-          if (pointsEarned === 0) {
-            teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
-          }
-
-          if (pointsEarned > 0) {
-            teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
-          }
-
-          // Track points per kolejkaId
-          kolejkaPoints[kolejkaId] = (kolejkaPoints[kolejkaId] || 0) + pointsEarned;
-          maxPointsInOneKolejka = Math.max(maxPointsInOneKolejka, kolejkaPoints[kolejkaId]);
+          teamPoints[game.home] += points;
+          teamPoints[game.away] += points;
         }
-      });
-
-      const mostChosenTeams = getTopTeams(teamChosenCount);
-      const mostDisappointingTeams = getTopTeams(teamFailureCount);
-      const mostSuccessfulTeams = getTopTeams(teamPointCount, true); // Ensure no blank value
-
-      userStatsData.push({
-        user,
-        mostChosenTeams,
-        mostDisappointingTeams,
-        mostSuccessfulTeams,
-        maxPointsInOneKolejka
       });
     });
 
-    setUserStats(userStatsData);
+    setTeamStats(teamPoints);
   }, [submittedData, results]);
 
-  // Function to get teams with max count
-  const getTopTeams = (teamData, allowEmpty = false) => {
-    const maxCount = Math.max(...Object.values(teamData), 0);
-    const teams = Object.keys(teamData).filter(team => teamData[team] === maxCount);
-    return allowEmpty && teams.length === 0 ? [] : teams;
-  };
+  const mostScoringTeams = Object.entries(teamStats)
+    .sort(([, a], [, b]) => b - a)
+    .filter(([, points]) => points > 0);
 
   return (
-    <Container fluid>
-      <Row>
-        <Col md={12}>
-          <h2 style={{ textAlign: 'center' }}>Statystyki Użytkowników</h2>
-          <hr />
-          {userStats.length > 0 ? (
-            userStats.map((userStats, idx) => (
-              <div key={idx}>
-                <h3>{userStats.user}</h3>
-                <hr />
-                <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeams.join(', ') || '------'}</p>
-                <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeams.join(', ') || '------'}</p>
-                <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.length > 0 ? userStats.mostSuccessfulTeams.join(', ') : ''}</p>
-                <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce: </strong> {userStats.maxPointsInOneKolejka}</p>
-                <hr />
-              </div>
-            ))
-          ) : (
-            <p>------</p>
-          )}
-        </Col>
-      </Row>
-    </Container>
+    <div style={{ textAlign: 'center', padding: '20px', backgroundColor: '#212529ab', color: 'white' }}>
+      <h3>📊 Statystyki</h3>
+      <hr style={{ color: 'white' }} />
+
+      <h4>🏆 Najbardziej Punktująca Drużyna:</h4>
+      {mostScoringTeams.length > 0 ? (
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {mostScoringTeams.map(([team, points]) => (
+            <li key={team} style={{ fontSize: '1.2em', fontWeight: 'bold' }}>
+              {team}: {points} pkt
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Brak punktów</p>
+      )}
+    </div>
   );
 };
 
