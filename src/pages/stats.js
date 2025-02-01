@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
+import { Row, Col, Container } from 'react-bootstrap';
 import { calculatePoints } from '../components/calculatePoints';
 
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCGVW31sTa6Giafh0-JTsnJ9ghybYEsJvE",
   authDomain: "wiosna25-66ab3.firebaseapp.com",
@@ -20,7 +22,7 @@ const database = getDatabase(firebaseApp);
 const Stats = () => {
   const [results, setResults] = useState({});
   const [submittedData, setSubmittedData] = useState({});
-  const [teamStats, setTeamStats] = useState({});
+  const [userStats, setUserStats] = useState([]);
 
   useEffect(() => {
     const resultsRef = ref(database, 'results');
@@ -35,54 +37,93 @@ const Stats = () => {
   }, []);
 
   useEffect(() => {
-    const teamPoints = {};
+    if (!submittedData || !results) return;
+
+    const userStatsData = [];
 
     Object.keys(submittedData).forEach((user) => {
-      const bets = Object.entries(submittedData[user]).map(([id, bet]) => ({
+      const bets = Object.entries(submittedData[user] || {}).map(([id, bet]) => ({
         ...bet,
         id,
       }));
 
+      const pointsData = calculatePoints(bets, results);
+      const teamChosenCount = {};
+      const teamFailureCount = {};
+      const teamPointCount = {};
+      const kolejkaPoints = {};
+      let maxPointsInOneKolejka = 0;
+
       bets.forEach((bet) => {
         const game = results[bet.id];
-        if (game && game.score) {
-          const { points } = calculatePoints([bet], results);
+        if (!game || !bet.kolejkaId) return;
 
-          // Count points for both home and away teams
-          if (!teamPoints[game.home]) teamPoints[game.home] = 0;
-          if (!teamPoints[game.away]) teamPoints[game.away] = 0;
+        const { home, away, kolejkaId } = bet;
+        let chosenTeam = null;
 
-          teamPoints[game.home] += points;
-          teamPoints[game.away] += points;
+        if (bet.bet.includes(':')) {
+          const [betHomeScore, betAwayScore] = bet.bet.split(':').map(Number);
+          chosenTeam = betHomeScore > betAwayScore ? home : betHomeScore < betAwayScore ? away : null;
         }
+
+        if (chosenTeam) {
+          teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
+
+          const pointsEarned = pointsData[bet.id] || 0;
+          if (pointsEarned > 0) {
+            teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
+          } else {
+            teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
+          }
+
+          kolejkaPoints[kolejkaId] = (kolejkaPoints[kolejkaId] || 0) + pointsEarned;
+          maxPointsInOneKolejka = Math.max(maxPointsInOneKolejka, kolejkaPoints[kolejkaId]);
+        }
+      });
+
+      userStatsData.push({
+        user,
+        mostChosenTeams: getTopTeams(teamChosenCount),
+        mostDisappointingTeams: getTopTeams(teamFailureCount),
+        mostSuccessfulTeams: getTopTeams(teamPointCount, true),
+        maxPointsInOneKolejka,
       });
     });
 
-    setTeamStats(teamPoints);
+    setUserStats(userStatsData);
   }, [submittedData, results]);
 
-  const mostScoringTeams = Object.entries(teamStats)
-    .sort(([, a], [, b]) => b - a)
-    .filter(([, points]) => points > 0);
+  // Helper function to get teams with max count
+  const getTopTeams = (teamData, allowEmpty = false) => {
+    const maxCount = Math.max(...Object.values(teamData), 0);
+    const teams = Object.keys(teamData).filter((team) => teamData[team] === maxCount);
+    return allowEmpty && teams.length === 0 ? [] : teams;
+  };
 
   return (
-    <div style={{ textAlign: 'center', padding: '20px', backgroundColor: '#212529ab', color: 'white' }}>
-      <h3>📊 Statystyki</h3>
-      <hr style={{ color: 'white' }} />
-
-      <h4>🏆 Najbardziej Punktująca Drużyna:</h4>
-      {mostScoringTeams.length > 0 ? (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {mostScoringTeams.map(([team, points]) => (
-            <li key={team} style={{ fontSize: '1.2em', fontWeight: 'bold' }}>
-              {team}: {points} pkt
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Brak punktów</p>
-      )}
-    </div>
+    <Container fluid>
+      <Row>
+        <Col md={12}>
+          <h2 style={{ textAlign: 'center' }}>Statystyki Użytkowników</h2>
+          <hr />
+          {userStats.length > 0 ? (
+            userStats.map((userStats, idx) => (
+              <div key={idx}>
+                <h3>{userStats.user}</h3>
+                <hr />
+                <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeams.join(', ') || '------'}</p>
+                <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeams.join(', ') || '------'}</p>
+                <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.length > 0 ? userStats.mostSuccessfulTeams.join(', ') : '------'}</p>
+                <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce: </strong> {userStats.maxPointsInOneKolejka}</p>
+                <hr />
+              </div>
+            ))
+          ) : (
+            <p>------</p>
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
