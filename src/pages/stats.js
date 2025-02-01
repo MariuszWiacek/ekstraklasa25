@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
-import { Line } from 'react-chartjs-2'; 
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 // Konfiguracja Firebase
 const firebaseConfig = {
@@ -20,9 +18,6 @@ const firebaseConfig = {
 // Inicjalizacja Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
-
-// Rejestracja komponentów Chart.js
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Stats = () => {
   const [results, setResults] = useState({});
@@ -102,10 +97,10 @@ const Stats = () => {
         }
       });
 
-      // Znalezienie najbardziej punktujących drużyn (tylko tej z największą liczbą punktów)
+      // Znalezienie tylko jednej najlepszej drużyny
       const mostChosenTeams = findMostFrequent(userStats.chosenTeams);
       const mostFailureTeams = findMostFrequent(userStats.failureTeams);
-      const mostSuccessTeams = findTopScoringTeam(userStats.successTeams); // Nowa funkcja
+      const mostSuccessTeams = findTopScoringTeam(userStats.successTeams);
 
       userStats.mostChosenTeams = mostChosenTeams.length ? mostChosenTeams : ['------'];
       userStats.mostFailureTeams = mostFailureTeams.length ? mostFailureTeams : ['------'];
@@ -117,7 +112,7 @@ const Stats = () => {
     setUserStats(userStatsData);
   }, [submittedData, results]);
 
-  // Funkcja wybierająca drużyny z największą liczbą trafionych punktów
+  // Funkcja wybierająca jedynie drużynę z największą liczbą punktów
   const findTopScoringTeam = (teams) => {
     if (Object.keys(teams).length === 0) return [];
 
@@ -126,7 +121,6 @@ const Stats = () => {
     return Object.keys(teams).filter(team => teams[team] === maxPoints);
   };
 
-  // Standardowa funkcja do wyszukiwania najczęściej wybieranych/zawodzących drużyn
   const findMostFrequent = (teams) => {
     if (Object.keys(teams).length === 0) return [];
 
@@ -144,9 +138,6 @@ const Stats = () => {
           {userStats.length > 0 ? userStats.map((stats, idx) => (
             <div key={idx}>
               <h3>{stats.user}</h3>
-              <hr />
-              <p><strong>⚽ Najczęściej Wybierane Drużyny: </strong> {stats.mostChosenTeams.join(', ')}</p>
-              <p><strong>👎 Najbardziej Zawodzące Drużyny: </strong> {stats.mostFailureTeams.join(', ')}</p>
               <p><strong>👍 Najbardziej Punktujące Drużyny: </strong> {stats.mostSuccessTeams.join(', ')}</p>
               <hr />
             </div>
