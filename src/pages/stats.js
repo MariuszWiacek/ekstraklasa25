@@ -95,17 +95,17 @@ const Stats = () => {
 
           // Śledzenie sukcesów i porażek drużyn
           if (actualOutcome === betOutcome) {
-            userStats.successTeams[chosenTeam] = (userStats.successTeams[chosenTeam] || 0) + 1;
+            userStats.successTeams[chosenTeam] = (userStats.successTeams[chosenTeam] || 0) + points;
           } else {
             userStats.failureTeams[chosenTeam] = (userStats.failureTeams[chosenTeam] || 0) + 1;
           }
         }
       });
 
-      // Znalezienie najbardziej punktujących drużyn (tylko tych z maksymalnym wynikiem)
+      // Znalezienie najbardziej punktujących drużyn (tylko tej z największą liczbą punktów)
       const mostChosenTeams = findMostFrequent(userStats.chosenTeams);
       const mostFailureTeams = findMostFrequent(userStats.failureTeams);
-      const mostSuccessTeams = findMostFrequent(userStats.successTeams);
+      const mostSuccessTeams = findTopScoringTeam(userStats.successTeams); // Nowa funkcja
 
       userStats.mostChosenTeams = mostChosenTeams.length ? mostChosenTeams : ['------'];
       userStats.mostFailureTeams = mostFailureTeams.length ? mostFailureTeams : ['------'];
@@ -117,12 +117,21 @@ const Stats = () => {
     setUserStats(userStatsData);
   }, [submittedData, results]);
 
-  // Funkcja wybierająca drużyny z maksymalną liczbą punktów
+  // Funkcja wybierająca drużyny z największą liczbą trafionych punktów
+  const findTopScoringTeam = (teams) => {
+    if (Object.keys(teams).length === 0) return [];
+
+    let maxPoints = Math.max(...Object.values(teams));
+    
+    return Object.keys(teams).filter(team => teams[team] === maxPoints);
+  };
+
+  // Standardowa funkcja do wyszukiwania najczęściej wybieranych/zawodzących drużyn
   const findMostFrequent = (teams) => {
     if (Object.keys(teams).length === 0) return [];
-    
-    const maxCount = Math.max(...Object.values(teams));
-    
+
+    let maxCount = Math.max(...Object.values(teams));
+
     return Object.keys(teams).filter(team => teams[team] === maxCount);
   };
 
