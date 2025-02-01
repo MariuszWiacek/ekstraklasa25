@@ -42,9 +42,9 @@ const Stats = () => {
 
     Object.keys(submittedData).forEach((user) => {
       const bets = Object.entries(submittedData[user] || {});
-      const teamChosenCount = {}; // For "Najczęściej wybierana"
-      const teamFailureCount = {}; // For "Najczęściej zawodząca"
-      const teamPointCount = {}; // For "Najczęściej punktująca"
+      const teamChosenCount = {}; // Most picked team
+      const teamFailureCount = {}; // Most failed team
+      const teamPointCount = {}; // Most point-giving team
 
       bets.forEach(([id, bet]) => {
         const result = results[id];
@@ -58,31 +58,31 @@ const Stats = () => {
 
         const { home, away } = bet;
         let pointsEarned = 0;
+        let chosenTeam = null;
 
         // Ignore matches where user bet "X" (no team chosen)
-        if (betOutcome === 'X') return;
+        if (betOutcome !== 'X') {
+          chosenTeam = betOutcome === '1' ? home : away;
 
-        // Count how many times each team was picked
-        teamChosenCount[home] = (teamChosenCount[home] || 0) + (betOutcome === '1' ? 1 : 0);
-        teamChosenCount[away] = (teamChosenCount[away] || 0) + (betOutcome === '2' ? 1 : 0);
+          // Count how many times each team was picked
+          teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
 
-        // Calculate points based on the bet
-        if (betHomeScore === homeScore && betAwayScore === awayScore) {
-          pointsEarned = 3; // Exact score match
-        } else if (betOutcome === actualOutcome) {
-          pointsEarned = 1; // Correct match type (1, X, 2)
-        }
+          // Calculate points
+          if (betHomeScore === homeScore && betAwayScore === awayScore) {
+            pointsEarned = 3; // Exact score match
+          } else if (betOutcome === actualOutcome) {
+            pointsEarned = 1; // Correct match type (1, X, 2)
+          }
 
-        // Count most failing team (chosen but gave 0 points)
-        if (pointsEarned === 0) {
-          teamFailureCount[home] = (teamFailureCount[home] || 0) + (betOutcome === '1' ? 1 : 0);
-          teamFailureCount[away] = (teamFailureCount[away] || 0) + (betOutcome === '2' ? 1 : 0);
-        }
+          // Count most failing team (chosen but gave 0 points)
+          if (pointsEarned === 0) {
+            teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
+          }
 
-        // Count most successful team (chosen and gave points)
-        if (pointsEarned > 0) {
-          teamPointCount[home] = (teamPointCount[home] || 0) + (betOutcome === '1' ? pointsEarned : 0);
-          teamPointCount[away] = (teamPointCount[away] || 0) + (betOutcome === '2' ? pointsEarned : 0);
+          // Count most successful team (chosen and gave points)
+          if (pointsEarned > 0) {
+            teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
+          }
         }
       });
 
@@ -115,13 +115,13 @@ const Stats = () => {
           <h2 style={{ textAlign: 'center' }}>Statystyki Użytkowników</h2>
           <hr />
           {userStats.length > 0 ? (
-            userStats.map((userStats, idx) => (
+            userStats.map((stats, idx) => (
               <div key={idx}>
-                <h3>{userStats.user}</h3>
+                <h3>{stats.user}</h3>
                 <hr />
-                <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeams.join(', ') || '------'}</p>
-                <p><strong>👎🏿 Najczęściej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeams.join(', ') || '------'}</p>
-                <p><strong>👍 Najczęściej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.join(', ') || '------'}</p>
+                <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {stats.mostChosenTeams.join(', ') || '------'}</p>
+                <p><strong>👎🏿 Najczęściej Zawodząca Drużyna: </strong> {stats.mostDisappointingTeams.join(', ') || '------'}</p>
+                <p><strong>👍 Najczęściej Punktująca Drużyna: </strong> {stats.mostSuccessfulTeams.join(', ') || '------'}</p>
                 <hr />
               </div>
             ))
