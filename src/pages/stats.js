@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -20,22 +18,17 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-// Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
 const Stats = () => {
   const [results, setResults] = useState({});
   const [submittedData, setSubmittedData] = useState({});
   const [userStats, setUserStats] = useState([]);
 
   useEffect(() => {
-    // Fetch match results
     const resultsRef = ref(database, 'results');
     onValue(resultsRef, (snapshot) => {
       setResults(snapshot.val() || {});
     });
 
-    // Fetch user predictions
     const submittedDataRef = ref(database, 'submittedData');
     onValue(submittedDataRef, (snapshot) => {
       setSubmittedData(snapshot.val() || {});
@@ -52,33 +45,30 @@ const Stats = () => {
       const teamChosenCount = {};
       const teamFailureCount = {};
       const teamPointCount = {};
-      let kolejkaPoints = {}; // Track points per kolejka
+      const kolejkaPoints = {};
       let maxPointsInOneKolejka = 0;
 
       bets.forEach(([id, bet]) => {
         const result = results[id];
-        if (!result) return;
+        if (!result || !bet.kolejkaId) return;
 
         const [homeScore, awayScore] = result.split(':').map(Number);
         const actualOutcome = homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2';
 
-        const { home, away, bet: betOutcome } = bet;
+        const { home, away, bet: betOutcome, kolejkaId } = bet;
         let chosenTeam = null;
         let pointsEarned = 0;
 
-        if (betOutcome === '1') {
-          chosenTeam = home;
-        } else if (betOutcome === '2') {
-          chosenTeam = away;
-        }
+        if (betOutcome === '1') chosenTeam = home;
+        else if (betOutcome === '2') chosenTeam = away;
 
         if (chosenTeam) {
           teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
 
           if (betOutcome === actualOutcome) {
-            pointsEarned = 3; // Correct match result
+            pointsEarned = 3;
           } else if (actualOutcome === 'X') {
-            pointsEarned = 1; // Draw
+            pointsEarned = 1;
             teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
           } else {
             teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
@@ -86,27 +76,21 @@ const Stats = () => {
 
           teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
 
-          // Track kolejka points
-          const kolejkaId = Math.floor((id - 1) / 9);
+          // Track points per kolejkaId
           kolejkaPoints[kolejkaId] = (kolejkaPoints[kolejkaId] || 0) + pointsEarned;
           maxPointsInOneKolejka = Math.max(maxPointsInOneKolejka, kolejkaPoints[kolejkaId]);
         }
       });
 
-      const mostChosenTeam = Object.entries(teamChosenCount)
-        .sort((a, b) => b[1] - a[1])[0]?.[0] || '------';
-
-      const mostDisappointingTeam = Object.entries(teamFailureCount)
-        .sort((a, b) => b[1] - a[1])[0]?.[0] || '------';
-
-      const mostSuccessfulTeam = Object.entries(teamPointCount)
-        .sort((a, b) => b[1] - a[1])[0]?.[0] || '------';
+      const mostChosenTeams = getTopTeams(teamChosenCount);
+      const mostDisappointingTeams = getTopTeams(teamFailureCount);
+      const mostSuccessfulTeams = getTopTeams(teamPointCount);
 
       userStatsData.push({
         user,
-        mostChosenTeam,
-        mostDisappointingTeam,
-        mostSuccessfulTeam,
+        mostChosenTeams,
+        mostDisappointingTeams,
+        mostSuccessfulTeams,
         maxPointsInOneKolejka
       });
     });
@@ -114,29 +98,33 @@ const Stats = () => {
     setUserStats(userStatsData);
   }, [submittedData, results]);
 
+  // Function to get teams with max count
+  const getTopTeams = (teamData) => {
+    const maxCount = Math.max(...Object.values(teamData), 0);
+    return Object.keys(teamData).filter(team => teamData[team] === maxCount);
+  };
+
   return (
     <Container fluid>
       <Row>
         <Col md={12}>
           <h2 style={{ textAlign: 'center' }}>Statystyki Użytkowników</h2>
           <hr />
-          <div>
-            {userStats.length > 0 ? (
-              userStats.map((userStats, idx) => (
-                <div key={idx}>
-                  <h3>{userStats.user}</h3>
-                  <hr />
-                  <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeam}</p>
-                  <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeam}</p>
-                  <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeam}</p>
-                  <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce: </strong> {userStats.maxPointsInOneKolejka}</p>
-                  <hr />
-                </div>
-              ))
-            ) : (
-              <p>------</p>
-            )}
-          </div>
+          {userStats.length > 0 ? (
+            userStats.map((userStats, idx) => (
+              <div key={idx}>
+                <h3>{userStats.user}</h3>
+                <hr />
+                <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeams.join(', ') || '------'}</p>
+                <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeams.join(', ') || '------'}</p>
+                <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.join(', ') || '------'}</p>
+                <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce: </strong> {userStats.maxPointsInOneKolejka}</p>
+                <hr />
+              </div>
+            ))
+          ) : (
+            <p>------</p>
+          )}
         </Col>
       </Row>
     </Container>
