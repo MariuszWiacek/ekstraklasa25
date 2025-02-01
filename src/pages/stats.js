@@ -64,16 +64,21 @@ const Stats = () => {
         const result = results[id];
         if (!result || !bet.home || !bet.away || !bet.bet) return;
 
-        const { home: homeTeam, away: awayTeam, bet: betOutcome } = bet;
-        const [homeScore, awayScore] = result.split(':').map(Number);
-        const actualOutcome = homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2';
-
-        let chosenTeam = null;
-        let isCorrectOutcome = betOutcome === actualOutcome;
-        let isExactScore = betOutcome === actualOutcome && homeScore === parseInt(bet.homeScore) && awayScore === parseInt(bet.awayScore);
+        const { home: homeTeam, away: awayTeam, bet: betOutcome, homeScore, awayScore } = bet;
+        const [actualHomeScore, actualAwayScore] = result.split(':').map(Number);
+        const actualOutcome = actualHomeScore === actualAwayScore ? 'X' : actualHomeScore > actualAwayScore ? '1' : '2';
 
         // Points Calculation
-        const points = isExactScore ? 3 : isCorrectOutcome ? 1 : 0;
+        let points = 0;
+
+        // Exact Score Calculation: 3 points for exact match
+        if (homeScore === actualHomeScore && awayScore === actualAwayScore) {
+          points = 3;
+        } 
+        // Correct Outcome Calculation: 1 point for correct win/loss/draw prediction
+        else if (betOutcome === actualOutcome) {
+          points = 1;
+        }
 
         // Track statistics for user
         const kolejkaId = Math.floor((id - 1) / 9);
@@ -85,7 +90,7 @@ const Stats = () => {
 
         // Ignore draws for chosen teams
         if (betOutcome !== 'X') {
-          chosenTeam = betOutcome === '1' ? homeTeam : awayTeam;
+          const chosenTeam = betOutcome === '1' ? homeTeam : awayTeam;
           userStats.chosenTeams[chosenTeam] = (userStats.chosenTeams[chosenTeam] || 0) + 1;
 
           // Track success and failure
