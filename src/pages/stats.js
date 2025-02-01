@@ -43,8 +43,8 @@ const Stats = () => {
     Object.keys(submittedData).forEach((user) => {
       const bets = Object.entries(submittedData[user] || {});
       const teamChosenCount = {}; // Most picked team
-      const teamFailureCount = {}; // Most failed team
-      const teamPointCount = {}; // Most point-giving team
+      const teamFailureCount = {}; // Most failing team
+      const teamPointCount = {}; // Most scoring team
 
       bets.forEach(([id, bet]) => {
         const result = results[id];
@@ -60,11 +60,11 @@ const Stats = () => {
         let pointsEarned = 0;
         let chosenTeam = null;
 
-        // Ignore matches where user bet "X" (no team chosen)
+        // Ignore draws (X) for team selection
         if (betOutcome !== 'X') {
           chosenTeam = betOutcome === '1' ? home : away;
 
-          // Count how many times each team was picked
+          // Track how often the user picked this team
           teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
 
           // Calculate points
@@ -74,12 +74,12 @@ const Stats = () => {
             pointsEarned = 1; // Correct match type (1, X, 2)
           }
 
-          // Count most failing team (chosen but gave 0 points)
+          // If the team failed (gave 0 points)
           if (pointsEarned === 0) {
             teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
           }
 
-          // Count most successful team (chosen and gave points)
+          // If the team gave points
           if (pointsEarned > 0) {
             teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
           }
