@@ -42,11 +42,9 @@ const Stats = () => {
 
     Object.keys(submittedData).forEach((user) => {
       const bets = Object.entries(submittedData[user] || {});
-      const teamChosenCount = {};
-      const teamFailureCount = {};
-      const teamPointCount = {};
-      const kolejkaPoints = {};
-      let maxPointsInOneKolejka = 0;
+      const teamChosenCount = {}; // For "Najczęściej wybierana"
+      const teamFailureCount = {}; // For "Najczęściej zawodząca"
+      const teamPointCount = {}; // For "Najczęściej punktująca"
 
       bets.forEach(([id, bet]) => {
         const result = results[id];
@@ -58,35 +56,35 @@ const Stats = () => {
         const actualOutcome = homeScore === awayScore ? 'X' : homeScore > awayScore ? '1' : '2';
         const betOutcome = betHomeScore === betAwayScore ? 'X' : betHomeScore > betAwayScore ? '1' : '2';
 
-        const { home, away, kolejkaId } = bet;
+        const { home, away } = bet;
         let chosenTeam = null;
         let pointsEarned = 0;
 
-        // Only assign chosen team if the bet is not a draw
+        // Assign chosen team unless the user bet a draw (X)
         if (betOutcome === '1') chosenTeam = home;
         else if (betOutcome === '2') chosenTeam = away;
 
+        // Calculate points based on the bet
         if (betHomeScore === homeScore && betAwayScore === awayScore) {
           pointsEarned = 3; // Exact score match
         } else if (betOutcome === actualOutcome) {
-          pointsEarned = 1; // Correct outcome (1, X, 2) but wrong exact score
+          pointsEarned = 1; // Correct match type (1, X, 2)
         }
 
+        // Count the most chosen team (excluding draws)
         if (chosenTeam) {
           teamChosenCount[chosenTeam] = (teamChosenCount[chosenTeam] || 0) + 1;
-
-          if (pointsEarned === 0) {
-            teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
-          }
-
-          if (pointsEarned > 0) {
-            teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
-          }
         }
 
-        // Track points per kolejkaId
-        kolejkaPoints[kolejkaId] = (kolejkaPoints[kolejkaId] || 0) + pointsEarned;
-        maxPointsInOneKolejka = Math.max(maxPointsInOneKolejka, kolejkaPoints[kolejkaId]);
+        // Count most failing team (chosen but gave 0 points)
+        if (chosenTeam && pointsEarned === 0) {
+          teamFailureCount[chosenTeam] = (teamFailureCount[chosenTeam] || 0) + 1;
+        }
+
+        // Count most successful team (chosen and gave points)
+        if (chosenTeam && pointsEarned > 0) {
+          teamPointCount[chosenTeam] = (teamPointCount[chosenTeam] || 0) + pointsEarned;
+        }
       });
 
       const mostChosenTeams = getTopTeams(teamChosenCount);
@@ -98,7 +96,6 @@ const Stats = () => {
         mostChosenTeams,
         mostDisappointingTeams,
         mostSuccessfulTeams,
-        maxPointsInOneKolejka
       });
     });
 
@@ -124,9 +121,8 @@ const Stats = () => {
                 <h3>{userStats.user}</h3>
                 <hr />
                 <p><strong>⚽ Najczęściej Wybierana Drużyna: </strong> {userStats.mostChosenTeams.join(', ') || '------'}</p>
-                <p><strong>👎🏿 Najbardziej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeams.join(', ') || '------'}</p>
-                <p><strong>👍 Najbardziej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.join(', ') || '------'}</p>
-                <p><strong>🎖️ Najwięcej Punktów w Jednej Kolejce: </strong> {userStats.maxPointsInOneKolejka}</p>
+                <p><strong>👎🏿 Najczęściej Zawodząca Drużyna: </strong> {userStats.mostDisappointingTeams.join(', ') || '------'}</p>
+                <p><strong>👍 Najczęściej Punktująca Drużyna: </strong> {userStats.mostSuccessfulTeams.join(', ') || '------'}</p>
                 <hr />
               </div>
             ))
