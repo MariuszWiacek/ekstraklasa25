@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+wwwimport React, { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { Row, Col, Container } from 'react-bootstrap';
@@ -133,9 +133,9 @@ const Stats = () => {
             <div key={idx}>
               <h3>{stats.user}</h3>
               <hr />
-              <p><strong>⚽ Najczęściej Wybierane Drużyny: </strong> {stats.mostChosenTeams.join(', ')}</p>
-              <p><strong>👎🏿 Najbardziej Zawodzące Drużyny: </strong> {stats.mostFailureTeams.join(', ')}</p>
-              <p><strong>👍 Najbardziej Punktujące Drużyny: </strong> {stats.mostSuccessTeams.join(', ')}</p>
+              <p><strong>⚽ Najczęściej obstawiane drużyny: </strong> {stats.mostChosenTeams.join(', ')}</p>
+              <p><strong>👎🏿 Najbardziej zawodzące drużyny: </strong> {stats.mostFailureTeams.join(', ')}</p>
+              <p><strong>👍 Najczesciej trafiane drużyny: </strong> {stats.mostSuccessTeams.join(', ')}</p>
               
               
               <hr />
