@@ -210,7 +210,7 @@ const Stats = () => {
               <p><strong>👍 Najczęściej trafione zwycięstwa: </strong> {stats.mostSuccessTeams.join(', ')}</p>
               
               {/* Render Line chart for user */}
-              <div style={{ width: '50%', height: '300px', backgroundColor: '#f0f8ff' }}>
+              <div style={{ width: 'max', height: '300px', backgroundColor: '#f0f8ff' }}>
                 <Line data={stats.chartData} options={{
                     responsive: true,
                     maintainAspectRatio: false,
