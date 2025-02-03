@@ -265,21 +265,8 @@
     "date": "2025-02-14",
     "disabled": false
   },
-  {
+{
     "id": 21,
-    "kolejkaId": 21,
-    "home": "Górnik",
-    "away": "Radomiak",
-    "score": "",
-    "bet": "",
-    "result": "",
-    "type": "",
-    "kickoff": "17:30",
-    "date": "2025-02-15",
-    "disabled": false
-  },
-  {
-    "id": 22,
     "kolejkaId": 21,
     "home": "Śląsk",
     "away": "Widzew",
@@ -291,6 +278,20 @@
     "date": "2025-02-15",
     "disabled": false
   },
+  {
+    "id": 22,
+    "kolejkaId": 21,
+    "home": "Górnik",
+    "away": "Radomiak",
+    "score": "",
+    "bet": "",
+    "result": "",
+    "type": "",
+    "kickoff": "17:30",
+    "date": "2025-02-15",
+    "disabled": false
+  },
+  
   {
     "id": 23,
     "kolejkaId": 21,
@@ -423,21 +424,9 @@
     "date": "2025-02-22",
     "disabled": false
   },
+  
   {
     "id": 33,
-    "kolejkaId": 22,
-    "home": "Cracovia",
-    "away": "Jagiellonia",
-    "score": "",
-    "bet": "",
-    "result": "",
-    "type": "",
-    "kickoff": "14:45",
-    "date": "2025-02-23",
-    "disabled": false
-  },
-  {
-    "id": 34,
     "kolejkaId": 22,
     "home": "Lechia",
     "away": "Puszcza",
@@ -446,6 +435,19 @@
     "result": "",
     "type": "",
     "kickoff": "12:15",
+    "date": "2025-02-23",
+    "disabled": false
+  },
+{
+    "id": 34,
+    "kolejkaId": 22,
+    "home": "Cracovia",
+    "away": "Jagiellonia",
+    "score": "",
+    "bet": "",
+    "result": "",
+    "type": "",
+    "kickoff": "14:45",
     "date": "2025-02-23",
     "disabled": false
   },
