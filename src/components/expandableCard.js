@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/card.css'; // Import your CSS file with styles
 import Pagination from './Pagination';
 
@@ -18,6 +18,13 @@ const ExpandableCard = ({ user, bets, results }) => {
 
   const totalKolejkas = groupedBets.length;
 
+  // Show the latest kolejka by default
+  useEffect(() => {
+    if (totalKolejkas > 0) {
+      setCurrentKolejka(totalKolejkas - 1);
+    }
+  }, [totalKolejkas]);
+
   const getTypeFromResult = (result) => {
     if (!result) return null;
     const [homeScore, awayScore] = result.split(':');
@@ -31,22 +38,18 @@ const ExpandableCard = ({ user, bets, results }) => {
 
   return (
     <div className="paper-card">
-      
       <h4 className="header-style" onClick={() => setExpanded(!expanded)}>
         {user} {expanded ? '-' : '+'}
       </h4>
-     
       {expanded && (
         <div className="bet-container">
           <Pagination
             currentPage={currentKolejka}
             totalPages={totalKolejkas}
-            onPageChange={(page) => {
-              handleKolejkaChange(page);
-            }}
+            onPageChange={handleKolejkaChange}
             label="Kolejka"
           />
-          <hr></hr>
+          <hr />
           {groupedBets[currentKolejka]?.map((bet) => (
             <div key={bet.id} className="game-style">
               <div style={{ fontSize: '10px' }}>
@@ -59,16 +62,12 @@ const ExpandableCard = ({ user, bets, results }) => {
                 <span style={{ color: 'black' }}>{bet.score}</span>
                 <span className="results-style">Wynik: </span>
                 <span>{results[bet.id]}</span>
-                {bet.score === results[bet.id] && (
-                  <span className="correct-score">✅</span>
-                )}
-                {getTypeFromResult(results[bet.id]) === bet.bet && (
-                  <span className="correct-type">☑️</span>
-                )}
+                {bet.score === results[bet.id] && <span className="correct-score">✅</span>}
+                {getTypeFromResult(results[bet.id]) === bet.bet && <span className="correct-type">☑️</span>}
               </div>
             </div>
           ))}
-          <hr></hr>
+          <hr />
         </div>
       )}
     </div>
