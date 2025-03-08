@@ -69,7 +69,7 @@ const CountdownTimer = () => {
         <p style={{color: "gold", fontSize: '14px', marginBottom: '10px'}}>Następny mecz:</p>
         
          {/* Display teams and logos */} 
-         <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px' }}>
+         <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
           <div style={{ textAlign: 'center' }}>
             <img style={{ width: '50%', height: '50%' }}  src={getTeamLogo(nextGame.home)}  alt={nextGame.home} />
             <hr></hr>
@@ -81,8 +81,9 @@ const CountdownTimer = () => {
           </div>
        
         </div>
-        <FontAwesomeIcon icon={faClock} style={{fontSize: '70%', color: '#FFF5BA', marginRight: '8px' }} /> 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10%' }}>
+       
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8%' }}>
+          
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '24px', color: '#FFF5BA', fontWeight: 'bold' }}>{timeRemaining.days}</div>
             <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>dni</div>
