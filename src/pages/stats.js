@@ -34,6 +34,8 @@ const Stats = () => {
     mostMatchedCorrectScoreCount: 0,
     mostDraws: 0,
     userWithMostDraws: '',
+    zapominalskiUser: '',  // Added zapominalski user
+    zapominalskiCount: 0,  // Added zapominalski count
   });
   const [userStats, setUserStats] = useState([]);
 
@@ -59,7 +61,8 @@ const Stats = () => {
     const matchedScores = {}; // To track matched scores for general stats
     const drawCount = {}; // To track the number of correct draw predictions
     const userDraws = {}; // To track the number of draws for each user
-
+    const missingPredictions = {}; // To track the number of "missing" predictions (with ':::')
+    
     Object.keys(submittedData).forEach((user) => {
       const bets = Object.entries(submittedData[user] || {});
       const userStats = {
@@ -100,6 +103,11 @@ const Stats = () => {
         }
         userStats.kolejki[kolejkaId].points += points;
         userStats.maxPointsInOneKolejka = Math.max(userStats.maxPointsInOneKolejka, userStats.kolejki[kolejkaId].points);
+
+        // Track missing predictions (with ':::')
+        if (betScore === ':::') {
+          missingPredictions[user] = (missingPredictions[user] || 0) + 1;
+        }
 
         // Ignore draws for chosen teams
         if (betOutcome !== 'X') {
@@ -165,7 +173,13 @@ const Stats = () => {
     // Find the most chosen and matched scores
     const mostChosenCorrectScore = findMostFrequent(scoreCount);
     const mostMatchedCorrectScore = findMostFrequent(matchedScores);
-    
+
+    // Find the user with the most ":::"
+    const zapominalskiUser = Object.keys(missingPredictions).reduce((a, b) =>
+      missingPredictions[a] > missingPredictions[b] ? a : b, null);
+
+    const zapominalskiCount = missingPredictions[zapominalskiUser] || 0;
+
     setGeneralStats({
       mostChosenCorrectScore: mostChosenCorrectScore.length ? mostChosenCorrectScore[0] : '------',
       mostMatchedCorrectScore: mostMatchedCorrectScore.length ? mostMatchedCorrectScore[0] : '------',
@@ -173,11 +187,12 @@ const Stats = () => {
       mostMatchedCorrectScoreCount: mostMatchedCorrectScore.length ? matchedScores[mostMatchedCorrectScore[0]] : 0,
       mostDraws: Math.max(...Object.values(drawCount), 0),
       userWithMostDraws: Object.keys(drawCount).find(user => drawCount[user] === Math.max(...Object.values(drawCount))) || '------',
+      zapominalskiUser,  // Set zapominalski user
+      zapominalskiCount,  // Set zapominalski count
     });
 
     setUserStats(userStatsData);
   }, [submittedData, results]);
-
 
   // Function to find the most frequent items
   const findMostFrequent = (items) => {
@@ -194,6 +209,7 @@ const Stats = () => {
           <p><strong>🏆 Najczęściej wybierany wynik: </strong> {generalStats.mostChosenCorrectScore} ({generalStats.mostChosenCorrectScoreCount} razy)</p>
           <p><strong>💥 Najczęściej trafiony wynik: </strong> {generalStats.mostMatchedCorrectScore} ({generalStats.mostMatchedCorrectScoreCount} razy)</p>
           <p><strong>🔴 Najwięcej trafionych remisów: </strong> {generalStats.mostDraws} (Użytkownik: {generalStats.userWithMostDraws})</p>
+          <p><strong>🤯 Największy zapominalski: </strong> {generalStats.zapominalskiUser} ({generalStats.zapominalskiCount} razy)</p>  {/* Display zapominalski user */}
         </Col>
       </Row>
 
