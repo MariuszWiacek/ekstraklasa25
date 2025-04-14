@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import '../styles/animations.css'; 
-import logo from '../images/ekstra.png';
 import TeamLogos from '../components/teamLogos'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faWhatsapp } from '@fortawesome/free-brands-svg-icons';
@@ -52,9 +51,7 @@ const Home = () => {
                 </Link>
             </p>
         </Col>
-                    <Col md={6} className="text-center spde-in">
-                        <img src={logo} alt="Logo" style={logoStyle} />
-                    </Col>
+                    
                 </Row>
             </Container>
             
@@ -91,11 +88,5 @@ const linkHoverStyle = {
     color: '#ff6347',
 };
 
-const logoStyle = {
-    width: '100%',
-    maxWidth: '300px',
-    height: 'auto',
-    margin: '20px auto',
-};
 
 export default Home;
