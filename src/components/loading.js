@@ -31,7 +31,7 @@ function Loading({ onLoaded }) {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundImage: `url(${require('../images/flares2.png')})`,
+        backgroundImage: `url(${require('../images/stadium.png')})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         display: 'flex',
