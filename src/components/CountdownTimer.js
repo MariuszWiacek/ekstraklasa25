@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import gameData from '../gameData/data.json'; 
-import teamsData from '../gameData/teams.json'; // Assuming the logos are stored in this file
+import gameData from '../gameData/data.json';
+import teamsData from '../gameData/teams.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
@@ -9,11 +9,10 @@ import { DateTime } from 'luxon';
 const getTeamLogo = (teamName) => {
   const team = teamsData[teamName];
   if (team && team.logo) {
-    // Return the correct logo path, assuming logos are under the public folder
-    return `${team.logo}`; // Adjust this based on the path where the images are located
+    return `${team.logo}`;
   } else {
-    console.log('No logo found for:', teamName); // Debugging log
-    return '/assets/default-logo.png'; // Fallback logo if not found
+    console.log('No logo found for:', teamName);
+    return '/assets/default-logo.png'; // Fallback logo
   }
 };
 
@@ -24,21 +23,20 @@ const CountdownTimer = () => {
   useEffect(() => {
     const updateTimeRemaining = () => {
       const now = DateTime.now().setZone("Europe/Warsaw");
-      console.log('Current Time:', now.toISO()); // Debugging log
+      console.log('Current Time:', now.toISO());
 
-      // Find the next upcoming game
-      const upcomingGame = gameData.find(game => {
-        const gameDateTime = DateTime.fromISO(`${game.date}T${game.kickoff}:00`, { zone: "Europe/Warsaw" });
-        console.log('Game Time:', gameDateTime.toISO()); // Debugging log
-
-        return gameDateTime > now;
-      });
+      // Find the next upcoming game sorted by closest datetime
+      const upcomingGame = gameData
+        .map(game => ({
+          ...game,
+          gameDateTime: DateTime.fromISO(`${game.date}T${game.kickoff}:00`, { zone: "Europe/Warsaw" })
+        }))
+        .filter(game => game.gameDateTime > now)
+        .sort((a, b) => a.gameDateTime - b.gameDateTime)[0];
 
       if (upcomingGame) {
-        console.log('Next Game:', upcomingGame); // Debugging log to see the full game object
-        setNextGame(upcomingGame); // Set next game if found
-        const gameDateTime = DateTime.fromISO(`${upcomingGame.date}T${upcomingGame.kickoff}:00`, { zone: "Europe/Warsaw" });
-        const diff = gameDateTime.diff(now, ["days", "hours", "minutes", "seconds"]).toObject();
+        setNextGame(upcomingGame);
+        const diff = upcomingGame.gameDateTime.diff(now, ["days", "hours", "minutes", "seconds"]).toObject();
 
         setTimeRemaining({
           days: Math.floor(diff.days),
@@ -47,7 +45,8 @@ const CountdownTimer = () => {
           seconds: Math.floor(diff.seconds),
         });
       } else {
-        console.log('No upcoming game found'); // Debugging log
+        console.log('No upcoming game found');
+        setNextGame(null);
       }
     };
 
@@ -56,34 +55,24 @@ const CountdownTimer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (nextGame) {
-      console.log('Next Game Home Team:', nextGame.home);
-      console.log('Next Game Away Team:', nextGame.away);
-    }
-  }, [nextGame]);
-
   return (
     nextGame ? (
-      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '24px', textAlign: 'center', marginBottom: '10px'}}>
-        <p style={{color: "gold", fontSize: '14px', marginBottom: '10px'}}>Następny mecz:</p>
-        
-         {/* Display teams and logos */} 
-         <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
+      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '24px', textAlign: 'center', marginBottom: '10px' }}>
+        <p style={{ color: "gold", fontSize: '14px', marginBottom: '10px' }}>Następny mecz:</p>
+
+        <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
           <div style={{ textAlign: 'center' }}>
-            <img style={{ width: '50%', height: '50%' }}  src={getTeamLogo(nextGame.home)}  alt={nextGame.home} />
-            <hr></hr>
+            <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.home)} alt={nextGame.home} />
+            <hr />
           </div>
           <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'gold' }}>VS</span>
           <div style={{ textAlign: 'center' }}>
             <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.away)} alt={nextGame.away} />
-            <hr></hr>
+            <hr />
           </div>
-       
         </div>
-       
+
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8%' }}>
-          
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '24px', color: '#FFF5BA', fontWeight: 'bold' }}>{timeRemaining.days}</div>
             <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>dni</div>
@@ -101,12 +90,9 @@ const CountdownTimer = () => {
             <div style={{ color: 'red', fontSize: '14px', fontWeight: '800' }}>sek.</div>
           </div>
         </div>
-       
-       
-          
       </div>
     ) : (
-      <p>No upcoming games!</p> // If no game is found, display a message
+      <p>No upcoming games!</p>
     )
   );
 };
