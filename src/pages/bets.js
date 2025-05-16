@@ -5,9 +5,9 @@ import 'firebase/compat/database';
 import usersData from '../gameData/users.json';
 import gameData from '../gameData/data.json';
 import teamsData from '../gameData/teams.json';
-import { getDatabase, ref, onValue, set } from 'firebase/database';
+import { getDatabase, ref, onValue, update } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import ExpandableCard from '../components/expandableCard';
 import Pagination from '../components/Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,13 +19,14 @@ const firebaseConfig = {
   authDomain: "wiosna25-66ab3.firebaseapp.com",
   databaseURL: "https://wiosna25-66ab3-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "wiosna25-66ab3",
-  storageBucket: "wiosna25-66ab3.firebasestorage.app",
+  storageBucket: "wiosna25-66ab3.appspot.com",
   messagingSenderId: "29219460780",
   appId: "1:29219460780:web:de984a281514ab6cdc7109",
   measurementId: "G-8Z3CMMQKE8"
 };
 
-initializeApp(firebaseConfig);
+
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 const auth = getAuth();
 const database = getDatabase();
@@ -33,8 +34,8 @@ const database = getDatabase();
 const groupGamesIntoKolejki = (games) => {
   const kolejki = [];
   games.forEach((game, index) => {
-    const currentKolejkaId = Math.floor(index / 9) + 1; // Calculate the Kolejka ID (every 9 games)
-    game.kolejkaId = currentKolejkaId;  // Add kolejekId to each game
+    const currentKolejkaId = Math.floor(index / 9) + 1;
+    game.kolejkaId = currentKolejkaId;
     if (!kolejki[currentKolejkaId - 1]) {
       kolejki[currentKolejkaId - 1] = { id: currentKolejkaId, games: [] };
     }
@@ -50,21 +51,14 @@ const Bets = () => {
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [results, setResults] = useState({});
   const [currentKolejkaIndex, setCurrentKolejkaIndex] = useState(0);
-  const [areInputsEditable, setAreInputsEditable] = useState(true); 
-  const [password, setPassword] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isEditable, setIsEditable] = useState(false);
+  const [areInputsEditable, setAreInputsEditable] = useState(true);
 
   useEffect(() => {
     const lastChosenUser = localStorage.getItem('selectedUser');
-    if (lastChosenUser) {
-      setSelectedUser(lastChosenUser);
-    }
+    if (lastChosenUser) setSelectedUser(lastChosenUser);
 
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        setSelectedUser(user.displayName);
-      }
+      if (user) setSelectedUser(user.displayName);
     });
 
     const dbRef = ref(database, 'submittedData');
@@ -79,9 +73,7 @@ const Bets = () => {
     const resultsRef = ref(database, 'results');
     onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) {
-        setResults(data);
-      }
+      if (data) setResults(data);
     });
 
     const now = new Date();
@@ -90,46 +82,39 @@ const Bets = () => {
     setCurrentKolejkaIndex(kolejkaIndex);
   }, []);
 
-  const isReadOnly = (selectedUser, index) => {
-    return submittedData[selectedUser] && submittedData[selectedUser][index];
-  };
+  const isReadOnly = (user, gameId) => submittedData[user] && submittedData[user][gameId];
 
   const gameStarted = (gameDate, gameKickoff) => {
-    const currentDateTime = DateTime.now().setZone('Europe/Warsaw');
-    const gameDateTime = DateTime.fromISO(`${gameDate}T${gameKickoff}:00`, { zone: 'Europe/Warsaw' });
-    return currentDateTime >= gameDateTime;
+    const now = DateTime.now().setZone('Europe/Warsaw');
+    const kickoff = DateTime.fromISO(`${gameDate}T${gameKickoff}:00`, { zone: 'Europe/Warsaw' });
+    return now >= kickoff;
+  };
+
+  const autoDetectBetType = (score) => {
+    const [home, away] = score.split(':').map(Number);
+    if (home === away) return 'X';
+    return home > away ? '1' : '2';
+  };
+
+  const handleScoreChange = (gameId, scoreInput) => {
+    const cleaned = scoreInput.replace(/[^0-9:]/g, '');
+    const formatted = cleaned.replace(/^(?:(\d))([^:]*$)/, '$1:$2');
+
+    const updated = kolejki.map(kolejka => ({
+      ...kolejka,
+      games: kolejka.games.map(game =>
+        game.id === gameId
+          ? { ...game, score: formatted, bet: autoDetectBetType(formatted) }
+          : game
+      )
+    }));
+    setKolejki(updated);
   };
 
   const handleUserChange = (e) => {
     const user = e.target.value;
     setSelectedUser(user);
     localStorage.setItem('selectedUser', user);
-  };
-
-  const autoDetectBetType = (score) => {
-    const [homeScore, awayScore] = score.split(':').map(Number);
-    if (homeScore === awayScore) {
-      return 'X';
-    } else if (homeScore > awayScore) {
-      return '1';
-    } else {
-      return '2';
-    }
-  };
-
-  const handleScoreChange = (gameId, newScore) => {
-    const cleanedScore = newScore.replace(/[^0-9:]/g, '');
-    const formattedScore = cleanedScore.replace(/^(?:(\d))([^:]*$)/, '$1:$2');
-
-    const updatedKolejki = kolejki.map(kolejka => ({
-      ...kolejka,
-      games: kolejka.games.map(game =>
-        game.id === gameId
-          ? { ...game, score: formattedScore, bet: autoDetectBetType(formattedScore) }
-          : game
-      )
-    }));
-    setKolejki(updatedKolejki);
   };
 
   const handleSubmit = () => {
@@ -141,17 +126,17 @@ const Bets = () => {
     const currentKolejka = kolejki[currentKolejkaIndex];
     const userSubmittedBets = submittedData[selectedUser] || {};
 
-    const newBetsToSubmit = currentKolejka.games.reduce((newBets, game) => {
+    const newBetsToSubmit = currentKolejka.games.reduce((acc, game) => {
       if (game.score && !userSubmittedBets[game.id]) {
-        newBets[game.id] = {
+        acc[game.id] = {
           home: game.home,
           away: game.away,
           score: game.score,
           bet: autoDetectBetType(game.score),
-          kolejkaId: game.kolejkaId, // Store Kolejka ID with each bet
+          kolejkaId: game.kolejkaId,
         };
       }
-      return newBets;
+      return acc;
     }, {});
 
     if (Object.keys(newBetsToSubmit).length === 0) {
@@ -159,55 +144,28 @@ const Bets = () => {
       return;
     }
 
-    set(ref(database, `submittedData/${selectedUser}`), { ...userSubmittedBets, ...newBetsToSubmit })
+    update(ref(database, `submittedData/${selectedUser}`), newBetsToSubmit)
       .then(() => {
-        setSubmittedData({ ...submittedData, [selectedUser]: { ...userSubmittedBets, ...newBetsToSubmit } });
+        setSubmittedData(prev => ({
+          ...prev,
+          [selectedUser]: {
+            ...prev[selectedUser],
+            ...newBetsToSubmit
+          }
+        }));
         setIsDataSubmitted(true);
         alert('Zakłady zostały pomyślnie przesłane!');
       })
       .catch((error) => {
-        console.error('Błąd podczas przesyłania danych:', error);
-        alert('Wystąpił błąd podczas przesyłania zakładów. Proszę spróbować ponownie.');
+        console.error('Błąd:', error);
+        alert('Wystąpił błąd przy zapisie. Spróbuj ponownie.');
       });
-
-    setKolejki(prevKolejki =>
-      prevKolejki.map((kolejka, idx) =>
-        idx === currentKolejkaIndex
-          ? {
-            ...kolejka,
-            games: kolejka.games.map(game =>
-              userSubmittedBets[game.id]
-                ? { ...game, readOnly: true }
-                : game
-            )
-          }
-          : kolejka
-      )
-    );
   };
 
-  const getTeamLogo = (teamName) => {
-    const team = teamsData[teamName];
-    return team ? team.logo : ''; // Default logo if not found
-  };
-
-  const getBetsForKolejka = (kolejkaId) => {
-    return Object.keys(submittedData).reduce((acc, user) => {
-      const userBets = submittedData[user];
-      const betsForKolejka = Object.keys(userBets)
-        .filter((gameId) => userBets[gameId].kolejkaId === kolejkaId)
-        .map((gameId) => userBets[gameId]);
-      if (betsForKolejka.length) {
-        acc[user] = betsForKolejka;
-      }
-      return acc;
-    }, {});
-  };
-
+  const getTeamLogo = (name) => teamsData[name]?.logo || '';
   const toggleEditableOff = () => setAreInputsEditable(false);
   const toggleEditableOn = () => setAreInputsEditable(true);
-
-  return (
+return (
     <div className="fade-in" style={{ textAlign: 'center' }}>
       <p>Wybrany użytkownik : </p>
       <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px', fontSize: '14px', color: 'yellow' }} />
