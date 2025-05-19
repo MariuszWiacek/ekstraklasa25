@@ -42,34 +42,40 @@ const ExpandableCard = ({ user, bets, results }) => {
         {user} {expanded ? '-' : '+'}
       </h4>
       {expanded && (
-        <div className="bet-container">
-          <Pagination
-            currentPage={currentKolejka}
-            totalPages={totalKolejkas}
-            onPageChange={handleKolejkaChange}
-            label="Kolejka"
-          />
-          <hr />
-          {groupedBets[currentKolejka]?.map((bet) => (
-            <div key={bet.id} className="game-style">
-              <div style={{ fontSize: '10px' }}>
-                <span style={{ color: 'black' }}>{bet.home}</span>
-                {' vs. '}
-                <span style={{ color: 'black' }}>{bet.away}</span>
-                {' | '}
-                <span style={{ color: 'blue' }}>Typ: [ {bet.bet} ]</span>
-                {' | '}
-                <span style={{ color: 'black' }}>{bet.score}</span>
-                <span className="results-style">Wynik: </span>
-                <span>{results[bet.id]}</span>
-                {bet.score === results[bet.id] && <span className="correct-score">✅</span>}
-                {getTypeFromResult(results[bet.id]) === bet.bet && <span className="correct-type">☑️</span>}
-              </div>
-            </div>
-          ))}
-          <hr />
+  <div className="bet-container">
+    <Pagination
+      currentPage={currentKolejka}
+      totalPages={totalKolejkas}
+      onPageChange={handleKolejkaChange}
+      label="Kolejka"
+    />
+    <hr />
+    
+    {currentKolejka === 15 ? (
+      <div style={{ fontStyle: 'italic', color: 'gray', padding: '8px' }}>
+        Typy dla 16. kolejki są tymczasowo ukryte. Zostaną odkryte po rozpoczęciu meczów.
+      </div>
+    ) : (
+      groupedBets[currentKolejka]?.map((bet) => (
+        <div key={bet.id} className="game-style">
+          <div style={{ fontSize: '10px' }}>
+            <span style={{ color: 'black' }}>{bet.home}</span> vs. <span style={{ color: 'black' }}>{bet.away}</span> | 
+            <span style={{ color: 'blue' }}> Typ: [ {bet.bet} ] </span> | 
+            <span style={{ color: 'black' }}>{bet.score}</span>
+            <span className="results-style"> Wynik: </span>
+            <span>{results[bet.id]}</span>
+            {bet.score === results[bet.id] && <span className="correct-score">✅</span>}
+            {getTypeFromResult(results[bet.id]) === bet.bet && <span className="correct-type">☑️</span>}
+          </div>
         </div>
-      )}
+      ))
+    )}
+
+    <hr />
+  </div>
+)}
+
+    
     </div>
   );
 };
