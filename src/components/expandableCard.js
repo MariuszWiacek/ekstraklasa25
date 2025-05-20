@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/card.css'; // Import your CSS file with styles
+import '../styles/card.css';
 import Pagination from './Pagination';
 
 const ExpandableCard = ({ user, bets, results }) => {
@@ -7,10 +7,10 @@ const ExpandableCard = ({ user, bets, results }) => {
   const [currentKolejka, setCurrentKolejka] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
-  // Group bets into kolejkas based on their IDs
+  // Group bets into kolejkas
   const groupedBets = Object.keys(bets).reduce((acc, key) => {
-    const betID = parseInt(key, 10); // Ensure ID is a number
-    const kolejkaIndex = Math.floor((betID - 1) / gamesPerKolejka); // Determine kolejka index (0-based)
+    const betID = parseInt(key, 10);
+    const kolejkaIndex = Math.floor((betID - 1) / gamesPerKolejka);
     if (!acc[kolejkaIndex]) acc[kolejkaIndex] = [];
     acc[kolejkaIndex].push({ id: key, ...bets[key] });
     return acc;
@@ -18,7 +18,6 @@ const ExpandableCard = ({ user, bets, results }) => {
 
   const totalKolejkas = groupedBets.length;
 
-  // Show the latest kolejka by default
   useEffect(() => {
     if (totalKolejkas > 0) {
       setCurrentKolejka(totalKolejkas - 1);
@@ -41,41 +40,47 @@ const ExpandableCard = ({ user, bets, results }) => {
       <h4 className="header-style" onClick={() => setExpanded(!expanded)}>
         {user} {expanded ? '-' : '+'}
       </h4>
+
       {expanded && (
-  <div className="bet-container">
-    <Pagination
-      currentPage={currentKolejka}
-      totalPages={totalKolejkas}
-      onPageChange={handleKolejkaChange}
-      label="Kolejka"
-    />
-    <hr />
-    
-    {currentKolejka === 15 ? (
-      <div style={{ fontStyle: 'italic', color: 'gray', padding: '8px' }}>
-        Typy dla 16. kolejki są tymczasowo ukryte. Zostaną odkryte po rozpoczęciu meczów.
-      </div>
-    ) : (
-      groupedBets[currentKolejka]?.map((bet) => (
-        <div key={bet.id} className="game-style">
-          <div style={{ fontSize: '10px' }}>
-            <span style={{ color: 'black' }}>{bet.home}</span> vs. <span style={{ color: 'black' }}>{bet.away}</span> | 
-            <span style={{ color: 'blue' }}> Typ: [ {bet.bet} ] </span> | 
-            <span style={{ color: 'black' }}>{bet.score}</span>
-            <span className="results-style"> Wynik: </span>
-            <span>{results[bet.id]}</span>
-            {bet.score === results[bet.id] && <span className="correct-score">✅</span>}
-            {getTypeFromResult(results[bet.id]) === bet.bet && <span className="correct-type">☑️</span>}
-          </div>
+        <div className="bet-container">
+          <Pagination
+            currentPage={currentKolejka}
+            totalPages={totalKolejkas}
+            onPageChange={handleKolejkaChange}
+            label="Kolejka"
+          />
+          <hr />
+
+          {groupedBets[currentKolejka]?.map((bet) => (
+            <div key={bet.id} className="game-style">
+              <div style={{ fontSize: '10px' }}>
+                <span style={{ color: 'black' }}>{bet.home}</span> vs. <span style={{ color: 'black' }}>{bet.away}</span> |{' '}
+                
+                {/* Show ✔️ instead of bet on Kolejka 16 */}
+                {currentKolejka === 15 ? (
+                  <span style={{ color: 'green' }}>Typ: [ ✔️ ]</span>
+                ) : (
+                  <span style={{ color: 'blue' }}>Typ: [ {bet.bet} ]</span>
+                )} |{' '}
+                
+                <span style={{ color: 'black' }}>{bet.score}</span>
+                <span className="results-style"> Wynik: </span>
+                <span>{results[bet.id]}</span>
+
+                {/* Only show correctness icons if NOT Kolejka 16 */}
+                {currentKolejka !== 15 && bet.score === results[bet.id] && (
+                  <span className="correct-score">✅</span>
+                )}
+                {currentKolejka !== 15 && getTypeFromResult(results[bet.id]) === bet.bet && (
+                  <span className="correct-type">☑️</span>
+                )}
+              </div>
+            </div>
+          ))}
+
+          <hr />
         </div>
-      ))
-    )}
-
-    <hr />
-  </div>
-)}
-
-    
+      )}
     </div>
   );
 };
