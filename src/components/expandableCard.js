@@ -51,7 +51,9 @@ const ExpandableCard = ({ user, bets, results }) => {
           />
           <hr />
 
-          {groupedBets[currentKolejka]?.map((bet) => (
+         <div style={{ fontSize: '11px', marginTop: '4px', color: 'gray' }}>
+                      Typy dla 16. kolejki są ukryte — zostaną ujawnione po starcie meczów lub gdy wszyscy oddadzą typy.
+                    </div> <hr /> {groupedBets[currentKolejka]?.map((bet) => (
             <div key={bet.id} className="game-style">
               <div style={{ fontSize: '10px' }}>
                 <span style={{ color: 'black' }}>{bet.home}</span> vs. <span style={{ color: 'black' }}>{bet.away}</span> |{' '}
@@ -60,9 +62,7 @@ const ExpandableCard = ({ user, bets, results }) => {
                   <>
                     <span style={{ color: 'green' }}>Typ: [ ✔️ ]</span> | 
                     <span style={{ color: 'green' }}>[ ✔️ ]</span>
-                    <div style={{ fontSize: '11px', marginTop: '4px', color: 'gray' }}>
-                      Typy dla 16. kolejki są ukryte — zostaną ujawnione po starcie meczów lub gdy wszyscy oddadzą typy.
-                    </div>
+                    
                   </>
                 ) : (
                   <>
