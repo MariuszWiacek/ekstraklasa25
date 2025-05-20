@@ -59,7 +59,10 @@ const ExpandableCard = ({ user, bets, results }) => {
                 {currentKolejka === 15 ? (
                   <>
                     <span style={{ color: 'green' }}>Typ: [ ✔️ ]</span> | 
-                    <span style={{ color: 'green' }}>Wynik: [ ✔️ ]</span>
+                    <span style={{ color: 'green' }}>[ ✔️ ]</span>
+                    <div style={{ fontSize: '11px', marginTop: '4px', color: 'gray' }}>
+                      Typy dla 16. kolejki są ukryte — zostaną ujawnione po starcie meczów lub gdy wszyscy oddadzą typy.
+                    </div>
                   </>
                 ) : (
                   <>
