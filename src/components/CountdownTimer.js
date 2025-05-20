@@ -1,99 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import gameData from '../gameData/data.json';
 import teamsData from '../gameData/teams.json';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 
-// Function to get team logo from teamsData
 const getTeamLogo = (teamName) => {
   const team = teamsData[teamName];
-  if (team && team.logo) {
-    return `${team.logo}`;
-  } else {
-    console.log('No logo found for:', teamName);
-    return '/assets/default-logo.png'; // Fallback logo
-  }
+  return team?.logo || '/assets/default-logo.png';
 };
 
 const CountdownTimer = () => {
-  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [nextGame, setNextGame] = useState(null);
+  const [upcomingGames, setUpcomingGames] = useState([]);
 
   useEffect(() => {
-    const updateTimeRemaining = () => {
+    const updateGames = () => {
       const now = DateTime.now().setZone("Europe/Warsaw");
-      console.log('Current Time:', now.toISO());
 
-      // Find the next upcoming game sorted by closest datetime
-      const upcomingGame = gameData
+      const upcoming = gameData
         .map(game => ({
           ...game,
           gameDateTime: DateTime.fromISO(`${game.date}T${game.kickoff}:00`, { zone: "Europe/Warsaw" })
         }))
         .filter(game => game.gameDateTime > now)
-        .sort((a, b) => a.gameDateTime - b.gameDateTime)[0];
+        .sort((a, b) => a.gameDateTime - b.gameDateTime);
 
-      if (upcomingGame) {
-        setNextGame(upcomingGame);
-        const diff = upcomingGame.gameDateTime.diff(now, ["days", "hours", "minutes", "seconds"]).toObject();
-
-        setTimeRemaining({
-          days: Math.floor(diff.days),
-          hours: Math.floor(diff.hours),
-          minutes: Math.floor(diff.minutes),
-          seconds: Math.floor(diff.seconds),
-        });
-      } else {
-        console.log('No upcoming game found');
-        setNextGame(null);
-      }
+      setUpcomingGames(upcoming);
     };
 
-    updateTimeRemaining();
-    const interval = setInterval(updateTimeRemaining, 1000);
+    updateGames();
+    const interval = setInterval(updateGames, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    nextGame ? (
-      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '24px', textAlign: 'center', marginBottom: '10px' }}>
-        <p style={{ color: "gold", fontSize: '14px', marginBottom: '10px' }}>Następny mecz:</p>
+  const getTimeDiff = (gameTime) => {
+    const now = DateTime.now().setZone("Europe/Warsaw");
+    const diff = gameTime.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
+    return {
+      days: Math.floor(diff.days),
+      hours: Math.floor(diff.hours),
+      minutes: Math.floor(diff.minutes),
+      seconds: Math.floor(diff.seconds),
+    };
+  };
 
-        <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.home)} alt={nextGame.home} />
-            <hr />
-          </div>
-          <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'gold' }}>VS</span>
-          <div style={{ textAlign: 'center' }}>
-            <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.away)} alt={nextGame.away} />
-            <hr />
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8%' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', color: '#FFF5BA', fontWeight: 'bold' }}>{timeRemaining.days}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>dni</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', color: '#FFF1A3', fontWeight: 'bold' }}>{timeRemaining.hours}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>godz.</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', color: '#FFE862', fontWeight: 'bold' }}>{timeRemaining.minutes}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>min.</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', color: '#FFDE21', fontWeight: 'bold' }}>{timeRemaining.seconds}</div>
-            <div style={{ color: 'red', fontSize: '14px', fontWeight: '800' }}>sek.</div>
-          </div>
-        </div>
+  if (upcomingGames.length === 9) {
+    return (
+      <div style={{ textAlign: 'center', backgroundColor: '#1e1e1e', color: 'gold', padding: '30px', fontSize: '24px', fontWeight: 'bold' }}>
+        Ostatnia kolejka! Czas na wielki finał!
       </div>
-    ) : (
-      <p>No upcoming games!</p>
-    )
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', padding: '16px', backgroundColor: '#212529ab', color: 'aliceblue' }}>
+      {upcomingGames.map((game, idx) => {
+        const time = getTimeDiff(game.gameDateTime);
+        return (
+          <div key={idx} style={{ width: '160px', padding: '10px', backgroundColor: '#2c2c2c', borderRadius: '12px', textAlign: 'center' }}>
+            <div>
+              <img src={getTeamLogo(game.home)} alt={game.home} style={{ width: '40px', height: '40px' }} />
+              <div style={{ fontSize: '12px', margin: '4px 0' }}>{game.home}</div>
+            </div>
+            <div style={{ color: 'gold', fontWeight: 'bold' }}>VS</div>
+            <div>
+              <img src={getTeamLogo(game.away)} alt={game.away} style={{ width: '40px', height: '40px' }} />
+              <div style={{ fontSize: '12px', margin: '4px 0' }}>{game.away}</div>
+            </div>
+            <div style={{ marginTop: '8px', fontSize: '12px' }}>
+              <div>{time.days}d {time.hours}h</div>
+              <div>{time.minutes}m {time.seconds}s</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 
