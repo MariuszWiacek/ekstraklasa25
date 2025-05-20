@@ -55,19 +55,22 @@ const ExpandableCard = ({ user, bets, results }) => {
             <div key={bet.id} className="game-style">
               <div style={{ fontSize: '10px' }}>
                 <span style={{ color: 'black' }}>{bet.home}</span> vs. <span style={{ color: 'black' }}>{bet.away}</span> |{' '}
-                
-                {/* Show ✔️ instead of bet on Kolejka 16 */}
+
                 {currentKolejka === 15 ? (
-                  <span style={{ color: 'green' }}>Typ: [ ✔️ ]</span>
+                  <>
+                    <span style={{ color: 'green' }}>Typ: [ ✔️ ]</span> | 
+                    <span style={{ color: 'green' }}>Wynik: [ ✔️ ]</span>
+                  </>
                 ) : (
-                  <span style={{ color: 'blue' }}>Typ: [ {bet.bet} ]</span>
-                )} |{' '}
-                
-                <span style={{ color: 'black' }}>{bet.score}</span>
+                  <>
+                    <span style={{ color: 'blue' }}>Typ: [ {bet.bet} ]</span> | 
+                    <span style={{ color: 'black' }}>{bet.score}</span>
+                  </>
+                )}
+
                 <span className="results-style"> Wynik: </span>
                 <span>{results[bet.id]}</span>
 
-                {/* Only show correctness icons if NOT Kolejka 16 */}
                 {currentKolejka !== 15 && bet.score === results[bet.id] && (
                   <span className="correct-score">✅</span>
                 )}
