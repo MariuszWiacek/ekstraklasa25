@@ -10,50 +10,96 @@ const getTeamLogo = (teamName) => {
 
 const CountdownTimer = () => {
   const [upcomingGames, setUpcomingGames] = useState([]);
+  const [finalRoundTime, setFinalRoundTime] = useState(null);
+  const [timeRemaining, setTimeRemaining] = useState(null);
 
   useEffect(() => {
-    const updateGames = () => {
-      const now = DateTime.now().setZone("Europe/Warsaw");
+    const now = DateTime.now().setZone("Europe/Warsaw");
 
-      const upcoming = gameData
-        .map(game => ({
-          ...game,
-          gameDateTime: DateTime.fromISO(`${game.date}T${game.kickoff}:00`, { zone: "Europe/Warsaw" })
-        }))
-        .filter(game => game.gameDateTime > now)
-        .sort((a, b) => a.gameDateTime - b.gameDateTime);
+    const upcoming = gameData
+      .map(game => ({
+        ...game,
+        gameDateTime: DateTime.fromISO(`${game.date}T${game.kickoff}:00`, { zone: "Europe/Warsaw" })
+      }))
+      .filter(game => game.gameDateTime > now)
+      .sort((a, b) => a.gameDateTime - b.gameDateTime);
 
-      setUpcomingGames(upcoming);
-    };
+    setUpcomingGames(upcoming);
 
-    updateGames();
-    const interval = setInterval(updateGames, 60000);
-    return () => clearInterval(interval);
+    if (upcoming.length === 9) {
+      const firstGameTime = upcoming[0].gameDateTime;
+      setFinalRoundTime(firstGameTime);
+
+      const updateCountdown = () => {
+        const current = DateTime.now().setZone("Europe/Warsaw");
+        const diff = firstGameTime.diff(current, ['days', 'hours', 'minutes', 'seconds']).toObject();
+        setTimeRemaining({
+          days: Math.floor(diff.days),
+          hours: Math.floor(diff.hours),
+          minutes: Math.floor(diff.minutes),
+          seconds: Math.floor(diff.seconds),
+        });
+      };
+
+      updateCountdown();
+      const interval = setInterval(updateCountdown, 1000);
+      return () => clearInterval(interval);
+    }
   }, []);
 
-  const getTimeDiff = (gameTime) => {
-    const now = DateTime.now().setZone("Europe/Warsaw");
-    const diff = gameTime.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
-    return {
-      days: Math.floor(diff.days),
-      hours: Math.floor(diff.hours),
-      minutes: Math.floor(diff.minutes),
-      seconds: Math.floor(diff.seconds),
-    };
-  };
-
-  if (upcomingGames.length === 9) {
+  if (upcomingGames.length === 9 && timeRemaining) {
     return (
-      <div style={{ textAlign: 'center', backgroundColor: '#1e1e1e', color: 'gold', padding: '30px', fontSize: '24px', fontWeight: 'bold' }}>
-        Ostatnia kolejka! Czas na wielki finał!
+      <div style={{
+        textAlign: 'center',
+        backgroundColor: '#1e1e1e',
+        color: 'gold',
+        padding: '30px',
+        borderRadius: '12px',
+        fontFamily: 'Arial Black, sans-serif'
+      }}>
+        <div style={{ fontSize: '28px', marginBottom: '10px' }}>
+          Ostatnia kolejka! Czas na wielki finał!
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '30px',
+          fontSize: '20px',
+          color: '#FFF9C4'
+        }}>
+          <div>
+            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.days}</div>
+            <div style={{ fontWeight: 'bold' }}>dni</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.hours}</div>
+            <div style={{ fontWeight: 'bold' }}>godz.</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.minutes}</div>
+            <div style={{ fontWeight: 'bold' }}>min.</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.seconds}</div>
+            <div style={{ fontWeight: 'bold' }}>sek.</div>
+          </div>
+        </div>
       </div>
     );
   }
 
+  // Show all upcoming games if not 9
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', padding: '16px', backgroundColor: '#212529ab', color: 'aliceblue' }}>
       {upcomingGames.map((game, idx) => {
-        const time = getTimeDiff(game.gameDateTime);
+        const now = DateTime.now().setZone("Europe/Warsaw");
+        const diff = game.gameDateTime.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
+        const time = {
+          days: Math.floor(diff.days),
+          hours: Math.floor(diff.hours),
+          minutes: Math.floor(diff.minutes),
+          seconds: Math.floor(diff.seconds),
+        };
         return (
           <div key={idx} style={{ width: '160px', padding: '10px', backgroundColor: '#2c2c2c', borderRadius: '12px', textAlign: 'center' }}>
             <div>
