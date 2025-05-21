@@ -96,7 +96,7 @@ const CountdownTimer = () => {
             </div>
           ) : (
             // If multiple games but not 9 simultaneous, just show count of next games
-            <p style={{ fontSize: '18px', fontWeight: 'bold', color: 'gold' }}>
+            <p style={{ fontSize: '32px', fontWeight: 'bold', color: 'gold', fontFamily:"Rubik" }}>
               Wielki finał <br></br> Ostatnia kolejka !
             </p>
           )}
