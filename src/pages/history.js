@@ -47,6 +47,8 @@ const styles = {
     lineHeight: "1.8",
     marginBottom: "3rem",
     textAlign: "center",
+    fontStyle: "italic",
+    
   },
   title: {
     fontSize: "3.5rem",
@@ -80,7 +82,7 @@ const styles = {
     color: "#AAA",
     fontWeight: "500",
     fontStyle: "italic",
-    textDecoration: "underline",
+    
     fontSize: "1rem",
   },
   list: {
@@ -116,8 +118,8 @@ const Historia = () => {
     <div style={styles.page}>
       <div style={styles.intro}>
         <p>
-          <strong>Nasza liga</strong> to grupa znajomych połączonych wspólną pasją do piłki nożnej i rywalizacji.
-          Początki były proste – typowaliśmy wyniki meczów na kartce papieru, dla zabawy i emocji a organizatorem był mistrz statystyki - Bartek.
+          <strong>Nasza liga</strong> to grupa znajomych połączonych wspólną pasją do piłki nożnej i rywalizacji.<br></br>
+          Początki były proste – typowaliśmy wyniki meczów na kartce papieru, dla zabawy i emocji a organizatorem był mistrz statystyki - Bartek.<br></br>
           Z czasem nasza liga zaczęła się rozwijać, a przybywało chętnych do wspólnego typowania.
         </p>
         <p>
@@ -125,7 +127,7 @@ const Historia = () => {
           Dzięki temu wszystko stało się przejrzyste, a zabawa – jeszcze lepsza.
           Dziś każda edycja to nowa dawka sportowych emocji, zdrowej rywalizacji i dobrej zabawy.
           A najlepsi z najlepszych trafiają do naszej <strong>Galerii Mistrzów</strong>, gdzie zapisują się na długo w historii futbolu.
-        </p>
+        </p><hr />
       </div>
 
       <h1 style={styles.title}>🏆 Galeria Mistrzów</h1>
