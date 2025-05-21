@@ -10,7 +10,6 @@ const getTeamLogo = (teamName) => {
 
 const CountdownTimer = () => {
   const [upcomingGames, setUpcomingGames] = useState([]);
-  const [finalRoundTime, setFinalRoundTime] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(null);
 
   useEffect(() => {
@@ -28,7 +27,6 @@ const CountdownTimer = () => {
 
     if (upcoming.length === 9) {
       const firstGameTime = upcoming[0].gameDateTime;
-      setFinalRoundTime(firstGameTime);
 
       const updateCountdown = () => {
         const current = DateTime.now().setZone("Europe/Warsaw");
@@ -47,72 +45,59 @@ const CountdownTimer = () => {
     }
   }, []);
 
+  // Final Round Banner
   if (upcomingGames.length === 9 && timeRemaining) {
     return (
       <div style={{
+        backgroundColor: '#212529ab',
+        color: 'aliceblue',
+        padding: '24px',
         textAlign: 'center',
-        background: 'linear-gradient(to right, #111, #222)',
-        color: '#fff',
-        padding: '40px 20px',
-        borderRadius: '16px',
-        fontFamily: '"Bebas Neue", "Orbitron", sans-serif',
-        letterSpacing: '1px',
-        boxShadow: '0 0 20px #FFD70055',
-        margin: '20px auto',
-        maxWidth: '600px',
-        animation: 'pulseGlow 3s infinite alternate',
+        marginBottom: '10px',
+        fontFamily: '"Bebas Neue", sans-serif',
       }}>
         <style>
-          {`
-            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@500&display=swap');
-            @keyframes pulseGlow {
-              from {
-                box-shadow: 0 0 20px #FFD70055;
-              }
-              to {
-                box-shadow: 0 0 30px #FFD700AA;
-              }
-            }
-          `}
+          {`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');`}
         </style>
-        <div style={{
-          fontSize: '36px',
-          color: '#FFD700',
-          textShadow: '1px 1px 6px #000',
-          marginBottom: '20px',
+        <p style={{
+          color: "gold",
+          fontSize: '20px',
+          marginBottom: '16px',
+          textTransform: 'uppercase',
+          letterSpacing: '1px'
         }}>
           Ostatnia kolejka! Czas na wielki finał!
-        </div>
+        </p>
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: '35px',
-          fontSize: '20px',
-          color: '#FFF9C4',
+          alignItems: 'center',
+          gap: '8%',
+          fontSize: '24px',
           fontWeight: 'bold',
         }}>
-          <div>
-            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.days}</div>
-            <div>dni</div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: '#FFF5BA' }}>{timeRemaining.days}</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>dni</div>
           </div>
-          <div>
-            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.hours}</div>
-            <div>godz.</div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: '#FFF1A3' }}>{timeRemaining.hours}</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>godz.</div>
           </div>
-          <div>
-            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.minutes}</div>
-            <div>min.</div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: '#FFE862' }}>{timeRemaining.minutes}</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>min.</div>
           </div>
-          <div>
-            <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.seconds}</div>
-            <div>sek.</div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: '#FFDE21' }}>{timeRemaining.seconds}</div>
+            <div style={{ color: 'red', fontSize: '14px', fontWeight: '800' }}>sek.</div>
           </div>
         </div>
       </div>
     );
   }
 
-  // Display all games (if not final round)
+  // Other Rounds - Show mini countdowns for each match
   return (
     <div style={{
       display: 'flex',
