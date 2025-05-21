@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import gameData from '../gameData/data.json';
 import teamsData from '../gameData/teams.json';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 
-// Get team logo
 const getTeamLogo = (teamName) => {
   const team = teamsData[teamName];
   return team && team.logo ? `${team.logo}` : '/assets/default-logo.png';
@@ -46,53 +43,70 @@ const CountdownTimer = () => {
     return () => clearInterval(interval);
   }, []);
 
+  if (!nextGame) {
+    return <p>No upcoming games!</p>;
+  }
+
+  // Show banner only if it's the last round (kolejka 16)
+  const isLastRound = nextGame.round === 16;
+
   return (
-    nextGame ? (
-      <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '24px', textAlign: 'center', marginBottom: '10px' }}>
-        <p style={{ color: "gold", fontSize: '14px', marginBottom: '10px' }}>Następny mecz:</p>
-
-        <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.home)} alt={nextGame.home} />
-            <hr />
-          </div>
-          <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'gold' }}>VS</span>
-          <div style={{ textAlign: 'center' }}>
-            <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.away)} alt={nextGame.away} />
-            <hr />
-          </div>
+    <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+      {isLastRound ? (
+        <div style={{
+          fontFamily: "'Arial Black', Arial, sans-serif",
+          fontSize: '24px',
+          color: '#FFD700',
+          fontWeight: 'bold',
+          marginBottom: '20px',
+        }}>
+          Ostatnia Kolejka! 🏆
         </div>
+      ) : (
+        <div style={{ backgroundColor: '#212529ab', color: 'aliceblue', padding: '24px' }}>
+          <p style={{ color: "gold", fontSize: '14px', marginBottom: '10px' }}>Następny mecz:</p>
 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8%' }}>
-          {["dni", "godz.", "min.", "sek."].map((label, index) => {
-            const value = Object.values(timeRemaining)[index];
-            const colors = ["#FFF5BA", "#FFF1A3", "#FFE862", "#FFDE21"];
-            return (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', color: colors[index], fontWeight: 'bold' }}>{value}</div>
-                <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>{label}</div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Additional Message */}
-        <div style={{ marginTop: '20px', fontSize: '14px', lineHeight: '1.6', color: '#fff' }}>
-          <div><b>Uwaga!</b> Jeśli w <b>ostatniej kolejce (16)</b> będzie więcej niż jeden zwycięzca, cała nagroda <b>przechodzi na mistrza ligi</b>.</div>
-
-          <div style={{ marginTop: '10px', color: '#FFD700' }}>
-            <b>Nagrody:</b><br />
-            1. miejsce – 400 <img src="/assets/coin.png" alt="coin" style={{ width: '16px', verticalAlign: 'middle' }} /> <br />
-            2. miejsce – 200 <img src="/assets/coin.png" alt="coin" style={{ width: '16px', verticalAlign: 'middle' }} /> <br />
-            3. miejsce – 100 <img src="/assets/coin.png" alt="coin" style={{ width: '16px', verticalAlign: 'middle' }} />
+          <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.home)} alt={nextGame.home} />
+              <hr />
+            </div>
+            <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'gold' }}>VS</span>
+            <div style={{ textAlign: 'center' }}>
+              <img style={{ width: '50%', height: '50%' }} src={getTeamLogo(nextGame.away)} alt={nextGame.away} />
+              <hr />
+            </div>
           </div>
 
-          <div style={{ marginTop: '10px', fontWeight: 'bold', fontSize: '16px', color: '#00FFAA' }}>Powodzenia!</div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8%' }}>
+            {["dni", "godz.", "min.", "sek."].map((label, index) => {
+              const value = Object.values(timeRemaining)[index];
+              const colors = ["#FFF5BA", "#FFF1A3", "#FFE862", "#FFDE21"];
+              return (
+                <div key={label} style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', color: colors[index], fontWeight: 'bold' }}>{value}</div>
+                  <div style={{ color: 'red', fontSize: '14px', fontWeight: '900' }}>{label}</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
+      )}
+
+      {/* Message below countdown */}
+      <div style={{ marginTop: '20px', fontSize: '14px', lineHeight: '1.6', color: '#fff' }}>
+        <div><b>Uwaga!</b> Jeśli w <b>ostatniej kolejce (16)</b> będzie więcej niż jeden zwycięzca, cała nagroda <b>przechodzi na mistrza ligi</b>.</div>
+
+        <div style={{ marginTop: '10px', color: '#FFD700' }}>
+          <b>Nagrody:</b><br />
+          1. miejsce – 400 🥮 <br />
+          2. miejsce – 200 🥮 <br />
+          3. miejsce – 100 🥮
+        </div>
+
+        <div style={{ marginTop: '10px', fontWeight: 'bold', fontSize: '16px', color: '#00FFAA' }}>Powodzenia!</div>
       </div>
-    ) : (
-      <p>No upcoming games!</p>
-    )
+    </div>
   );
 };
 
