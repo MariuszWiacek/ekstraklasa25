@@ -51,46 +51,78 @@ const CountdownTimer = () => {
     return (
       <div style={{
         textAlign: 'center',
-        backgroundColor: '#1e1e1e',
-        color: 'gold',
-        padding: '30px',
-        borderRadius: '12px',
-        fontFamily: 'Arial Black, sans-serif'
+        background: 'linear-gradient(to right, #111, #222)',
+        color: '#fff',
+        padding: '40px 20px',
+        borderRadius: '16px',
+        fontFamily: '"Bebas Neue", "Orbitron", sans-serif',
+        letterSpacing: '1px',
+        boxShadow: '0 0 20px #FFD70055',
+        margin: '20px auto',
+        maxWidth: '600px',
+        animation: 'pulseGlow 3s infinite alternate',
       }}>
-        <div style={{ fontSize: '28px', marginBottom: '10px' }}>
+        <style>
+          {`
+            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@500&display=swap');
+            @keyframes pulseGlow {
+              from {
+                box-shadow: 0 0 20px #FFD70055;
+              }
+              to {
+                box-shadow: 0 0 30px #FFD700AA;
+              }
+            }
+          `}
+        </style>
+        <div style={{
+          fontSize: '36px',
+          color: '#FFD700',
+          textShadow: '1px 1px 6px #000',
+          marginBottom: '20px',
+        }}>
           Ostatnia kolejka! Czas na wielki finał!
         </div>
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: '30px',
+          gap: '35px',
           fontSize: '20px',
-          color: '#FFF9C4'
+          color: '#FFF9C4',
+          fontWeight: 'bold',
         }}>
           <div>
             <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.days}</div>
-            <div style={{ fontWeight: 'bold' }}>dni</div>
+            <div>dni</div>
           </div>
           <div>
             <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.hours}</div>
-            <div style={{ fontWeight: 'bold' }}>godz.</div>
+            <div>godz.</div>
           </div>
           <div>
             <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.minutes}</div>
-            <div style={{ fontWeight: 'bold' }}>min.</div>
+            <div>min.</div>
           </div>
           <div>
             <div style={{ fontSize: '32px', color: '#FFEB3B' }}>{timeRemaining.seconds}</div>
-            <div style={{ fontWeight: 'bold' }}>sek.</div>
+            <div>sek.</div>
           </div>
         </div>
       </div>
     );
   }
 
-  // Show all upcoming games if not 9
+  // Display all games (if not final round)
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', padding: '16px', backgroundColor: '#212529ab', color: 'aliceblue' }}>
+    <div style={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      gap: '16px',
+      padding: '16px',
+      backgroundColor: '#212529ab',
+      color: 'aliceblue',
+    }}>
       {upcomingGames.map((game, idx) => {
         const now = DateTime.now().setZone("Europe/Warsaw");
         const diff = game.gameDateTime.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
@@ -101,7 +133,14 @@ const CountdownTimer = () => {
           seconds: Math.floor(diff.seconds),
         };
         return (
-          <div key={idx} style={{ width: '160px', padding: '10px', backgroundColor: '#2c2c2c', borderRadius: '12px', textAlign: 'center' }}>
+          <div key={idx} style={{
+            width: '160px',
+            padding: '10px',
+            backgroundColor: '#2c2c2c',
+            borderRadius: '12px',
+            textAlign: 'center',
+            boxShadow: '0 0 8px #0005',
+          }}>
             <div>
               <img src={getTeamLogo(game.home)} alt={game.home} style={{ width: '40px', height: '40px' }} />
               <div style={{ fontSize: '12px', margin: '4px 0' }}>{game.home}</div>
