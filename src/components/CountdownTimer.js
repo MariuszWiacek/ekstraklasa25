@@ -95,7 +95,7 @@ const CountdownTimer = () => {
 
       {/* Message below countdown */}
       <div style={{ marginTop: '20px', fontSize: '14px', lineHeight: '1.6', color: '#fff' }}>
-        <div><b>Uwaga!</b> Jeśli w <b>ostatniej kolejce (16)</b> będzie więcej niż jeden zwycięzca, cała nagroda <b>przechodzi na mistrza ligi</b>.</div>
+        <div><b>Uwaga!</b> Jeśli w <b>ostatniej kolejce (16)</b> będzie więcej niż jeden zwycięzca, aktualny bonus <b>przechodzi do puli mistrza ligi</b>.</div>
 
         <div style={{ marginTop: '10px', color: '#FFD700' }}>
           <b>Nagrody:</b><br />
