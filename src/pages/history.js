@@ -48,7 +48,51 @@ const styles = {
     marginBottom: "3rem",
     textAlign: "center",
     fontStyle: "italic",
-    
+  },
+  medalistsWrapper: {
+    maxWidth: "600px",
+    marginBottom: "3rem",
+    backgroundColor: "rgba(0,0,0,0.4)",
+    padding: "1.5rem 2rem",
+    borderRadius: "20px",
+    color: "#FFE066",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.6)",
+  },
+  medalistsTitle: {
+    fontSize: "2rem",
+    fontWeight: "700",
+    color: "#FFD43B",
+    marginBottom: "1rem",
+    textAlign: "center",
+  },
+  medalistsList: {
+    listStyle: "none",
+    paddingLeft: 0,
+    margin: 0,
+  },
+  medalistItem: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "0.8rem",
+    fontWeight: "600",
+    fontSize: "1.4rem",
+  },
+  medalistRank: {
+    width: "24px",
+    textAlign: "right",
+    marginRight: "1rem",
+    fontWeight: "700",
+    color: "#FFD43B",
+  },
+  medalIcons: {
+    marginLeft: "auto",
+    display: "flex",
+    gap: "4px",
+  },
+  medalIcon: {
+    width: "20px",
+    height: "20px",
+    filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.7))",
   },
   title: {
     fontSize: "3.5rem",
@@ -82,7 +126,6 @@ const styles = {
     color: "#AAA",
     fontWeight: "500",
     fontStyle: "italic",
-    
     fontSize: "1rem",
   },
   list: {
@@ -114,23 +157,84 @@ const styles = {
 };
 
 const Historia = () => {
+  // 1. Calculate medals tally per user
+  const medalTally = {};
+  historyData.forEach(({ podium }) => {
+    podium.forEach(({ name, place }) => {
+      if (!medalTally[name]) medalTally[name] = [0, 0, 0];
+      if (place >= 1 && place <= 3) {
+        medalTally[name][place - 1]++;
+      }
+    });
+  });
+
+  // 2. Sort medalists by total medals desc, gold desc, silver desc, bronze desc
+  const sortedMedalists = Object.entries(medalTally)
+    .filter(([_, medals]) => medals.reduce((a, b) => a + b, 0) > 0)
+    .sort((a, b) => {
+      const aTotal = a[1].reduce((sum, val) => sum + val, 0);
+      const bTotal = b[1].reduce((sum, val) => sum + val, 0);
+      if (bTotal !== aTotal) return bTotal - aTotal;
+      if (b[1][0] !== a[1][0]) return b[1][0] - a[1][0];
+      if (b[1][1] !== a[1][1]) return b[1][1] - a[1][1];
+      return b[1][2] - a[1][2];
+    });
+
   return (
     <div style={styles.page}>
       <div style={styles.intro}>
         <p>
-          <strong>Nasza liga</strong> to grupa znajomych połączonych wspólną pasją do piłki nożnej i rywalizacji.<br></br>
-          Początki były proste – typowaliśmy wyniki meczów na kartce papieru, dla zabawy i emocji a organizatorem był mistrz statystyki - Bartek.<br></br>
-          Z czasem nasza liga zaczęła się rozwijać, a przybywało chętnych do wspólnego typowania.
+          <strong>Nasza liga</strong> to grupa znajomych połączonych wspólną
+          pasją do piłki nożnej i rywalizacji.
+          <br />
+          Początki były proste – typowaliśmy wyniki meczów na kartce papieru,
+          dla zabawy i emocji a organizatorem był mistrz statystyki - Bartek.
+          <br />
+          Z czasem nasza liga zaczęła się rozwijać, a przybywało chętnych do
+          wspólnego typowania.
         </p>
         <p>
           Aby ułatwić prowadzenie wyników, przenieśliśmy się do internetu.
-          Dzięki temu wszystko stało się przejrzyste, a zabawa – jeszcze lepsza.
-          Dziś każda edycja to nowa dawka sportowych emocji, zdrowej rywalizacji i dobrej zabawy.
-          A najlepsi z najlepszych trafiają do naszej <strong>Galerii Mistrzów</strong>, gdzie zapisują się na długo w historii futbolu.
-        </p><hr />
+          Dzięki temu wszystko stało się przejrzyste, a zabawa – jeszcze
+          lepsza. Dziś każda edycja to nowa dawka sportowych emocji, zdrowej
+          rywalizacji i dobrej zabawy. A najlepsi z najlepszych trafiają do
+          naszej <strong>Galerii Mistrzów</strong>, gdzie zapisują się na długo
+          w historii futbolu.
+        </p>
+        <hr />
       </div>
 
-      <h1 style={styles.title}>🏆 Galeria Mistrzów</h1>
+      {/* Medalists ranked list */}
+      <section style={styles.medalistsWrapper}>
+        <h2 style={styles.medalistsTitle}>🏅 Medaliści</h2><hr />
+        <ul style={styles.medalistsList}>
+          {sortedMedalists.map(([name, medals], i) => (
+            <li key={name} style={styles.medalistItem}>
+              <span style={styles.medalistRank}>{i + 1}.</span>
+              <span>{name}</span>
+              <span style={styles.medalIcons}>
+                {[0, 1, 2].map((idx) =>
+                  [...Array(medals[idx])].map((_, medalIndex) => (
+                    <FaMedal
+                      key={`${idx}-${medalIndex}`}
+                      style={{ ...styles.medalIcon, color: medalColors[idx + 1] }}
+                      title={
+                        idx === 0
+                          ? "Złoty medal"
+                          : idx === 1
+                          ? "Srebrny medal"
+                          : "Brązowy medal"
+                      }
+                    />
+                  ))
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+<hr />
+      <h1 style={styles.title}>🏆 Galeria Mistrzów</h1><hr />
 
       {historyData.map((edycja, index) => (
         <section key={index} style={styles.card}>
