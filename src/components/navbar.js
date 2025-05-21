@@ -152,6 +152,11 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link to="/history" className="nav-link" onClick={closeMenu}>
+                  Historia
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to="/admin" className="nav-link" onClick={closeMenu}>
                   Admin
                 </Link>
