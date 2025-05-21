@@ -36,46 +36,24 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: "3rem 1rem",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  },
+  intro: {
+    maxWidth: "800px",
+    color: "#EEE",
+    fontSize: "1.1rem",
+    lineHeight: "1.8",
+    marginBottom: "3rem",
+    textAlign: "center",
   },
   title: {
     fontSize: "3.5rem",
     fontWeight: "800",
-    marginBottom: "3rem",
+    marginBottom: "2rem",
     color: "#FFD43B",
     textShadow: "0 2px 8px rgba(0,0,0,0.7)",
-  },
-  summary: {
-    marginBottom: "3rem",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    padding: "1.5rem 2rem",
-    borderRadius: "15px",
-    maxWidth: "600px",
-    width: "100%",
-    color: "#FFD43B",
-    fontWeight: "700",
-    fontSize: "1.3rem",
-  },
-  summaryItem: {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: "1.5rem", // increased spacing
-    gap: "1rem", // space between name and medals
-    cursor: "default",
-  },
-  summaryName: {
-    fontSize: "2rem", // bigger font for names
-    fontWeight: "700",
-    color: "#FFD43B",
-    minWidth: "120px", // consistent alignment
-  },
-  medalIcon: {
-    marginLeft: "0.5rem", // more space between medals
-    width: "22px",
-    height: "22px",
-    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.7))",
   },
   card: {
     backgroundColor: "rgba(0,0,0,0.4)",
@@ -113,96 +91,45 @@ const styles = {
   listItem: {
     display: "flex",
     alignItems: "center",
-    marginBottom: "1.8rem", // increased vertical spacing
+    marginBottom: "1.5rem",
     cursor: "default",
   },
   medal: {
-    marginRight: "0.8rem", // spacing between medal and name
+    marginRight: "1.2rem",
     filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.7))",
     width: "36px",
     height: "36px",
   },
   winnerName: {
-    fontSize: "42px", // bigger winner name font
+    fontSize: "36px",
     fontWeight: "800",
     color: medalColors[1],
   },
   secondThirdName: {
-    fontSize: "20px", // bigger 2nd/3rd place font
+    fontSize: "1.6rem",
     fontWeight: "700",
   },
 };
 
 const Historia = () => {
-  // Collect medal counts for each user
-  const medalCount = {};
-  historyData.forEach(({ podium }) => {
-    podium.forEach(({ name, place }) => {
-      if (!medalCount[name]) medalCount[name] = { gold: 0, silver: 0, bronze: 0 };
-      if (place === 1) medalCount[name].gold++;
-      else if (place === 2) medalCount[name].silver++;
-      else if (place === 3) medalCount[name].bronze++;
-    });
-  });
-
-  // Convert to array and sort by:
-  // 1) total medals desc
-  // 2) gold desc
-  // 3) silver desc
-  // 4) bronze desc
-  const sortedMedalists = Object.entries(medalCount)
-    .map(([name, medals]) => ({
-      name,
-      ...medals,
-      total: medals.gold + medals.silver + medals.bronze,
-    }))
-    .sort((a, b) => {
-      if (b.total !== a.total) return b.total - a.total;
-      if (b.gold !== a.gold) return b.gold - a.gold;
-      if (b.silver !== a.silver) return b.silver - a.silver;
-      return b.bronze - a.bronze;
-    });
-
   return (
     <div style={styles.page}>
+      <div style={styles.intro}>
+        <p>
+          <strong>Nasza liga</strong> to grupa znajomych połączonych wspólną pasją do piłki nożnej i rywalizacji.
+          Początki były proste – typowaliśmy wyniki meczów na kartce papieru, dla zabawy i emocji a organizatorem był mistrz statystyki - Bartek.
+          Z czasem nasza liga zaczęła się rozwijać, a przybywało chętnych do wspólnego typowania.
+        </p>
+        <p>
+          Aby ułatwić prowadzenie wyników, przenieśliśmy się do internetu.
+          Dzięki temu wszystko stało się przejrzyste, a zabawa – jeszcze lepsza.
+          Dziś każda edycja to nowa dawka sportowych emocji, zdrowej rywalizacji i dobrej zabawy.
+          A najlepsi z najlepszych trafiają do naszej <strong>Galerii Mistrzów</strong>, gdzie zapisują się na długo w historii futbolu.
+        </p>
+      </div>
+
       <h1 style={styles.title}>🏆 Galeria Mistrzów</h1>
 
-      {/* Summary of medalists */}
-      <section style={styles.summary}>
-        <h2>Medaliści</h2>
-        <hr />
-        {sortedMedalists.map(({ name, gold, silver, bronze }) => (
-          <div key={name} style={styles.summaryItem}>
-            <span style={styles.summaryName}>{name}</span>
-            {[...Array(gold)].map((_, i) => (
-              <FaMedal
-                key={`gold-${i}`}
-                style={{ ...styles.medalIcon, color: medalColors[1] }}
-                title="Złoty medal"
-              />
-            ))}
-            {[...Array(silver)].map((_, i) => (
-              <FaMedal
-                key={`silver-${i}`}
-                style={{ ...styles.medalIcon, color: medalColors[2] }}
-                title="Srebrny medal"
-              />
-            ))}
-            {[...Array(bronze)].map((_, i) => (
-              <FaMedal
-                key={`bronze-${i}`}
-                style={{ ...styles.medalIcon, color: medalColors[3] }}
-                title="Brązowy medal"
-              />
-            ))}
-          </div>
-        ))}
-      </section>
-
-      <h2>Poprzednie edycje :</h2>
-      <hr />
-
-      {/* Detailed podiums */}
       {historyData.map((edycja, index) => (
         <section key={index} style={styles.card}>
           <div style={styles.header}>
