@@ -96,8 +96,8 @@ const CountdownTimer = () => {
             </div>
           ) : (
             // If multiple games but not 9 simultaneous, just show count of next games
-            <p style={{ fontSize: '32px', fontWeight: 'bold', color: 'gold', fontFamily:"Rubik" }}>
-              Wielki finał <br></br> Ostatnia kolejka !
+            <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#00FFAA', fontFamily:"Rubik" }}>
+              Wielki finał -  Powodzenia !
             </p>
           )}
 
@@ -117,17 +117,15 @@ const CountdownTimer = () => {
       )}
 
       {/* Message below countdown */}
-      <div style={{ marginTop: '20px', fontSize: '14px', lineHeight: '1.6', color: '#fff' }}>
+      <div style={{ marginTop: '12px', fontSize: '14px', lineHeight: '1.6', color: '#fff' }}>
         <div><b>Uwaga!</b> Jeśli w <b>ostatniej kolejce (16)</b> będzie więcej niż jeden zwycięzca, aktualny bonus <b>przechodzi do puli mistrza ligi</b>.</div>
 
         <div style={{ marginTop: '10px', color: '#FFD700' }}>
-          <b>Nagrody:</b><br />
+          <b>Nagrody:</b><br /><br />
           1. miejsce – 400 🥮 <br />
           2. miejsce – 200 🥮 <br />
           3. miejsce – 100 🥮
         </div>
-
-        <div style={{ marginTop: '10px', fontWeight: 'bold', fontSize: '16px', color: '#00FFAA' }}>Powodzenia!</div>
       </div>
     </div>
   );
