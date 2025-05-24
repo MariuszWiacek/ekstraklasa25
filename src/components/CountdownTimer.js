@@ -54,7 +54,7 @@ const CountdownTimer = () => {
 
   if (nextGames.length === 0) {
     return <p style={{ marginTop:"12px", fontSize: '32px', fontWeight: 'bold', color: '#00FFAA', fontFamily:"Rubik", textAlign:"center"}}>
-              Wielki finał -  Powodzenia !
+              
             </p>;
   }
 
