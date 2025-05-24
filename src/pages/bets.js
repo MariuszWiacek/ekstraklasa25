@@ -277,7 +277,9 @@ return (
             ) : (
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center', padding:'5%' }}>
-                  Koniec rundy. <br></br><br></br> Dziękujemy za zaciekłą grę do końca.<br></br> 
+                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#00FFAA', fontFamily:"Rubik", textAlign:"center"}}>
+              To już koniec rundy – dzięki za wspólną zabawę!
+            </p>
                 </td>
               </tr>
             )}
