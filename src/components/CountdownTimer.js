@@ -54,7 +54,7 @@ const CountdownTimer = () => {
 
   if (nextGames.length === 0) {
     return <p style={{ marginTop:"12px", fontSize: '32px', fontWeight: 'bold', color: '#00FFAA', fontFamily:"Rubik", textAlign:"center"}}>
-              Ekstrabet Wiosna 2025 wygrywa - ALAN<br></br>Gratulacje!
+              <br></br>
             </p>;
   }
 

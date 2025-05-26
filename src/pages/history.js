@@ -2,6 +2,15 @@ import React from "react";
 import { FaMedal } from "react-icons/fa";
 
 const historyData = [
+   {
+    title: "Ekstraklasa Wiosna 2025",
+    link: "https://ekstraklasa251.vercel.app/",
+    podium: [
+      { name: "Alan", place: 1 },
+      { name: "Marcin", place: 2 },
+      { name: "Seba", place: 3 },
+    ],
+  },
   {
     title: "Ekstraklasa Jesień 2024",
     link: "https://ekstraklasa24.vercel.app/",
