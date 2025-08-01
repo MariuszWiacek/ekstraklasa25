@@ -77,26 +77,26 @@ const Bets = () => {
     });
 
     
+  
   const now = new Date();
+  let closestGameIndex = -1;
+  let closestTimeDiff = Infinity;
 
-  // Sort gameData by actual DateTime
-  const sortedGames = [...gameData].sort((a, b) => {
-    const dateA = new Date(`${a.date}T${a.kickoff}:00+02:00`);
-    const dateB = new Date(`${b.date}T${b.kickoff}:00+02:00`);
-    return dateA - dateB;
+  gameData.forEach((game, index) => {
+    const gameDate = new Date(`${game.date}T${game.kickoff}:00+02:00`);
+    const timeDiff = gameDate - now;
+
+    if (timeDiff > 0 && timeDiff < closestTimeDiff) {
+      closestTimeDiff = timeDiff;
+      closestGameIndex = index;
+    }
   });
 
-  // Now find the first game after now
-  const nextGameIndex = sortedGames.findIndex(
-    game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now
-  );
-
-  if (nextGameIndex !== -1) {
-    const kolejkaIndex = Math.floor(nextGameIndex / 9);
+  if (closestGameIndex !== -1) {
+    const kolejkaIndex = Math.floor(closestGameIndex / 9);
     setCurrentKolejkaIndex(kolejkaIndex);
   
 }, []);
-
 
   const isReadOnly = (user, gameId) => submittedData[user] && submittedData[user][gameId];
 
