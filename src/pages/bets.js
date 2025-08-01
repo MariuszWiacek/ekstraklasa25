@@ -79,24 +79,21 @@ const Bets = () => {
     
   
   const now = new Date();
-  let closestGameIndex = -1;
-  let closestTimeDiff = Infinity;
+let closestGameIndex = -1;
+let closestGameDate = null;
 
-  gameData.forEach((game, index) => {
-    const gameDate = new Date(`${game.date}T${game.kickoff}:00+02:00`);
-    const timeDiff = gameDate - now;
+gameData.forEach((game, index) => {
+  const gameDate = new Date(`${game.date}T${game.kickoff}:00+02:00`);
+  if (gameDate > now && (!closestGameDate || gameDate < closestGameDate)) {
+    closestGameDate = gameDate;
+    closestGameIndex = index;
+  }
+});
 
-    if (timeDiff > 0 && timeDiff < closestTimeDiff) {
-      closestTimeDiff = timeDiff;
-      closestGameIndex = index;
-    }
-  });
-
-  if (closestGameIndex !== -1) {
-    const kolejkaIndex = Math.floor(closestGameIndex / 9);
-    setCurrentKolejkaIndex(kolejkaIndex);
-  
-}, []);
+if (closestGameIndex !== -1) {
+  const kolejkaIndex = Math.floor(closestGameIndex / 9);
+  setCurrentKolejkaIndex(kolejkaIndex);
+}
 
   const isReadOnly = (user, gameId) => submittedData[user] && submittedData[user][gameId];
 
