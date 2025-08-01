@@ -76,11 +76,27 @@ const Bets = () => {
       if (data) setResults(data);
     });
 
-    const now = new Date();
-    const nextGameIndex = gameData.findIndex(game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now);
+    
+  const now = new Date();
+
+  // Sort gameData by actual DateTime
+  const sortedGames = [...gameData].sort((a, b) => {
+    const dateA = new Date(`${a.date}T${a.kickoff}:00+02:00`);
+    const dateB = new Date(`${b.date}T${b.kickoff}:00+02:00`);
+    return dateA - dateB;
+  });
+
+  // Now find the first game after now
+  const nextGameIndex = sortedGames.findIndex(
+    game => new Date(`${game.date}T${game.kickoff}:00+02:00`) > now
+  );
+
+  if (nextGameIndex !== -1) {
     const kolejkaIndex = Math.floor(nextGameIndex / 9);
     setCurrentKolejkaIndex(kolejkaIndex);
-  }, []);
+  
+}, []);
+
 
   const isReadOnly = (user, gameId) => submittedData[user] && submittedData[user][gameId];
 
